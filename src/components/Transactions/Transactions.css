@@ -1,0 +1,11 @@
+.transactions{
+    border: 1px solid red;
+}
+
+.transactionsModal{
+    border: 1px solid blue;
+}
+
+.transactionsDashboard{
+    border: 1px solid green;
+}
