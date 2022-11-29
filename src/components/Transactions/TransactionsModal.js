@@ -2,23 +2,19 @@ import React, { useEffect, useState } from 'react';
 import Transactions from './Transactions';
 import './Transactions.css';
 
-function TransactionsModal(modalInfo) {
+function TransactionsModal() {
     const [formStatus, setFormStatus] = useState(false);
     const [disableForm, setDisableForm] = useState(false);
+    const [deleteMode, setDeleteMode] = useState(false);
 
     const initialValues = { name: "", category: 'Groceries', date: "", positive: false, value: "", reoccuring: false, id:1 };
     const [formValues, setFormValues] = useState(initialValues);
     const [formErrors, setFormErrors] = useState({});
-    const [allTransactions, setAllTransactions] = useState([]);
+    const [newTransaction, setNewTransaction] = useState({});
     const [submitSuccess, setSubmitSuccess] = useState(false);
 
     const categories = ['Groceries', 'Entertainment', 'Goals', 'Rent'];
     // Make this come in from props soon
-
-    // Tells TransactionDashboard to close the modal
-    const disableModal = () => {
-        modalInfo.modalStatus();
-    }
 
     // Handles incoming inputs from form, buttons or inputs
     const handleChange = (e) => {
@@ -44,7 +40,6 @@ function TransactionsModal(modalInfo) {
         if(values.name.length > 10){
             errors.name = 'Transaction name cannot exceed 10 characters.';
         }
-
         // Date
         if( isNaN(values.date) || values.date < 1 || values.date > 30){
             errors.date = 'Date must be a number between 1 and 30.';
@@ -66,56 +61,60 @@ function TransactionsModal(modalInfo) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
         // check for errors
         const errors = validate(formValues);
         setFormErrors(errors);
-        // console.log(errors);
 
-        // if there are no errors, add new transaction to complete list of transactions
-        // reset form, form errors, initalvalues, close form and show success message
+        // if there are no errors, add new transaction to newTransaction state and send to Transactions component, then reset form, form errors, and initalvalues, set form disabled and show success message
         if(Object.keys(errors).length === 0){
-            setAllTransactions([...allTransactions, formValues]);
-            // console.log(newAllTransactions);
-            // console.log('transaction added');
+            setNewTransaction(formValues);
             setSubmitSuccess(true);
-            
             // resetting form
             setFormValues(initialValues);
             setFormErrors({});
-            setFormStatus(false);
         }
     }
 
     // make success message disappear after 10 seconds
     useEffect(() => {
         if(submitSuccess === true){
-            const interval = setInterval(() => {
+            const timeoutID = setTimeout(() => {
                 setSubmitSuccess(false);
-            }, 10000);
-            return () => clearInterval(interval);
+              }, "10000")
+              return () => {
+                // 👇️ clear timeout when component unmounts
+                clearTimeout(timeoutID);
+              };
         }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [submitSuccess]);
 
     return (
-        <div data-testid='transactionsmodal' className="transactionsModal">
+        <div className="transactionsModal">
             TransactionsModal
-            <Transactions allTransactions={allTransactions}/>
-            <p>Other stuff to update transactions</p>
-            <button onClick={() => disableModal()}>x</button>
-            <div>
-                <button onClick={() => {
-                    setFormStatus(true);
-                    setDisableForm(false);
-                    setSubmitSuccess(false);
-                }}>Add</button>
-                <button onClick={() => {
-                    setFormStatus(true);
-                    setDisableForm(true);
-                }}>Edit</button>
-                <button>Delete</button>
-                {formStatus ? 
+            <Transactions newTransaction={newTransaction} deleteMode={deleteMode}/>
+            <button onClick={ () => {setFormStatus(!formStatus);
+                                     setDisableForm(true);
+                                     setDeleteMode(false);}}>
+                {formStatus ? 'Exit Manage Transactions' : 'Manage Transactions'}
+            </button>
+            {formStatus && 
+                <div>
+                    <button onClick={() => {
+                        setDisableForm(false);
+                        setSubmitSuccess(false);
+                        setDeleteMode(false);
+                    }}>Add</button>
+
+                    <button onClick={() => {
+                        setDisableForm(true);
+                        setDeleteMode(false);
+                    }}>Edit</button>
+
+                    <button onClick={() => {
+                        setDisableForm(true);
+                        setDeleteMode(true);
+                    }}>Delete</button>
                     <form onSubmit={handleSubmit}>
                         <fieldset disabled={ disableForm ?? 'disabled'}>
                             <label>Name:
@@ -139,10 +138,8 @@ function TransactionsModal(modalInfo) {
                                                 defaultValue
                                                 value={`${category}`}
                                                 key={categories.indexOf(category)}
-                                            >{`${category}`}</option>
-                                        )
-                                    })}
-                                </select>
+                                                >{`${category}`}</option>
+                                    )})}</select>
                             </label>
                             <br/>
                             <label>Day of the month:
@@ -157,20 +154,19 @@ function TransactionsModal(modalInfo) {
                             <br/>
                             <label>Value range:
                                 <input
-                                        disabled = {formValues.positive ?? 'disabled'}
-                                        type="button"
-                                        name="positive"
-                                        value='+'
-                                        onClick={() => handleClick('positive', true)}
-                                        ></input>
-                                
-                                        <input
-                                        disabled = {!formValues.positive ?? 'disabled'}
-                                        type="button"
-                                        name="negative"
-                                        value= '-'
-                                        onClick={() => handleClick('positive', false)}
-                                        ></input>
+                                    disabled = {formValues.positive ?? 'disabled'}
+                                    type="button"
+                                    name="positive"
+                                    value='+'
+                                    onClick={() => handleClick('positive', true)}
+                                    ></input>
+                                <input
+                                    disabled = {!formValues.positive ?? 'disabled'}
+                                    type="button"
+                                    name="negative"
+                                    value= '-'
+                                    onClick={() => handleClick('positive', false)}
+                                    ></input>
                             </label>
                             <br/>
                             <label>Value:
@@ -191,7 +187,7 @@ function TransactionsModal(modalInfo) {
                                     name="reoccuring" 
                                     value='Switch'
                                     onClick={() => handleClick('reoccuring', !formValues.reoccuring)}
-                                    ></input>
+                                ></input>
                             </label>
                             <br/>
                             <br/>
@@ -202,9 +198,9 @@ function TransactionsModal(modalInfo) {
                                 onClick={() => giveId()}></input>
                         </fieldset>
                     </form>
-                : '' }
                 {submitSuccess ? <p>Transaction was a success!</p> : ''}
-            </div>
+                </div>
+                }
         </div>
     );
 }

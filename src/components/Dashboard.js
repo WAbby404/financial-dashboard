@@ -1,11 +1,11 @@
 import React from 'react';
-import TransactionsDashboard from './Transactions/TransactionsDashboard';
+import TransactionsModal from './Transactions/TransactionsModal';
 
 function Dashboard(props) {
     return(
         <div>
             <h1>Dashboard</h1>
-            <TransactionsDashboard />
+            <TransactionsModal />
         </div>
     )
 }

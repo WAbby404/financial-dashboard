@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import TransactionsModal from './TransactionsModal';
 
@@ -6,38 +6,34 @@ beforeEach(() => {
   render(<TransactionsModal />);
 });
 
+afterEach(cleanup);
 
 test('TransactionsModal component renders', () => {
   expect(screen.getByText('TransactionsModal')).toBeInTheDocument();
 });
 
-
-test('Render buttons that can manage transactions and exit btn: x, edit, add, delete', () => {
-  const allBtns = screen.getAllByRole('button');
-  expect(allBtns.length).toEqual(4);
+test('Manage Transactions button brings up form or disables it', () => {
+  const manageBtn = screen.getByRole('button');
+  userEvent.click(manageBtn);
+  const nameInput = screen.getByRole('textbox', {name: /name/i});
+  expect(nameInput).toBeDisabled();
+  userEvent.click(manageBtn);
+  expect(nameInput).not.toBeInTheDocument();
 });
 
-
 test('Add button enables form to add a transaction', () => {
-  const editButton = screen.getByText('Edit');
-  userEvent.click(editButton);
+  const manageBtn = screen.getByRole('button');
+  userEvent.click(manageBtn);
+  const nameInput = screen.getByRole('textbox', {name: /name/i});
+  expect(nameInput).toBeDisabled();
   const addButton = screen.getByText('Add');
   userEvent.click(addButton);
-  const nameInput = screen.getByRole('textbox', {name: /name/i});
-  expect(nameInput).toBeInTheDocument();
   expect(nameInput).not.toBeDisabled();
 });
 
-
-test('Edit button disables form until a transaction is selected', () => {
-  const editButton = screen.getByText('Edit');
-  userEvent.click(editButton);
-  const nameInput = screen.getByRole('textbox', {name: /name/i});
-  expect(nameInput).toBeDisabled();
-});
-
-
-test('Simulates entering data into inputs', () => {
+test('Simulates entering data into inputs, and expects transaction to be in document', () => {
+  const manageBtn = screen.getByRole('button');
+  userEvent.click(manageBtn);
   const addButton = screen.getByText('Add');
   userEvent.click(addButton);
 
@@ -72,9 +68,12 @@ test('Simulates entering data into inputs', () => {
   userEvent.click(reoccuringInput);
   const reoccuringResponse = screen.getByText('yes');
   expect(reoccuringResponse).toBeInTheDocument();
+
 });
 
 test('Input values are validated upon submission', ()=> {
+  const manageBtn = screen.getByRole('button');
+  userEvent.click(manageBtn);
   const addButton = screen.getByText('Add');
   userEvent.click(addButton);
 
@@ -108,7 +107,9 @@ test('Input values are validated upon submission', ()=> {
   expect(valueError).toBeInTheDocument();
 });
 
-test('When transaction is submitted, form fields reset and form closes', () =>{
+test('When transaction is submitted, form fields reset', () =>{
+  const manageBtn = screen.getByRole('button');
+  userEvent.click(manageBtn);
   const addButton = screen.getByText('Add');
   userEvent.click(addButton);
 
@@ -124,12 +125,83 @@ test('When transaction is submitted, form fields reset and form closes', () =>{
   const successMessage = screen.getByText('Transaction was a success!');
   expect(successMessage).toBeInTheDocument();
 
-  userEvent.click(addButton);
-  nameInput = screen.getByRole('textbox', {name: /name/i}); 
   expect(nameInput.value).toEqual('');
-  dateInput = screen.getByRole('textbox', {name: /Day of the month/i});
   expect(dateInput.value).toEqual('');
-  valueInput = screen.getByRole('textbox', {name: /value/i});
   expect(valueInput.value).toEqual('');
 });
+
+test('Transaction persists when manage transaction form is closed', () => {
+  const manageBtn = screen.getByRole('button');
+  userEvent.click(manageBtn);
+  const addButton = screen.getByText('Add');
+  userEvent.click(addButton);
+
+  let nameInput = screen.getByRole('textbox', {name: /name/i}); 
+  userEvent.type(nameInput, 'Wegmans');
+  let dateInput = screen.getByRole('textbox', {name: /Day of the month/i}); 
+  userEvent.type(dateInput, '29');
+  let valueInput = screen.getByRole('textbox', {name: /value/i}); 
+  userEvent.type(valueInput, '248.12');
+  const submitBtn = screen.getByText('Submit');
+  userEvent.click(submitBtn);
+
+  userEvent.click(manageBtn);
+  const submitResponse = screen.getByRole('listitem');
+  expect(submitResponse).toHaveTextContent('Wegmans');
+});
+
+test('Clicking the delete button enables a delete button on transactions', () => {
+  const manageBtn = screen.getByRole('button');
+  userEvent.click(manageBtn);
+  const addButton = screen.getByText('Add');
+  userEvent.click(addButton);
+
+  let nameInput = screen.getByRole('textbox', {name: /name/i}); 
+  userEvent.type(nameInput, 'Wegmans');
+  let dateInput = screen.getByRole('textbox', {name: /Day of the month/i}); 
+  userEvent.type(dateInput, '29');
+  let valueInput = screen.getByRole('textbox', {name: /value/i}); 
+  userEvent.type(valueInput, '248.12');
+  const submitBtn = screen.getByText('Submit');
+  userEvent.click(submitBtn);
+
+  const deleteButton = screen.getByText('Delete');
+  userEvent.click(deleteButton);
+
+  const deleteButtons = screen.getAllByText('Delete');
+  expect(deleteButtons.length).toEqual(2);
+});
+
+test('Clicking delete button deletes transaction', ()=>{
+  const manageBtn = screen.getByRole('button');
+  userEvent.click(manageBtn);
+  const addButton = screen.getByText('Add');
+  userEvent.click(addButton);
+
+  let nameInput = screen.getByRole('textbox', {name: /name/i}); 
+  userEvent.type(nameInput, 'Wegmans');
+  let dateInput = screen.getByRole('textbox', {name: /Day of the month/i}); 
+  userEvent.type(dateInput, '29');
+  let valueInput = screen.getByRole('textbox', {name: /value/i}); 
+  userEvent.type(valueInput, '248.12');
+  const submitBtn = screen.getByText('Submit');
+  userEvent.click(submitBtn);
+
+  const deleteButton = screen.getByText('Delete');
+  userEvent.click(deleteButton);
+});
+
+// test('Edit button disables form until a transaction is selected, then populates form with that transactions values', () => {
+//   const manageBtn = screen.getByRole('button');
+//   userEvent.click(manageBtn);
+//   const editButton = screen.getByText('Edit');
+//   userEvent.click(editButton);
+//   const nameInput = screen.getByRole('textbox', {name: /name/i});
+//   expect(nameInput).toBeDisabled();
+
+
+// });
+
+
+
 
