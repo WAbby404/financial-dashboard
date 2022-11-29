@@ -191,6 +191,57 @@ test('Clicking delete button deletes transaction', ()=>{
   userEvent.click(deleteButton);
 });
 
+test('Edit button enables a select button on transactions and disables form', () => {
+  const manageBtn = screen.getByRole('button');
+  userEvent.click(manageBtn);
+  const addButton = screen.getByText('Add');
+  userEvent.click(addButton);
+
+  let nameInput = screen.getByRole('textbox', {name: /name/i}); 
+  userEvent.type(nameInput, 'Wegmans');
+  let dateInput = screen.getByRole('textbox', {name: /Day of the month/i}); 
+  userEvent.type(dateInput, '29');
+  let valueInput = screen.getByRole('textbox', {name: /value/i}); 
+  userEvent.type(valueInput, '248.12');
+  const submitBtn = screen.getByText('Submit');
+  userEvent.click(submitBtn);
+
+  const deleteBtn = screen.getByText('Delete');
+  userEvent.click(deleteBtn);
+
+  const editBtn = screen.getByText('Edit');
+  userEvent.click(editBtn);
+
+  const selectButton = screen.getByText('Select');
+  expect(selectButton).toBeInTheDocument();
+  expect(nameInput).toBeDisabled();
+});
+
+test('Pressing the select button on a transaction populates form with that transactions values', ()=> {
+  const manageBtn = screen.getByRole('button');
+  userEvent.click(manageBtn);
+  const addButton = screen.getByText('Add');
+  userEvent.click(addButton);
+
+  let nameInput = screen.getByRole('textbox', {name: /name/i}); 
+  userEvent.type(nameInput, 'Wegmans');
+  let dateInput = screen.getByRole('textbox', {name: /Day of the month/i}); 
+  userEvent.type(dateInput, '29');
+  let valueInput = screen.getByRole('textbox', {name: /value/i}); 
+  userEvent.type(valueInput, '248.12');
+  const submitBtn = screen.getByText('Submit');
+  userEvent.click(submitBtn);
+
+  const editBtn = screen.getByText('Edit');
+  userEvent.click(editBtn);
+
+  const selectButton = screen.getByText('Select');
+  userEvent.click(selectButton);
+
+  let newNameInput = screen.getByRole('textbox', {name: /name/i}); 
+  expect(newNameInput.value).toEqual('Wegmans');
+});
+
 // test('Edit button disables form until a transaction is selected, then populates form with that transactions values', () => {
 //   const manageBtn = screen.getByRole('button');
 //   userEvent.click(manageBtn);

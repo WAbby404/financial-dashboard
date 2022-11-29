@@ -6,6 +6,7 @@ function TransactionsModal() {
     const [formStatus, setFormStatus] = useState(false);
     const [disableForm, setDisableForm] = useState(false);
     const [deleteMode, setDeleteMode] = useState(false);
+    const [editMode, setEditMode] = useState(false);
 
     const initialValues = { name: "", category: 'Groceries', date: "", positive: false, value: "", reoccuring: false, id:1 };
     const [formValues, setFormValues] = useState(initialValues);
@@ -89,10 +90,16 @@ function TransactionsModal() {
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [submitSuccess]);
 
+    const editTransaction = (transaction) => {
+        setDisableForm(false);
+        setFormValues(transaction);
+        setEditMode(false);
+    };
+
     return (
         <div className="transactionsModal">
             TransactionsModal
-            <Transactions newTransaction={newTransaction} deleteMode={deleteMode}/>
+            <Transactions newTransaction={newTransaction} deleteMode={deleteMode} editMode={editMode} editTransaction={editTransaction}/>
             <button onClick={ () => {setFormStatus(!formStatus);
                                      setDisableForm(true);
                                      setDeleteMode(false);}}>
@@ -104,16 +111,22 @@ function TransactionsModal() {
                         setDisableForm(false);
                         setSubmitSuccess(false);
                         setDeleteMode(false);
+                        setEditMode(false);
+                        setFormValues(initialValues);
                     }}>Add</button>
 
                     <button onClick={() => {
                         setDisableForm(true);
                         setDeleteMode(false);
+                        setEditMode(true);
+                        setSubmitSuccess(false);
                     }}>Edit</button>
 
                     <button onClick={() => {
                         setDisableForm(true);
                         setDeleteMode(true);
+                        setEditMode(false);
+                        setSubmitSuccess(false);
                     }}>Delete</button>
                     <form onSubmit={handleSubmit}>
                         <fieldset disabled={ disableForm ?? 'disabled'}>

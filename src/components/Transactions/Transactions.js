@@ -27,13 +27,18 @@ function Transactions(props) {
         }
     };
 
-    const deleteTransaction = (idToDelete) => {
-        const index = allTransactions.findIndex(transaction => transaction.id === idToDelete.id);
+    const deleteTransaction = (transacitonToDelete) => {
+        const index = allTransactions.findIndex(transaction => transaction.id === transacitonToDelete.id);
         const beforeDelete = allTransactions;
         beforeDelete.splice(index, 1);
         setAllTransactions(beforeDelete);
         setCount(count +1);
     };
+
+    const editTransaction = transaction => {
+        props.editTransaction(transaction);
+        deleteTransaction(transaction);
+    }
 
     const renderSwitch = (items) => {
         switch(true) {
@@ -52,7 +57,8 @@ function Transactions(props) {
                         {items[0].value}
                         </div>
                         <br/>
-                        {props.deleteMode && <button onClick={() => deleteTransaction(items)}>Delete</button>}
+                        {props.editMode && <button onClick={() => editTransaction(items[0])}>Select</button>}
+                        {props.deleteMode && <button onClick={() => deleteTransaction(items)}>Delete</button>}   
                     </li>
                 );
 
@@ -73,6 +79,7 @@ function Transactions(props) {
                                     {item.value}
                                 </div>
                                 <br/>
+                                {props.editMode && <button onClick={() => editTransaction(item)}>Select</button>}
                                 {props.deleteMode && <button onClick={() => deleteTransaction(item)}>Delete</button>}
                             </li>
                         );
