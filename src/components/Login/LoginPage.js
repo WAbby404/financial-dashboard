@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { GoogleAuthProvider, signInWithPopup} from 'firebase/auth';
-import { getDatabase, ref} from "firebase/database";
+// import { GoogleAuthProvider, signInWithPopup} from 'firebase/auth';
+// import { getDatabase, ref} from "firebase/database";
 // , push, set, onValue, remove
-import { auth } from '../../config/Firebase';
+// import { auth } from '../../config/Firebase';
 import Login from './Login';
 import Register from './Register';
 // import '../styles/Forms.css';
 
 function LoginPage(props) {
     const [register, setRegister] = useState(false);
-    const googleProvider = new GoogleAuthProvider();
+    // const googleProvider = new GoogleAuthProvider();
 
     // const GoogleLogin = async () => {
     //     try {

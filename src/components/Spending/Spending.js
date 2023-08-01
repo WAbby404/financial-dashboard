@@ -8,7 +8,7 @@ function Spending(props) {
 
     const [ user ] = useAuthState(auth);
 
-    // const [ count, setCount ] = useState(0);
+    const [ count, setCount ] = useState(0);
 
 
     useEffect(()=> {
@@ -24,6 +24,7 @@ function Spending(props) {
                 return transaction;
             })
             console.log(filteredArray);
+            setCount(count + 1);
             // let structuredData;
             // structuredData is an array of objects
             // find transaction.category, set x as category, y as total, find all other transactions with that category, add its total to y

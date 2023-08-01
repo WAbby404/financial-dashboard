@@ -28,7 +28,7 @@ function Transactions(props) {
                     props.toSetAllTransactions(oldTransactions);
                 }
             })});
-    }, []);
+    }, []); // eslint-disable-line
 
     const deleteTransaction = (transacitonToDelete, index) => {
         props.deleteTransaction(transacitonToDelete, index);

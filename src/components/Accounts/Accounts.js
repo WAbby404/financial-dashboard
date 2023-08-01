@@ -42,7 +42,7 @@ function Accounts(props) {
                     props.toSetAllAccounts(oldAccounts);
                 }
             })});
-    }, []);
+    }, []); // eslint-disable-line
 
     const editAccount = (accountToEdit, index) => {
         props.editAccount(accountToEdit, index);
