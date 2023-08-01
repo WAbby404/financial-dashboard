@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { auth } from '../../config/Firebase';
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
-import { getDatabase, ref, push, set} from "firebase/database";
+import { getDatabase, ref, push} from "firebase/database";
+// , set
 
 function Register(props) {
     const initialUserInfo = {name: "", email: "", password:""};

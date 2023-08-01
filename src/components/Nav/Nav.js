@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../../config/Firebase';
 import { AiFillLinkedin, AiFillGithub, AiOutlineLink } from "react-icons/ai";

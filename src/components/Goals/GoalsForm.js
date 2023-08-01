@@ -21,7 +21,7 @@ function GoalsForm(props) {
         if(props.goalToEdit?.name.length !== 0 && props.editOn === true){
             setFormValues(props.goalToEdit);
         }
-    }, [props.goalToEdit]);
+    }, [props.goalToEdit]);  // eslint-disable-line
 
     const capitalizeFirst = (formValues) => {
         const name = formValues.name;

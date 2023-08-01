@@ -42,7 +42,7 @@ function Login(props) {
         signInWithEmailAndPassword(auth, userInfo.email, userInfo.password)
         .then((userCredential) => {
             console.log(userCredential);
-            const user = userCredential.user;
+            // const user = userCredential.user;
             // redirect to dashboard (Router)
             setFormErrors({});
             setUserInfo(initialUserInfo);

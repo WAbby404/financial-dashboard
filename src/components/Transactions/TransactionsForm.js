@@ -32,15 +32,15 @@ function TransactionsForm(props) {
         props.toSetFormOn(setModeTo);
     };
 
-    const toSetEditOn = value => {
-        props.toSetEditOn(value);
-    };
+    // const toSetEditOn = value => {
+    //     props.toSetEditOn(value);
+    // };
 
     useEffect(() => {
         if(props.transactionToEdit?.name.length !== 0 && props.editOn === true){
             setFormValues(props.transactionToEdit);
         }
-    }, [props.transactionToEdit]);
+    }, [props.transactionToEdit]);  // eslint-disable-line
 
 
     const handleSubmit = (e) => {

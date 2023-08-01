@@ -27,7 +27,7 @@ function Goals(props) {
                     props.toSetAllGoals(oldGoals);
                 }
             })});
-    }, []);
+    }, []); // eslint-disable-line
     
     const deleteGoal = (goalToDelete, index) => {
         props.deleteGoal(goalToDelete, index);
