@@ -1,219 +1,200 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Transactions from './Transactions';
+import TransactionsForm from'./TransactionsForm';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../../config/Firebase';
+import { getDatabase, ref, push, set, onValue, remove} from "firebase/database";
+import Button from '@mui/material/Button';
+import EditDialogBox from '../EditDialogBox';
+import SuccessSnackbar from '../SuccessSnackbar';
+import '../Dashboard.css';
 import './Transactions.css';
 
-function TransactionsModal() {
-    const [formStatus, setFormStatus] = useState(false);
-    const [disableForm, setDisableForm] = useState(false);
-    const [deleteMode, setDeleteMode] = useState(false);
-    const [editMode, setEditMode] = useState(false);
+function TransactionsModal(props) {
+    const [ user ] = useAuthState(auth);
+    // Represents all transactions, read from database
+    const [ allTransactions, setAllTransactions ] = useState([]);
+    const [ modalOn, setModalOn ] = useState(false);
+    const [ formOn, setFormOn ] = useState(false);
+    // Sets edit mode on, necessary for useEffect in TransactionsForm, exiting while editing (with cancel and X) & dialog box
+    const [ editOn, setEditOn ] = useState(false);
+    const [ transactionToEdit, setTransactionToEdit ] = useState(null); 
+    const [ successSnackBarOn, setSuccessSnackBarOn ] = useState(false);
+    const [ dialogBoxOn, setDialogBoxOn ] = useState(false);
+    const [ exitWithCancelOn, setExitWithCancelOn ] = useState(false);
 
-    const initialValues = { name: "", category: 'Groceries', date: "", positive: false, value: "", reoccuring: false, id:1 };
-    const [formValues, setFormValues] = useState(initialValues);
-    const [formErrors, setFormErrors] = useState({});
-    const [newTransaction, setNewTransaction] = useState({});
-    const [submitSuccess, setSubmitSuccess] = useState(false);
+    // vvv this is odd, i have an issue where if i modify an element in a state array or obj React wont push for an update, so i add 1 to a count which DOES push for an update
+    // maybe i can try force update here
+    const [ count, setCount ] = useState(0);
 
-    const categories = ['Groceries', 'Entertainment', 'Goals', 'Rent'];
-    // Make this come in from props soon
 
-    // Handles incoming inputs from form, buttons or inputs
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormValues({...formValues, [name]: value});
-    }
-    const handleClick = (name, value) => {
-        setFormValues({...formValues, [name] : value})
-    }
 
-    const giveId = () => {
-        setFormValues({...formValues, id: Math.random()*1000});
-    }
-
-    // Validates inputs
-    const validate = (values) => {
-        const errors = {};
-
-        // Name
-        if(!values.name){
-            errors.name = 'Transaction name required.';
-        }
-        if(values.name.length > 10){
-            errors.name = 'Transaction name cannot exceed 10 characters.';
-        }
-        // Date
-        if( isNaN(values.date) || values.date < 1 || values.date > 30){
-            errors.date = 'Date must be a number between 1 and 30.';
-        }
-        if(!values.date){
-            errors.date = 'Transaction date required.';
-        }
-
-        // Values
-        if( isNaN(values.value) || values.value < 0.01 || values.value > 1000000){
-            errors.value = 'Value must be a number between 0.01 and 1,000,000.00.';
-        }
-        if(!values.value){
-            errors.value = 'Transaction value required.';
-        }
-
-        return errors;
-    }
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // check for errors
-        const errors = validate(formValues);
-        setFormErrors(errors);
-
-        // if there are no errors, add new transaction to newTransaction state and send to Transactions component, then reset form, form errors, and initalvalues, set form disabled and show success message
-        if(Object.keys(errors).length === 0){
-            setNewTransaction(formValues);
-            setSubmitSuccess(true);
-            // resetting form
-            setFormValues(initialValues);
-            setFormErrors({});
-        }
-    }
-
-    // make success message disappear after 10 seconds
-    useEffect(() => {
-        if(submitSuccess === true){
-            const timeoutID = setTimeout(() => {
-                setSubmitSuccess(false);
-              }, "10000")
-              return () => {
-                // 👇️ clear timeout when component unmounts
-                clearTimeout(timeoutID);
-              };
-        }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [submitSuccess]);
-
-    const editTransaction = (transaction) => {
-        setDisableForm(false);
-        setFormValues(transaction);
-        setEditMode(false);
+    const toSetFormOn = () => {
+        setFormOn(true);
     };
 
+    const toSetFormOff = () => {
+        setFormOn(false);
+        setExitWithCancelOn(false);
+    };
+
+    const toSetModalOn = () => {
+        setModalOn(true);
+    }
+
+    const toSetModalOff = () => {
+        setExitWithCancelOn(false);
+        // alerts with dialog box while transaction is being edited
+        if(editOn){
+            setDialogBoxOn(true);
+        } else {
+            setModalOn(!modalOn);
+            setFormOn(false);
+            setEditOn(false);
+        }
+    };
+
+    const toSetEditOn = () => {
+        setEditOn(true);
+    };
+
+    const toSetEditOff = () => {
+        setEditOn(false);
+    };
+
+    // Sets which goal to edit, turn on form  & edit mode for GoalsForm useEffect
+    const editTransaction = (transactionToEdit, index) => {
+        setTransactionToEdit(transactionToEdit, index);
+        setEditOn(true);
+        setFormOn(true);
+    };
+
+    const toSetAllTransactions = (newTransactions) => {
+        setAllTransactions(newTransactions);
+    };
+
+    const toSetExitWithCancelOn = () => {
+        setExitWithCancelOn(true);
+    }
+
+    // Open / turn off the dialog box from cancel (in form while editing)
+    const toSetDialogBoxOn = () => {
+        setDialogBoxOn(true);
+    };
+        
+    const toSetDialogBoxOff = () => {
+        setDialogBoxOn(false);
+    };
+
+    // Called when pressing 'exit anyway' on dialog box after pressing x
+    const exitDialogWithX = () => {
+        setExitWithCancelOn(false);
+        setModalOn(!modalOn);
+        setFormOn(false);
+        setEditOn(false);
+        setDialogBoxOn(false);
+    }
+
+    // Called when pressing 'exit anyway' on dialog box after pressing cancel
+    const exitDialogWithCancel = () => {
+        setFormOn(false);
+        setEditOn(false);
+        setDialogBoxOn(false);
+        setExitWithCancelOn(false);
+    }
+
+    // Turns off success snackbar alert
+    const toSetSuccessSnackBarOff = () => {
+        setSuccessSnackBarOn(false);
+    };
+
+    const createTransaction = (newTransaction) =>{
+        const db = getDatabase();
+        const dbTransactionRef = ref(db, user.uid + '/transactions');
+        const newTransactionPostRef = push(dbTransactionRef);
+        set(newTransactionPostRef, {
+            ...newTransaction
+        });
+        setCount(count + 1);
+        setEditOn(false);
+        setSuccessSnackBarOn(true);
+    };
+
+    const deleteTransaction = (transacitonToDelete, index) => {
+        const idToDel = transacitonToDelete.id;
+        const db = getDatabase();
+        const dbRef = ref(db, user.uid + '/transactions');
+        onValue(dbRef, (snapshot) => {
+                snapshot.forEach((childSnapshot) => {
+                    const childKey = childSnapshot.key;
+                    const childData = childSnapshot.val();
+                    if(childData.id === idToDel){
+                        let newTransactions = allTransactions;
+                        newTransactions.splice(index, 1);
+                        setAllTransactions(newTransactions);
+                        remove(ref(db, user.uid + `/transactions/${childKey}`));
+                    }
+                })});
+        setCount(count + 1);
+    };
+
+
+
     return (
-        <div className="transactionsModal">
-            TransactionsModal
-            <Transactions newTransaction={newTransaction} deleteMode={deleteMode} editMode={editMode} editTransaction={editTransaction}/>
-            <button onClick={ () => {setFormStatus(!formStatus);
-                                     setDisableForm(true);
-                                     setDeleteMode(false);}}>
-                {formStatus ? 'Exit Manage Transactions' : 'Manage Transactions'}
-            </button>
-            {formStatus && 
-                <div>
-                    <button onClick={() => {
-                        setDisableForm(false);
-                        setSubmitSuccess(false);
-                        setDeleteMode(false);
-                        setEditMode(false);
-                        setFormValues(initialValues);
-                    }}>Add</button>
-
-                    <button onClick={() => {
-                        setDisableForm(true);
-                        setDeleteMode(false);
-                        setEditMode(true);
-                        setSubmitSuccess(false);
-                    }}>Edit</button>
-
-                    <button onClick={() => {
-                        setDisableForm(true);
-                        setDeleteMode(true);
-                        setEditMode(false);
-                        setSubmitSuccess(false);
-                    }}>Delete</button>
-                    <form onSubmit={handleSubmit}>
-                        <fieldset disabled={ disableForm ?? 'disabled'}>
-                            <label>Name:
-                                <input 
-                                    type="text"    
-                                    name="name" 
-                                    placeholder="ex. Clothes" 
-                                    value={formValues.name}
-                                    onChange={handleChange}></input>
-                            </label>
-                            <p>{formErrors.name}</p>
-                            <br/>
-                            <label>Cateogry:
-                                <select
-                                    name="category" 
-                                    value={formValues.category} 
-                                    onChange={handleChange}>
-                                    {categories.map((category) => {
-                                        return(
-                                            <option 
-                                                defaultValue
-                                                value={`${category}`}
-                                                key={categories.indexOf(category)}
-                                                >{`${category}`}</option>
-                                    )})}</select>
-                            </label>
-                            <br/>
-                            <label>Day of the month:
-                                <input 
-                                    type="text" 
-                                    name="date" 
-                                    placeholder="ex. 11" 
-                                    value={formValues.date}
-                                    onChange={handleChange}></input>
-                            </label>
-                            <p>{formErrors.date}</p>
-                            <br/>
-                            <label>Value range:
-                                <input
-                                    disabled = {formValues.positive ?? 'disabled'}
-                                    type="button"
-                                    name="positive"
-                                    value='+'
-                                    onClick={() => handleClick('positive', true)}
-                                    ></input>
-                                <input
-                                    disabled = {!formValues.positive ?? 'disabled'}
-                                    type="button"
-                                    name="negative"
-                                    value= '-'
-                                    onClick={() => handleClick('positive', false)}
-                                    ></input>
-                            </label>
-                            <br/>
-                            <label>Value:
-                                {formValues.positive ? '+' : '-'}
-                                <input 
-                                    type="text" 
-                                    name="value" 
-                                    placeholder="ex. $1,000" 
-                                    value={formValues.value}
-                                    onChange={handleChange}></input>
-                            </label>
-                            <p>{formErrors.value}</p>
-                            <br/>
-                            <label>Reoccuring?
-                                <div>{formValues.reoccuring ? 'yes' : 'no'}</div>
-                                <input 
-                                    type="button" 
-                                    name="reoccuring" 
-                                    value='Switch'
-                                    onClick={() => handleClick('reoccuring', !formValues.reoccuring)}
-                                ></input>
-                            </label>
-                            <br/>
-                            <br/>
-                            <input 
-                                type="submit" 
-                                name="submit" 
-                                value="Submit"
-                                onClick={() => giveId()}></input>
-                        </fieldset>
-                    </form>
-                {submitSuccess ? <p>Transaction was a success!</p> : ''}
+        <div className="modal transactionsModal">
+            <div className="goals__spacebetween">
+                <h3 className="modal--title">Transactions</h3>
+                <Button className="btn" variant='contained' onClick={() => toSetModalOn()}>
+                    Manage Transactions
+                </Button>
+            </div>
+            <Transactions 
+                allTransactions={allTransactions}
+                toSetAllTransactions={toSetAllTransactions}
+                darkMode={props.darkMode}/>
+            {modalOn && 
+                <div className="overlay">
+                    <SuccessSnackbar
+                        message='Transaction created!' 
+                        successSnackBarOn={successSnackBarOn} 
+                        toSetSuccessSnackBarOff={toSetSuccessSnackBarOff}/>
+                    <EditDialogBox 
+                        dialogBoxOn={dialogBoxOn}
+                        toSetDialogBoxOff={toSetDialogBoxOff}
+                        toSetDialogBoxOffAndClearGoal={exitWithCancelOn ? exitDialogWithCancel : exitDialogWithX} 
+                        dialogTitle="Exit while editing your transaction?"
+                        dialogText="Exiting now will cause the transaction you are editing to be lost."/>
+                    <div className="overlay__modal">
+                        <div className="transactions--flex">
+                            <h3 className="modal--title">Transactions</h3>
+                            <Button onClick={() => toSetModalOff()} className="btn" variant='contained'>
+                                X
+                            </Button>
+                        </div>
+                        <div className="overlay--spacing">
+                            <Transactions
+                                modalOn={modalOn}
+                                toSetAllTransactions={toSetAllTransactions}
+                                allTransactions={allTransactions}
+                                deleteTransaction={deleteTransaction}
+                                editTransaction={editTransaction}
+                                darkMode={props.darkMode}/>
+                            <TransactionsForm 
+                                formOn={formOn}
+                                toSetFormOn={toSetFormOn}
+                                toSetFormOff={toSetFormOff}
+                                editOn={editOn}
+                                transactionToEdit={transactionToEdit}
+                                toSetEditOn={toSetEditOn}
+                                toSetEditOff={toSetEditOff}
+                                toSetExitWithCancelOn={toSetExitWithCancelOn}
+                                toSetDialogBoxOn={toSetDialogBoxOn}
+                                createTransaction={createTransaction}
+                                deleteTransaction={deleteTransaction}/>
+                        </div>
+                    </div>
                 </div>
-                }
+            }
         </div>
     );
 }

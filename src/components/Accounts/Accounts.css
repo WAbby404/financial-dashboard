@@ -1,0 +1,17 @@
+.accounts{
+   color: white;
+}
+
+.accountsModal{
+    grid-area: accounts;
+    border: 1px solid rgb(15, 10, 1);
+}
+
+.green{
+    color: green;
+}
+
+.red{
+    color:red;
+}
+

@@ -1,0 +1,61 @@
+.border {
+  border: 1px solid red;
+}
+
+.login__title {
+  margin: 0 2rem;
+  text-align: center;
+}
+
+.input--group {
+  display: flex;
+  flex-direction: column;
+  margin: 2rem;
+}
+
+.input-fields {
+  border-radius: 4px;
+  background-color: rgb(72, 67, 129);
+  box-shadow: none;
+  border: none;
+  padding: 10px;
+  color: rgb(242, 241, 255);
+  width: 100%;
+}
+
+.labels {
+  text-align: start;
+  color: #adbed6;
+  padding: 0 5px;
+}
+
+.btn--submit {
+  background-color: rgb(91, 149, 235);
+  border: none;
+  color: rgb(242, 241, 255);
+  padding: 10px;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+.btn--submit:hover {
+  box-shadow: 0px 5px 8px 1px rgba(91, 149, 235, 0.65);
+}
+
+textarea:focus, input:focus {
+  outline: none;
+  /* outline: 2px solid rgb(110, 103, 192); */
+  box-shadow: 0px 3px 10px 0px rgba(110, 103, 192, 0.4);
+}
+
+::-moz-placeholder {
+  color: rgb(205, 203, 238);
+}
+
+:-ms-input-placeholder {
+  color: rgb(205, 203, 238);
+}
+
+::placeholder {
+  color: rgb(205, 203, 238);
+}/*# sourceMappingURL=Forms.css.map */

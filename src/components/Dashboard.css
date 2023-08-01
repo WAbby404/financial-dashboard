@@ -1,0 +1,41 @@
+.dashboard{
+    width: 100%;
+    padding: 20px;
+    height: 100vh;
+}
+
+.dark{
+    background-color: #1c183d;
+    color: black;
+}
+
+.light{
+    background-color:rgb(232, 232, 240);
+}
+
+.dashboard__wrapper{
+    display:flex;
+    gap: 10px;
+}
+
+.dashboard__container{
+    width: 100%;
+    display:flex;
+    gap: 10px;
+    flex-direction: column;
+}
+
+.dashboard--info{
+    display:flex;
+    justify-content: space-between;
+}
+
+.dashboard__title{
+    color:var(--modal-title);
+}
+
+.dashboard__btn{
+    background: none;
+    border: none;
+    color: white;
+}

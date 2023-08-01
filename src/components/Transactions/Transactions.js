@@ -1,22 +1,45 @@
 import React, { useEffect, useState } from 'react';
+import { getDatabase, ref, onValue } from "firebase/database";
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../../config/Firebase';
+import { RxCounterClockwiseClock } from "react-icons/rx";
+import Button from '@mui/material/Button';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import './Transactions.css';
 
 function Transactions(props) {
-    const [oldId, setOldId] = useState(0);
-    const [allTransactions, setAllTransactions] = useState([]);
-    const [count, setCount] = useState(0);
-    // updating slow when element is deleted
+    const [ count, setCount ] = useState(0);
+    const [ user ] = useAuthState(auth);
 
-    // save incoming props to state on change 
     useEffect(()=> {
-        // if a transaction id from props exists & is not the same id as the old transaciton, add it to the list of all transactions
-        if(props.newTransaction?.id && props.newTransaction.id !== oldId){
-            const oldTransactions = allTransactions;
-            setOldId(props.newTransaction.id);
-            setAllTransactions([...oldTransactions, props.newTransaction]);
-        }
-         // eslint-disable-next-line
-    },[props.newTransaction])
+        const db = getDatabase();
+        const dbRef = ref(db, user.uid + '/transactions');
+        // console.log(user.uid);
+        onValue(dbRef, (snapshot) => {
+            snapshot.forEach((childSnapshot) => {
+                const childData = childSnapshot.val();
+                setCount(count + 1);
+                // if snapshot id is found in the alltransactions array dont add it
+                let check = props.allTransactions.some(item => item.id === childData.id);
+                if(!check){
+                    let oldTransactions = props.allTransactions;
+                    oldTransactions.push(childData);
+                    props.toSetAllTransactions(oldTransactions);
+                }
+            })});
+    }, []);
+
+    const deleteTransaction = (transacitonToDelete, index) => {
+        props.deleteTransaction(transacitonToDelete, index);
+        setCount(count + 1);
+    }
+
+    const editTransaction = (transaction, index) => {
+        props.editTransaction(transaction);
+        props.deleteTransaction(transaction, index);
+        setCount(count + 1);
+    }
 
     // sort transactions in decending order by date 
     const sortTransactions = transactions => {
@@ -27,60 +50,89 @@ function Transactions(props) {
         }
     };
 
-    const deleteTransaction = (transacitonToDelete) => {
-        const index = allTransactions.findIndex(transaction => transaction.id === transacitonToDelete.id);
-        const beforeDelete = allTransactions;
-        beforeDelete.splice(index, 1);
-        setAllTransactions(beforeDelete);
-        setCount(count +1);
-    };
-
-    const editTransaction = transaction => {
-        props.editTransaction(transaction);
-        deleteTransaction(transaction);
-    }
-
     const renderSwitch = (items) => {
         switch(true) {
             // case for 1 transaction
             case (items.length === 1):
                 return (
-                    <li key={items[0].id}>
-                        {items[0].name}
-                        <br/>
-                        {items[0].category}
-                        <br/>
-                        {items[0].reoccuring ? 'yes': 'no'}
-                        <div data-testid='date'>{items[0].date}</div>
-                        <div>
-                        {items[0].positive ? '+' : '-' }
-                        {items[0].value}
+                    <li key={items[0].id} className="transaction">
+                        <div className="flex">
+                            <div className="flex-stack">
+                                {props.modalOn && 
+                                    <Button size="small" color="error" variant="outlined" onClick={() => editTransaction(items[0], 0)}>
+                                        <EditIcon/>
+                                    </Button>
+                                }
+                                {props.modalOn && 
+                                    <Button size="small" variant="contained" onClick={() => deleteTransaction(items[0], 0)}>
+                                        <DeleteIcon/>
+                                    </Button>
+                                }
+                            </div>
                         </div>
-                        <br/>
-                        {props.editMode && <button onClick={() => editTransaction(items[0])}>Select</button>}
-                        {props.deleteMode && <button onClick={() => deleteTransaction(items)}>Delete</button>}   
+                        <div className="transaction">
+                            <div>
+                                <div className={`${items[0].positive ? 'transaction--positive' : 'transaction--negative'}`}>{items[0].name}</div>
+                                <div className="transaction--category">{items[0].category}</div>
+                            </div>
+                            <div className="flex">
+                                <div>{items[0].date}</div>
+                            </div>
+                            <div className="flex-stack">
+                                <div className={`${items[0].positive ? 'transaction--positive' : 'transaction--negative'}`}>
+                                    {items[0].positive ? '+' : '-' }
+                                    $
+                                    {items[0].value}
+                                </div>
+                                <div>
+                                    {items[0].account}
+                                </div>
+                            </div>
+                        </div>
                     </li>
                 );
 
             // case for multiple transactions
             case (items.length > 1):
                 return (
-                    sortTransactions(items).map(item => {
+                    sortTransactions(items).map((item, index) => {
                         return(
                             <li key={item.id}>
-                                {item.name}
-                                <br/>
-                                {item.category}
-                                <br/>
-                                {item.reoccuring ? 'yes': 'no'}
-                                <div data-testid='date'>{item.date}</div>
-                                <div>
-                                    {item.positive ? '+' : '-' }
-                                    {item.value}
+                                <div className="flex">
+                                    <div className="flex-stack">
+                                        {props.modalOn && 
+                                            <Button size="small" color="error" variant="outlined" 
+                                                onClick={() => editTransaction(item, index)}><EditIcon/></Button>
+                                        }
+                                        {props.modalOn && 
+                                            <Button size="small" variant="contained"
+                                                onClick={() => deleteTransaction(item, index)} data-testid="transactionDelete"><DeleteIcon/></Button>
+                                        }
+                                    </div>
+                                    <div className="transaction">
+                                        <div>
+                                            <div className={`${item.positive ? 'transaction--positive' : 'transaction--negative'}`}>{item.name}</div>
+                                            <div className="transaction--category">{item.category}</div>
+                                        </div>
+                                        <div className="flex">
+                                            <div>{item.reoccuring ? <RxCounterClockwiseClock /> : ''}</div>
+                                            <div>{item.date}</div>
+                                        </div>
+                                        <div className="flex-stack">
+                                            <div className={`${item.positive ? 'transaction--positive' : 'transaction--negative'}`}>
+                                                {item.positive ? '+' : '-' }
+                                                $
+                                                {item.value}
+                                            </div>
+                                            <div>
+                                                {item.account}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <br/>
-                                {props.editMode && <button onClick={() => editTransaction(item)}>Select</button>}
-                                {props.deleteMode && <button onClick={() => deleteTransaction(item)}>Delete</button>}
+                                
+
+                                <hr/>
                             </li>
                         );
                     })
@@ -93,16 +145,13 @@ function Transactions(props) {
     };
 
 return (
-        <section>
-            <div>
-                <div className="transactions">
-                    <div>Transactions</div>
-                    {renderSwitch(allTransactions)}
-                </div>
-            </div>
-        </section>
+    <div className="transactions">
+        <ul className="transactions__list">
+            {renderSwitch(props.allTransactions)}
+        </ul>
+
+    </div>
     );
 }
-
 
 export default Transactions;
