@@ -15,6 +15,7 @@ function SpendingModal(props) {
     return (
         <div className="modal spendingModal">
             <h3 className="modal--title">Spending</h3>
+            <div>for new push</div>
             <Spending 
                 spendingValues={spendingValues}
                toSetAllSpendingValues={toSetAllSpendingValues} />
