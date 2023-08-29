@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import capitalizeName from '../capitalizeName';
-import validateAccounts from './validateAccounts';
+import validateAccount from './validateAccount';
 
 function AccountsForm(props) {
     const initialValues = { name: "", total: 0, debit: undefined, id:Math.random()*1000 };
@@ -32,7 +32,7 @@ function AccountsForm(props) {
         e.preventDefault();
         console.log(formValues);
         // console.log(uniqueAccountNames);
-        const errors = validateAccounts(formValues);
+        const errors = validateAccount(formValues);
         // If there are no errors, send transaction to database
         if(Object.keys(errors).length === 0){
             // let oldNames = uniqueAccountNames;

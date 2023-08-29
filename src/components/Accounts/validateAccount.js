@@ -1,4 +1,4 @@
-function validateAccounts(values) {
+function validateAccount(values) {
     // account name needs to be unqiue
     const errors = {}; 
     if(!values.name){
@@ -14,4 +14,4 @@ function validateAccounts(values) {
     return errors;
 }
 
-export default validateAccounts;
+export default validateAccount;
