@@ -2,8 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-import validateAccounts from './validateAccounts';
 import capitalizeName from '../capitalizeName';
+import validateAccounts from './validateAccounts';
 
 function AccountsForm(props) {
     const initialValues = { name: "", total: 0, debit: undefined, id:Math.random()*1000 };
