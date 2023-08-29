@@ -1,29 +1,34 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import ToggleButton from '@mui/material/ToggleButton';
-import ValidateTransaction from './ValidateTransaction';
+import validateTransaction from './validateTransaction';
+import capitalizeName from '../capitalizeName';
+import RemoveIcon from '@mui/icons-material/Remove';
+import AddIcon from '@mui/icons-material/Add';
+import { getDatabase, ref, onValue, update } from "firebase/database";
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../../config/Firebase';
 
 function TransactionsForm(props) {
     const initialValues = { name: "", account: null, category: null, date: "", positive: false, value: "", id: Math.random()*1000 };
+    const initialCategories = [
+        {label: 'Personal', showInSpending: true},
+        {label: 'Housing', showInSpending: true},
+        {label: 'Health', showInSpending: true},
+        {label: 'Transportation', showInSpending: true},
+        {label: 'Entertainment', showInSpending: true},
+        {label: 'Food', showInSpending: true},
+        {label: 'Money In', showInSpending: false},
+        {label: 'Transfer', showInSpending: false},
+        {label: 'Credit Card Payment', showInSpending: false},
+    ];
+    const [ user ] = useAuthState(auth);
     const [ formValues, setFormValues ] = useState(initialValues);
     const [ formErrors, setFormErrors ] = useState({});
-    const categories = [
-        {label: 'Groceries', showInSpending: true},
-        {label: 'Credit Card Payment', showInSpending: false},
-        {label: 'Entertainment', showInSpending: true},
-        {label: 'Profit', showInSpending: false},
-        {label: 'Living Expense', showInSpending: true},
-        {label: 'Eating Out', showInSpending: true},
-        {label: 'Miscellanious', showInSpending: true},
-    ];
-    const accounts = [
-        {label: 'Checking', total: 250},
-        {label: 'Savings', total: 250},
-        {label: 'Credit Cards', total: 250},
-    ]
+    const [ categories, setCategories ] = useState(initialCategories);
+    const [ allAccounts, setAllAccounts ] = useState([]);
+    const topInputBox = useRef();
 
     const toSetFormOn = setModeTo =>{
         props.toSetEditOff();
@@ -32,41 +37,73 @@ function TransactionsForm(props) {
         props.toSetFormOn(setModeTo);
     };
 
-    // const toSetEditOn = value => {
-    //     props.toSetEditOn(value);
-    // };
+    const setFocus = () => {
+        topInputBox.current.focus();
+    };
 
     useEffect(() => {
         if(props.transactionToEdit?.name.length !== 0 && props.editOn === true){
+            setFocus();
             setFormValues(props.transactionToEdit);
         }
     }, [props.transactionToEdit]);  // eslint-disable-line
 
 
     const handleSubmit = (e) => {
-        // if credit card, & positive then category is credit card payment
-        // console.log(formValues);
-        // console.log(formErrors);
         e.preventDefault();
-        const errors = ValidateTransaction(formValues);
+        const errors = validateTransaction(formValues);
         // If there are no errors, send transaction to database
         // console.log(Object.keys(errors));
         if(Object.keys(errors).length === 0){
-            // console.log('transaction sent up');
             props.createTransaction(formValues);
+            setFocus();
             // Reset form and show success message
             toSetFormOn();
+
+            reflectTransactionInAccounts(formValues);
+            // reflect transaction in account here
+
         } else {
             setFormErrors(errors);
         }
     };
 
+
+    const reflectTransactionInAccounts = (formValues) => {
+        const db = getDatabase();
+        const dbRef = ref(db, user.uid + '/accounts/');
+        let accountTotal = 0;
+        let accountId = `${user.uid}/accounts/`;
+        let transferToTotal = 0;
+        let transferToId = `${user.uid}/accounts/`;
+        onValue(dbRef, (snapshot) => {
+            snapshot.forEach((childSnapshot) => {
+                const childData = childSnapshot.val();
+                if (childData.name === formValues.account){
+                    accountId += `${childSnapshot.key}`;
+                    if(formValues.positive){
+                        // unary operator (+ infront of childData.total & formValues.value) convert strings to numbers to add them together
+                        accountTotal = +childData.total + +(parseFloat(formValues.value)).toFixed(2);
+                    } else {
+                        accountTotal = +childData.total - +(parseFloat(formValues.value)).toFixed(2);
+                    }
+                }
+                if(formValues.transferTo){
+                    if (childData.name === formValues.transferTo){
+                        transferToId += `${childSnapshot.key}`;
+                        transferToTotal = +childData.total + +(parseFloat(formValues.value)).toFixed(2);
+                    }
+                    let transferUpdatedRef = ref(db, transferToId);
+                    update(transferUpdatedRef, {total: transferToTotal});
+                }
+        })
+        },{onlyOnce: true});
+        let updatedRef = ref(db, accountId);
+        update(updatedRef, {total: accountTotal});
+    }
+
     const handleChange = (e) => {
-        // console.log(e);
-        // console.log(e.target);
         const { name, value } = e.target;
-        // console.log(name);
-        // console.log(value);
         setFormValues({...formValues, [name]: value});
         setFormErrors({...formErrors, [name]: null});
         if(name === 'positive' && value === 'true'){
@@ -74,7 +111,6 @@ function TransactionsForm(props) {
         } else if (name === 'positive' && value === 'false'){
             setFormValues({...formValues, positive: false});
         }
-        // console.log(formValues);
     }
 
     // Exit form with cancel button
@@ -95,16 +131,31 @@ function TransactionsForm(props) {
 
     const giveId = () => {
         setFormValues({...formValues, id: Math.random()*1000});
+        capitalizeName(formValues, setFormValues);
+    }
+
+    const setTransferToAccounts = () => {
+        const currentAccount = formValues?.account;
+        let transferToAccounts = allAccounts.filter((account) => (account.label !== currentAccount && account.debit));
+        return transferToAccounts;
     }
 
     const handleOptionChangeCategory = (event, newValue) => {
+        // if certain category is selected, positive changes depending on which category it is
         // if there is no value set formvalue to null
         if(!newValue){
             setFormValues({...formValues, category: null});
         // if there is a value, clear form error for category
         } else {
-            setFormValues({...formValues, category: newValue.label});
+            // console.log(newValue.label);
             setFormErrors({...formErrors, category: null});
+            if( newValue.label === 'Money In' || newValue.label === 'Credit Card Payment'){
+                setFormValues({...formValues, positive: true, category: newValue.label });
+            } else if (newValue.label === 'Transfer') {
+                setFormValues({...formValues, positive: false, category: newValue.label, transferTo: null });
+            } else {
+                setFormValues({...formValues, positive: false, category: newValue.label });
+            }
         }
     }
 
@@ -114,109 +165,213 @@ function TransactionsForm(props) {
             setFormValues({...formValues, account: null});
         // if there is a value, clear form error for category
         } else {
-            setFormValues({...formValues, account: newValue.label});
+            setFormValues({...formValues, account: newValue.label, category:null});
             setFormErrors({...formErrors, account: null});
+            // Conditional for which categories are enabled when certain accounts are selected
+            if(newValue.debit){
+                let newCategories = categories.filter((category) => category.label !== 'Credit Card Payment');
+                if(!newCategories.some((category) => category.label === 'Transfer')){
+                    newCategories.push({label: 'Transfer', showInSpending: false});
+                }
+                if(!newCategories.some((category) => category.label === 'Money In')){
+                    newCategories.push({label: 'Money In', showInSpending: false});
+                }
+                setCategories(newCategories);
+            } else if (!newValue.debit){
+                let newCategories = categories.filter((category) => category.label !== 'Transfer' && category.label !== 'Money In');
+                if(!newCategories.some((category) => category.label === 'Credit Card Payment')){
+                    newCategories.push({label: 'Credit Card Payment', showInSpending: false});
+                }
+                setCategories(newCategories);
+            }
         }
+    }
+
+    const handleOptionChangeTransferTo = (event, newValue) => {
+        if(!newValue){
+            setFormValues({...formValues, transferTo: ''});
+        } else { 
+            setFormValues({...formValues, transferTo: newValue.label});
+            setFormErrors({...formErrors, transferTo: null});
+        }
+    };
+
+    const renderAccounts = () => {
+        let formattedAccounts = [];
+        const db = getDatabase();
+        const dbRef = ref(db, user.uid + '/accounts');
+        onValue(dbRef, (snapshot) => {
+            snapshot.forEach((childSnapshot) => {
+                const childData = childSnapshot.val();
+                if(!childData.id){
+                    let values = Object.values(childData);
+                    values.forEach((account) => {
+                        formattedAccounts.push({ label:account.name, debit:account.debit });
+                    })
+                } else {
+                    formattedAccounts.push({ label:childData.name, debit:childData.debit });
+                }
+            })}
+            ,{onlyOnce: true}
+            );
+        setAllAccounts(formattedAccounts);
     }
 
     const transactionForm = () => {
         return(
-            <form onSubmit={handleSubmit} className="flex-stack">
-                <h4 className="goal__title">{props.editOn === false ? 'Create your transaction' : 'Edit your transaction' }</h4>
-                <Autocomplete
-                    name="account"
-                    value={formValues?.account}
-                    onChange={(event, newValue) => handleOptionChangeAccount(event, newValue)}
-                    disablePortal
-                    id="combo-box-demo"
-                    options={accounts}
-                    sx={{ width: 300 }}
-                    renderInput={(params) => <TextField {...params} label="Account" 
-                                                name="account" 
-                                                error={formErrors?.account ? true : false} 
-                                                helperText={formErrors?.account}/>}
-                    isOptionEqualToValue={(option, value) => option.label === value}/>
-                    <Autocomplete
-                    name="category"
-                    value={formValues?.category}
-                    onChange={(event, newValue) => handleOptionChangeCategory(event, newValue)}
-                    disablePortal
-                    id="combo-box-demo"
-                    options={categories}
-                    sx={{ width: 300 }}
-                    renderInput={(params) => <TextField {...params} label="Category" 
-                                                name="category" 
-                                                error={formErrors?.category ? true : false} 
-                                                helperText={formErrors?.category}
-                                />}
-                    isOptionEqualToValue={(option, value) => option.label === value}/>
-                <div className="flex">
-                    <ToggleButtonGroup
-                        orientation="vertical"
-                        value={formValues?.positive}
-                        exclusive
-                        onChange={handleChange}>
-                        <ToggleButton value={true} aria-label="list" name='positive' size="small">
-                            +
-                        </ToggleButton>
-                        <ToggleButton value={false} aria-label="list" name='positive' size="small">
-                            -
-                        </ToggleButton>
-                    </ToggleButtonGroup>
-                    <TextField
-                        id="filled-basic"
-                        label="Value"
-                        variant="filled"
-                        name="value"
-                        value={formValues.value}
-                        onChange={handleChange}
-                        error={formErrors?.value ? true : false}
-                        helperText={formErrors?.value}/>
-                </div>
-                <TextField
-                    id="filled-basic"
-                    label="Day of month"
-                    variant="filled"
-                    name="date"
-                    value={formValues.date}
-                    onChange={handleChange}
-                    error={formErrors?.date ? true : false}
-                    helperText={formErrors?.date}/>
-                <TextField
-                    id="filled-basic" 
-                    label="Transaction name" 
-                    variant="filled"
-                    name="name"
-                    value={formValues.name}
-                    onChange={handleChange}
-                    error={formErrors?.name ? true : false}
-                    helperText={formErrors?.name}/>
-                    <div className="flex">
-                        <Button variant='contained' type="submit" onClick={() => giveId()}>
-                        {props.editOn === false ? 'Create transaction' : 'Finalize Edits' }
+            <div className='flex flex-col justify-center md:gap-3'>
+                <h4 className="text-indigo-300 font-medium sm:text-base xl:text-lg">
+                    {props.editOn === false ? 'Create your transaction' : 'Edit your transaction'}
+                </h4>
+                <form onSubmit={handleSubmit} className="flex flex-col gap-1">
+                    <div className="flex flex-col gap-2 sm:grid sm:grid-cols-2 sm:gap-0.5 md:flex md:flex-col md:justify-center md:m-auto md:gap-3">
+                        <TextField
+                            id="filled-basic"
+                            label="Title"
+                            variant="outlined"
+                            size="small"
+                            name="name"
+                            value={formValues.name}
+                            onChange={handleChange}
+                            error={formErrors?.name ? true : false}
+                            helperText={formErrors?.name}
+                            sx={{ width: {
+                                xs: 150,
+                                sm: 150,
+                                md: 300,
+                                },
+                                margin:'auto'  }}
+                            inputRef={topInputBox}/>
+                        <Autocomplete
+                            name="account"
+                            value={formValues?.account}
+                            onChange={(event, newValue) => handleOptionChangeAccount(event, newValue)}
+                            disablePortal
+                            id="combo-box-demo"
+                            size="small"
+                            options={allAccounts}
+                            sx={{ width: {
+                                xs: 150,
+                                sm: 150,
+                                md: 300,
+                                },
+                                margin:'auto'  }}
+                            renderInput={(params) => <TextField {...params} label="Account"
+                                                        name="account"
+                                                        error={formErrors?.account ? true : false}
+                                                        helperText={formErrors?.account}/>}
+                            isOptionEqualToValue={(option, value) => option.label === value}/>
+                        <Autocomplete
+                            name="category"
+                            value={formValues?.category}
+                            onChange={(event, newValue) => handleOptionChangeCategory(event, newValue)}
+                            disablePortal
+                            size="small"
+                            disabled={formValues?.account ? false : true}
+                            id="combo-box-demo"
+                            options={categories}
+                            sx={{ width: {
+                                xs: 150,
+                                sm: 150,
+                                md: 300,
+                                },
+                                margin:'auto'  }}
+                            renderInput={(params) => <TextField {...params} label="Category"
+                                                        name="category"
+                                                        error={formErrors?.category ? true : false}
+                                                        helperText={formErrors?.category}
+                                        />}
+                            isOptionEqualToValue={(option, value) => option.label === value}/>
+                        {formValues?.category === 'Transfer' ?
+                            <Autocomplete
+                                name="transferTo"
+                                value={formValues?.transferTo}
+                                onChange={(event, newValue) => handleOptionChangeTransferTo(event, newValue)}
+                                disablePortal
+                                size="small"
+                                id="combo-box-demo"
+                                options={setTransferToAccounts()}
+                                sx={{ width: {
+                                    xs: 150,
+                                    sm: 150,
+                                    md: 300,
+                                    },
+                                    margin:'auto'  }}
+                                renderInput={(params) => <TextField {...params} label="Transfer To"
+                                                            name="category"
+                                                            error={formErrors?.transferTo ? true : false}
+                                                            helperText={formErrors?.transferTo}
+                                            />}
+                                isOptionEqualToValue={(option, value) => {
+                                    return option.label === value;
+                                }}/>
+                        : ''}
+                        <div className="flex items-center m-auto">
+                            <div className="text-indigo-300">{formValues?.positive ? <AddIcon/> : <RemoveIcon/> }</div>
+                            <TextField
+                                id="filled-basic"
+                                label="Value"
+                                variant="outlined"
+                                name="value"
+                                size="small"
+                                disabled={formValues?.category ? false : true}
+                                value={formValues.value}
+                                onChange={handleChange}
+                                sx={{ width: {
+                                    xs: 125,
+                                    sm: 125,
+                                    md: 275,
+                                    },
+                                    margin:'auto'  }}
+                                error={formErrors?.value ? true : false}
+                                helperText={formErrors?.value}/>
+                        </div>
+                        <TextField
+                            id="filled-basic"
+                            label="Day of month"
+                            variant="outlined"
+                            size="small"
+                            name="date"
+                            disabled={formValues?.category ? false : true}
+                            value={formValues.date}
+                            onChange={handleChange}
+                            sx={{ width: {
+                                xs: 150,
+                                sm: 150,
+                                md: 300,
+                                },
+                                margin:'auto'  }}
+                            error={formErrors?.date ? true : false}
+                            helperText={formErrors?.date}/>
+                    </div>
+                    <div className="flex flex-col gap-2 pt-2 justify-center sm:flex-row sm:w-full sm:flex-auto sm:pt-0 md:gap-3">
+                        <Button sx={props.buttonStyles} type="submit" size="small" onClick={() => giveId()}>
+                            {props.editOn === false ? 'Create' : 'Finalize' }
                         </Button>
-                        <Button variant='outlined' onClick={() => toSetFormOff()}>
+                        <Button sx={props.buttonStyles} size="small" onClick={() => toSetFormOff()}>
                             Cancel
                         </Button>
                     </div>
                 </form>
+            </div>
         )
     }
 
-
-
     return (
-        <div>
+        <article className="basis-40 sm:basis-7/12 md:basis-1/2">
             {props.formOn === true ? transactionForm() :
-                <div className="flex">
-                    <div className="goals--text">
+                <div className="flex flex-col">
+                    <div className="text-indigo-300 font-medium">
                         Edit, Delete or
                     </div>
-                    <Button variant='contained'
-                        onClick={() => toSetFormOn(true)}>Create new transaction</Button>
+                    <Button sx={props.buttonStyles}
+                        onClick={() => {
+                            renderAccounts();
+                            toSetFormOn(true);
+                            }}>Create new transaction</Button>
                 </div>
             }
-        </div>
+        </article>
     );
 }
 

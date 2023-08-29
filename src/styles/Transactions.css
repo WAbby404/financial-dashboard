@@ -36,6 +36,10 @@
     padding: 15px;
 }
 
+.align-self{
+    align-self: center;
+}
+
 .transaction__value{
     display:flex;
 }

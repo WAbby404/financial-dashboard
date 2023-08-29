@@ -3,12 +3,12 @@ import Transactions from './Transactions';
 import TransactionsForm from'./TransactionsForm';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../../config/Firebase';
-import { getDatabase, ref, push, set, onValue, remove} from "firebase/database";
+import { getDatabase, ref, push, set, onValue, remove, update } from "firebase/database";
 import Button from '@mui/material/Button';
 import EditDialogBox from '../EditDialogBox';
 import SuccessSnackbar from '../SuccessSnackbar';
-import '../Dashboard.css';
-import './Transactions.css';
+import ErrorSnackbar from '../ErrorSnackbar';
+import DeleteSnackbar from '../DeleteSnackbar';
 
 function TransactionsModal(props) {
     const [ user ] = useAuthState(auth);
@@ -19,13 +19,14 @@ function TransactionsModal(props) {
     // Sets edit mode on, necessary for useEffect in TransactionsForm, exiting while editing (with cancel and X) & dialog box
     const [ editOn, setEditOn ] = useState(false);
     const [ transactionToEdit, setTransactionToEdit ] = useState(null); 
-    const [ successSnackBarOn, setSuccessSnackBarOn ] = useState(false);
+    const [ successSnackbarOn, setSuccessSnackbarOn ] = useState(false);
+    const [ errorSnackbarOn, setErrorSnackbarOn ] = useState(false);
+    const [ deleteSnackbarOn, setDeleteSnackbarOn ] = useState(false);
     const [ dialogBoxOn, setDialogBoxOn ] = useState(false);
     const [ exitWithCancelOn, setExitWithCancelOn ] = useState(false);
 
     // vvv this is odd, i have an issue where if i modify an element in a state array or obj React wont push for an update, so i add 1 to a count which DOES push for an update
     // maybe i can try force update here
-    const [ count, setCount ] = useState(0);
 
 
 
@@ -40,6 +41,9 @@ function TransactionsModal(props) {
 
     const toSetModalOn = () => {
         setModalOn(true);
+        window.scroll(0, 0);
+        const body = document.querySelector("body");
+        body.style.overflow = "hidden";
     }
 
     const toSetModalOff = () => {
@@ -51,6 +55,9 @@ function TransactionsModal(props) {
             setModalOn(!modalOn);
             setFormOn(false);
             setEditOn(false);
+            const body = document.querySelector("body");
+            body.style.overflow = "auto";
+            toSetSuccessSnackbarOff();
         }
     };
 
@@ -89,10 +96,12 @@ function TransactionsModal(props) {
     // Called when pressing 'exit anyway' on dialog box after pressing x
     const exitDialogWithX = () => {
         setExitWithCancelOn(false);
-        setModalOn(!modalOn);
+        setModalOn(false);
         setFormOn(false);
         setEditOn(false);
         setDialogBoxOn(false);
+        const body = document.querySelector("body");
+        body.style.overflow = "auto";
     }
 
     // Called when pressing 'exit anyway' on dialog box after pressing cancel
@@ -101,11 +110,21 @@ function TransactionsModal(props) {
         setEditOn(false);
         setDialogBoxOn(false);
         setExitWithCancelOn(false);
+        const body = document.querySelector("body");
+        body.style.overflow = "auto";
     }
 
     // Turns off success snackbar alert
-    const toSetSuccessSnackBarOff = () => {
-        setSuccessSnackBarOn(false);
+    const toSetSuccessSnackbarOff = () => {
+        setSuccessSnackbarOn(false);
+    };
+
+    const toSetErrorSnackbarOff = () => {
+        setErrorSnackbarOn(false);
+    };
+
+    const toSetDeleteSnackbarOff = () => {
+        setDeleteSnackbarOn(false);
     };
 
     const createTransaction = (newTransaction) =>{
@@ -114,13 +133,18 @@ function TransactionsModal(props) {
         const newTransactionPostRef = push(dbTransactionRef);
         set(newTransactionPostRef, {
             ...newTransaction
-        });
-        setCount(count + 1);
+        })
+        .then(() => {
+            setSuccessSnackbarOn(true);
+        })
+        .catch((error) => {
+            console.log(error);
+            setErrorSnackbarOn(true, error);
+        })
         setEditOn(false);
-        setSuccessSnackBarOn(true);
     };
 
-    const deleteTransaction = (transacitonToDelete, index) => {
+    const deleteTransaction = (transacitonToDelete, index, editOnTrue) => {
         const idToDel = transacitonToDelete.id;
         const db = getDatabase();
         const dbRef = ref(db, user.uid + '/transactions');
@@ -132,51 +156,92 @@ function TransactionsModal(props) {
                         let newTransactions = allTransactions;
                         newTransactions.splice(index, 1);
                         setAllTransactions(newTransactions);
-                        remove(ref(db, user.uid + `/transactions/${childKey}`));
+                        remove(ref(db, user.uid + `/transactions/${childKey}`))
+                        .then(() => {
+                            if(!editOnTrue){
+                                setDeleteSnackbarOn(true);
+                            }
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                            setErrorSnackbarOn(true, error);
+                        });
                     }
-                })});
-        setCount(count + 1);
+                })
+        },{onlyOnce: true});
+        reflectDeleteTransaction(transacitonToDelete);
     };
 
-
+    const reflectDeleteTransaction = (formValues) => {
+        const db = getDatabase();
+        const dbRef = ref(db, user.uid + '/accounts/');
+        let accountTotal = 0;
+        let accountId = `${user.uid}/accounts/`;
+        onValue(dbRef, (snapshot) => {
+            snapshot.forEach((childSnapshot) => {
+                const childData = childSnapshot.val();
+                if(childData.name === formValues.account){
+                    accountId += `${childSnapshot.key}`;
+                    if(formValues.positive){
+                        accountTotal = +childData.total - +(parseFloat(formValues.value)).toFixed(2);
+                    } else {
+                        accountTotal = +childData.total + +(parseFloat(formValues.value)).toFixed(2);
+                    }
+                }
+            })
+        },{onlyOnce: true});
+        let updatedRef = ref(db, accountId);
+        update(updatedRef, {total: accountTotal});
+    }
 
     return (
-        <div className="modal transactionsModal">
-            <div className="goals__spacebetween">
-                <h3 className="modal--title">Transactions</h3>
-                <Button className="btn" variant='contained' onClick={() => toSetModalOn()}>
-                    Manage Transactions
-                </Button>
+        <section className="w-full order-2 xl:col-span-3 xl:row-span-12 xl:w-full xl:h-full xl:order-3">
+            <div className="bg-indigo-900 rounded-sm p-3 m-3 flex flex-col gap-2 max-h-80 sm:w-10/12 sm:m-auto md:w-9/12 xl:w-full xl:h-full xl:max-h-none">
+                <header className="flex justify-between">
+                    <h2 className="text-indigo-300 font-bold text-xl">Transactions</h2>
+                    <Button sx={props.buttonStyles} onClick={() => toSetModalOn()}>
+                        Manage Transactions
+                    </Button>
+                </header>
+                <Transactions 
+                    allTransactions={allTransactions}
+                    toSetAllTransactions={toSetAllTransactions}
+                    darkMode={props.darkMode}/>
             </div>
-            <Transactions 
-                allTransactions={allTransactions}
-                toSetAllTransactions={toSetAllTransactions}
-                darkMode={props.darkMode}/>
             {modalOn && 
-                <div className="overlay">
+                <div className="absolute bg-gray-950/75 w-full h-screen z-50 top-0 p-3 flex flex-col justify-center items-center xl:inset-x-0">
+                    <DeleteSnackbar
+                        message='Transaction deleted.'
+                        deleteSnackbarOn={deleteSnackbarOn}
+                        toSetDeleteSnackbarOff={toSetDeleteSnackbarOff}/>
+                    <ErrorSnackbar
+                        message='Error with transaction.'
+                        errorSnackbarOn={errorSnackbarOn}
+                        toSetErrorSnackbarOff={toSetErrorSnackbarOff}/>
                     <SuccessSnackbar
                         message='Transaction created!' 
-                        successSnackBarOn={successSnackBarOn} 
-                        toSetSuccessSnackBarOff={toSetSuccessSnackBarOff}/>
+                        successSnackbarOn={successSnackbarOn} 
+                        toSetSuccessSnackbarOff={toSetSuccessSnackbarOff}/>
                     <EditDialogBox 
                         dialogBoxOn={dialogBoxOn}
                         toSetDialogBoxOff={toSetDialogBoxOff}
                         toSetDialogBoxOffAndClearGoal={exitWithCancelOn ? exitDialogWithCancel : exitDialogWithX} 
                         dialogTitle="Exit while editing your transaction?"
                         dialogText="Exiting now will cause the transaction you are editing to be lost."/>
-                    <div className="overlay__modal">
-                        <div className="transactions--flex">
-                            <h3 className="modal--title">Transactions</h3>
-                            <Button onClick={() => toSetModalOff()} className="btn" variant='contained'>
+                    <article className="container h-[37rem] w-full bg-indigo-900 p-3 sm:max-h-[98vh] md:w-10/12 md:max-h-[60%] lg:max-h-[85%] xl:max-w-[50%]">
+                        <header className="flex justify-between">
+                            <h2 className="text-indigo-300 font-bold text-xl">Transactions</h2>
+                            <Button onClick={() => toSetModalOff()} className="btn" size="small" sx={props.buttonStyles}>
                                 X
                             </Button>
-                        </div>
-                        <div className="overlay--spacing">
+                        </header>
+                        <div className="flex gap-2 mt-2 h-5/6 m-auto justify-center md:w-11/12 md:gap-3 xl:gap-10">
                             <Transactions
                                 modalOn={modalOn}
                                 toSetAllTransactions={toSetAllTransactions}
                                 allTransactions={allTransactions}
                                 deleteTransaction={deleteTransaction}
+                                editOn={editOn}
                                 editTransaction={editTransaction}
                                 darkMode={props.darkMode}/>
                             <TransactionsForm 
@@ -190,12 +255,13 @@ function TransactionsModal(props) {
                                 toSetExitWithCancelOn={toSetExitWithCancelOn}
                                 toSetDialogBoxOn={toSetDialogBoxOn}
                                 createTransaction={createTransaction}
-                                deleteTransaction={deleteTransaction}/>
+                                deleteTransaction={deleteTransaction}
+                                buttonStyles={props.buttonStyles}/>
                         </div>
-                    </div>
+                    </article>
                 </div>
             }
-        </div>
+        </section>
     );
 }
 

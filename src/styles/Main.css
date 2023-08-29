@@ -1,4 +1,7 @@
-/* Flex, btn  */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 *{
     box-sizing: border-box;
     margin: 0;
@@ -8,156 +11,20 @@
     font-weight: 400;
     font-display: swap;
 }
-  
-body, html {
-    height: 100%;
-}
-  
-:root{
-    --positive-green: green;
-    --negative-red: red;
-    --transfer-yellow: yellow;
 
-    --btn-background: #4e5279;
-    --btn-text: #e1daff;
-  
-    --modal-title: #D7CDff;
-    --modal-background: #2e2270;
+html, body{
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0px !important; 
+    padding: 0px !important;
+    overflow-x: hidden !important; 
 }
 
-.border{
-    border: 1px solid red;
+/* Scrollbars */
+
+body::-webkit-scrollbar{
+    display:none;
 }
-
-.flex{
-    display:flex;
-}
-
-ul{
-    text-decoration: none;
-    list-style-type: none;
-}
-
-/* Button */
-
-
-.btn{
-    background-color:var(--btn-background);
-    box-shadow: 0px 2px 2px 1px rgba(33, 34, 56, 0.486);
-    border: none;
-    border-radius: 4px;
-    color: var(--btn-text);
-    padding: .5em;
-    font-size: 15px;
-    align-self: flex-start;
-}
-
-.btn:hover{
-    cursor: pointer;
-    transform:scale(0.925);
-}
-
-
-/* Modal Layout */
-
-
-.modal{
-    border-radius: 6px;
-    background-color: var(--modal-background);
-    padding: 10px;
-}
-
-.modal__container{
-    width: 100%;
-    height: 85vh;
-    display:grid;
-    gap: 10px;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(5, 1fr);
-    grid-template-areas: 
-    'accounts goals goals transactions'
-    'accounts spending spending transactions'
-    'accounts spending spending transactions'
-    'analytics analytics analytics analytics'
-    'analytics analytics analytics analytics';
-}
-
-.spendingModal{
-    grid-area: spending;
-}
-
-.transactionsModal{
-    grid-area: transactions;
-}
-
-.analyticsModal{
-    grid-area: analytics;
-}
-
-
-/* Black Overlay styling */
-
-
-.overlay{
-    background-color: hsla(233, 100%, 5%, 0.5);
-    position:absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    z-index: 999; 
-}
-
-.overlay__modal{
-    position:absolute;
-    height: 450px;
-    width: 700px;
-    top: 40%;
-    left: 50%;
-    gap: 1rem;
-    background-color: #2e2270;
-    transform:translate(-50%, -50%);
-    z-index: 1000;
-    padding: 15px;
-    border-radius: 6px;
-}
-
-.space-between{
-    justify-content: space-between;
-}
-
-.overlay--spacing{
-    display:flex;
-    gap: 20px;
-    margin: 0 auto;
-    justify-content: center;
-    height: 450px;
-}
-
-.overlay__title--spacing{
-    display:flex;
-    justify-content: space-between;
-}
-
-/* Modal box styling */
-
-
-.modal{
-    display:flex;
-    flex-direction: column;
-    gap: .3rem;
-    padding: 12px;
-}
-
-.modal--title{
-    color: var(--modal-title);
-    font-size: 22px;
-    font-weight: 500;
-}
-
-
-/* Scrollbar */
-
 
 ::-webkit-scrollbar{
     width: 9px;

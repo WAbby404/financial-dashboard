@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { getDatabase, ref, onValue } from "firebase/database";
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../../config/Firebase';
@@ -7,98 +7,98 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
 function Accounts(props) {
-    const [ count, setCount ] = useState(0);
+    // const [ count, setCount ] = useState(0);
     const [ user ] = useAuthState(auth);
 
     useEffect(()=> {
         const db = getDatabase();
         const dbRef = ref(db, user.uid + '/accounts');
+        let newAccounts = [];
         onValue(dbRef, (snapshot) => {
+            // each item under accounts db
+            newAccounts = [];
             snapshot.forEach((childSnapshot) => {
-                // console.log(childSnapshot);
-                // console.log(childSnapshot.val());
-                // console.log(typeof childSnapshot.val());
-                // console.log(childSnapshot.val().id);
                 const childData = childSnapshot.val();
-                setCount(count + 1);
-                // if snapshot id is found in the allAccounts array dont add it
-                
-                // console.log(oldAccounts);
-                // if(!childSnapshot.val().id){
-                    // console.log('inside if reached');
-                    // console.log(childSnapshot.val());
-                //     const initalizedAccounts = childSnapshot.val();
-                //     Object.keys(initalizedAccounts).forEach(key => {
-                //         // console.log(key, initalizedAccounts[key]);
-                //         // if(oldAccounts)
-                //         console.log(initalizedAccounts[key]);
-                //         // oldAccounts.push(initalizedAccounts[key]);
-                //     });
-                // }
-                let oldAccounts = props.allAccounts;
-                let check = props.allAccounts.some(item => item.id === childData.id);
-                if(!check){
-                    oldAccounts.push(childData);
-                    props.toSetAllAccounts(oldAccounts);
+                if(!childData.id){
+                    const baseAccounts = Object.values(childData);
+                    newAccounts.push(...baseAccounts);
+                } else {
+                    newAccounts.push(childData);
                 }
-            })});
-    }, []); // eslint-disable-line
+                props.toSetAllAccounts(newAccounts);
+        })});
+    }, []); 
+
+// eslint-disable-line
 
     const editAccount = (accountToEdit, index) => {
         props.editAccount(accountToEdit, index);
-        setCount(count + 1);
+        props.deleteAccount(accountToEdit, index, true);
     };
 
     const deleteAccount = (accountToDelete, index) => {
         props.deleteAccount(accountToDelete, index);
-        setCount(count + 1);
-    }
+    };
+
+    const sortAccounts = (accounts) => {
+        let sortedBaseArray = [];
+        let sortedArray = [];
+        let index = 0;
+        while(index <= accounts.length -1){
+            if(accounts[index].hasOwnProperty('notEditable')){
+                sortedBaseArray.push(accounts[index]);
+                index += 1;
+            } else {
+                sortedArray.push(accounts[index]);
+                index += 1;
+            }
+        }
+        sortedBaseArray.push(...sortedArray);
+        sortedBaseArray = sortedBaseArray.flat();
+        return sortedBaseArray;
+    };
 
     const renderAccounts = (allAccounts) => {
-        if(allAccounts?.length !== 0){
-            // console.log(allAccounts);
-            let newAllAccounts;
-            let initializedAccounts = allAccounts[0];
-            // console.log(allAccounts);
-            // console.log(Object.values(initializedAccounts));
-            let otherAccounts = allAccounts.slice(1);
-            // console.log(otherAccounts);
-            newAllAccounts = Object.values(initializedAccounts)
-            if(otherAccounts){
-                newAllAccounts.push(...otherAccounts);
-            }
-            // console.log(newAllAccounts);
             return (
-                newAllAccounts.map((account, index) => {
+                sortAccounts(allAccounts).map((account, index) => {
                     return (
-                        <li key={account.id}>
-                            <h4>{account.name}</h4>
-                            <div className="flex">
-                                {/* will need to reevaluate this later, like if checking acc is negative */}
-                                <span>{account.checkingAccount ? '+' : '-'}</span>
-                                <h5 className={account.checkingAccount ? 'green' : 'red'}>{account.total}</h5>
+                        <li key={account.id} className={`pb-2 flex flex-col ${props.modalOn ? 'md:flex-row' : ''}`}>
+                            <div className="flex flex-col md:justify-center md:w-full">
+                                <h3 className="text-indigo-300 font-medium pl-3 md:text-lg">{account.name}</h3>
+                                <div className="flex justify-center">
+                                    {/* {console.log(account.total)} */}
+                                    <h4 className={`${account.debit ? 'text-green-600' : 'text-rose-600'} font-bold text-3xl xl:text-5xl ${props.modalOn ? '' : 'text-4xl '}`}>
+                                        <span className="">$</span>
+                                        {account.total > 0 ?  account.total : account.total * -1}
+                                    </h4>
+                                </div>
                             </div>
-                            {props.modalOn && !account.notEditable &&
-                                <Button onClick={() => editAccount(account, index)} size="small" color="error" variant="outlined">
-                                    <EditIcon/>
-                                </Button>}
-                            {props.modalOn  && !account.notEditable && 
-                                <Button onClick={() => deleteAccount(account, index)} size="small" variant="contained">
-                                    <DeleteIcon/>
-                            </Button>}
+                            <div className="flex justify-center gap-1 md:flex-col">
+                                {props.modalOn && !account.notEditable &&
+                                    <Button onClick={() => editAccount(account, index)} size="small" color="secondary" variant="outlined"
+                                        disabled={props.editOn ? true : false}
+                                        sx={{color: 'orange'}}>
+                                        <EditIcon/>
+                                    </Button>}
+                                {props.modalOn  && !account.notEditable && 
+                                    <Button onClick={() => deleteAccount(account, index)} size="small" color="error" variant="outlined"
+                                        sx={{color: 'red'}}>
+                                        <DeleteIcon/>
+                                    </Button>}
+                            </div>
+                            {/* <div className="w-4/6 h-0.5 bg-indigo-800 m-auto"></div> */}
                         </li>
                     )
                 })
             )
-        }
     };
 
     return (
-        <div className="accounts">
-            <ul>
+        <article className={`${ props.modalOn ? 'basis-40 md:basis-1/2 xl:basis-2/5' : ''} h-full overflow-y-auto`}>
+            <ul className="">
                 {renderAccounts(props.allAccounts)}
             </ul>
-        </div>
+        </article>
     );
 }
 

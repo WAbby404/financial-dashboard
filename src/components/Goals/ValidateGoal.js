@@ -1,40 +1,39 @@
-function ValidateGoal(values) {
+function validateGoal(values) {
     const errors = {}; 
     if(!values.name){
-        errors.name = 'Goal name required.';
+        errors.name = 'Name required.';
     }
-    if(values.name.length > 10){
-        errors.name = 'Goal name cannot exceed 10 characters.';
+    if(values.name.length > 15){
+        errors.name = 'Name cannot exceed 15 characters.';
     }
 
 
     if(isNaN(values.total)){
-        errors.total = 'Goal total must be a number.';
+        errors.total = 'Total must be a number.';
     }
     if(values.total[0] === '0'){
-        errors.total = 'Goal total cannot start with a 0.';
+        errors.total = 'Total cannot start with a 0.';
     }
     if(values.total <= 0){
-        errors.total = 'Goal total must be a positive value';
+        errors.total = 'Total must be a positive value';
     }
     if(!values.total){
-        errors.total = 'Goal total amount required.';
+        errors.total = 'Total required';
     }
 
 
     if(isNaN(values.current)){
-        errors.current = 'Goal current total must be a number.';
+        errors.current = 'Current total must be a number.';
     }
-    if(parseInt(values.current) > parseInt(values.total)){
+    if(parseFloat(values.current) > parseFloat(values.total)){
         errors.current = 'Current total cannot be lower than total';
         errors.total = 'Current total cannot be lower than total';
     }
     if(!values.current){
-        errors.current = 'Current goal amount required.';
+        errors.current = 'Current required';
     }
 
-    // console.log(errors);
     return errors;
 }
 
-export default ValidateGoal;
+export default validateGoal;

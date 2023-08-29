@@ -7,15 +7,15 @@ const Alert = forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
 
-function SuccessSnackbar(props) {
+function ErrorSnackbar(props) {
     return (
             <Box sx={{ width: 500 }}>
                 <Snackbar
                     autoHideDuration={2500}
                     anchorOrigin={{ vertical:'top', horizontal:'center' }}
-                    open={props.successSnackbarOn}
-                    onClose={props.toSetSuccessSnackbarOff}>
-                    <Alert onClose={props.toSetSuccessSnackbarOff} severity="success" sx={{ width: '100%' }}>
+                    open={props.errorSnackbarOn}
+                    onClose={props.toSetErrorSnackbarOff}>
+                    <Alert onClose={props.toSetErrorSnackbarOff} severity="error" sx={{ width: '100%' }}>
                         {props.message}
                     </Alert>
                 </Snackbar>
@@ -23,4 +23,4 @@ function SuccessSnackbar(props) {
     );
 }
 
-export default SuccessSnackbar;
+export default ErrorSnackbar;

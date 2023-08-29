@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../config/Firebase';
 import LoginPage from './Login/LoginPage';
@@ -8,71 +8,103 @@ import SpendingModal from "./Spending/SpendingModal";
 import AnalyticsModal from './Analytics/AnalyticsModal';
 import TransactionsModal from './Transactions/TransactionsModal';
 import GoalsModal from './Goals/GoalsModal';
-import './Dashboard.css';
+// import './Dashboard.css';
 import PulseLoader from "react-spinners/PulseLoader";
-import { GiHamburgerMenu } from 'react-icons/gi';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
  
-function Dashboard(props) {
-    const [ darkMode, setDarkMode ] = useState(true);
+function Dashboard() {
+    const [ theme, setTheme ] = useState('dark');
     const [ showNav, setShowNav ] = useState(false);
     const [ user, loading ] = useAuthState(auth);
 
+
+    useEffect(() => {
+        if(theme === 'dark'){
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    })
+
     const changeTheme = () => {
-        setDarkMode(!darkMode);
+        setTheme(theme === "dark" ? "light" : "dark");
     };
 
     const setDate = () => {
         const today = new Date().toLocaleDateString().split('/');
         const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'Septemper', 'October', 'November', 'December'];
         today[0] = months[today[0]-1];
-        // if(today[0] === 'Tue'){
-        //     today[0] = today[0] + 'sday';
-        // } else if (today[0] === 'Wed') {
-        //     today[0] = today[0] + 'nesday';
-        // } else if (today[0] === 'Thu'){
-        //     today[0] = today[0] + 'rsday';
-        // } else if (today[0] === 'Sat'){
-        //     today[0] = today[0] + 'urday';
-        // } else {
-        //     today[0] = today[0] + 'day';
-        // }
-        // console.log(today);
         return (
-            <div className="dashboard__title flex">
-                <h3>{today[0]}</h3>
+            <time className="flex basis-1/3 gap-2 items-center">
+                <h3 className="text-lg font-semibold">{today[0]}</h3>
                 <span>{today[1]}</span>
-            </div>
+            </time>
         )
     }
 
+    const capitalize = (name) => {
+        if(name){
+            let capitalizedName = name.toLowerCase()
+            .split(' ')
+            .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+            .join(' ');
+            return capitalizedName;
+        }
+    }
+
+    const toSetShowNavOn = () => {
+        setShowNav(true);
+        const body = document.querySelector("body");
+        body.style.overflow = "hidden";
+    }
+
+    const toSetShowNavOff = () => {
+        setShowNav(false);
+        const body = document.querySelector("body");
+        body.style.overflow = "auto";
+    }
+
+    const buttonStyles = {
+        fontSize: 13,
+        color: 'rgb(224 231 255)',
+        backgroundColor: 'rgb(37 99 235)',
+        '&:hover': {
+            backgroundColor: 'rgb(30 64 175)'
+        },
+        boxShadow: 2
+        // textTransform: 'lowercase !important'
+    }
+
     return(
-        <div className={`${darkMode ? 'dark' : 'light'} dashboard`} >
+        <div className={`bg-indigo-950 container h-full max-w-full dark:bg-indigo-300`} >
+            {console.log(theme)}
             { loading && <PulseLoader color="#523eed" />}
-            { !user && <LoginPage  /> }
-            { user &&
-            <div className="dashboard__wrapper">
-                <div className="dashboard__container">
-                    <div className="dashboard--info">
-                        <div className="dashboard__title">
-                            <h1>Welcome { user?.displayName}!</h1>
-                            <h2>Your monthly Dashboard</h2>
-                            <br/>
-                        </div>
+            { !user ? <LoginPage buttonStyles={buttonStyles}/> :
+                <div className="static">
+                    {showNav && <Nav theme={theme} changeTheme={changeTheme} buttonStyles={buttonStyles} toSetShowNavOff={toSetShowNavOff}/>}
+                    <div className="h-full w-full">
+                        <aside className="flex flex-row justify-between items-center p-3 text-indigo-300">
+                            <div className="basis-1/3">
+                                <h1 className="">{capitalize(user?.displayName)}'s</h1>
+                                <h2>Monthly Dashboard</h2>
+                            </div>
                             {setDate()}
-                        <button className="dashboard__btn" onClick={() => setShowNav(!showNav)}>
-                            <GiHamburgerMenu size='2em'/>
-                        </button>
+                            <IconButton onClick={() => toSetShowNavOn()}
+                                sx={{color: 'white'}}
+                                size="large">
+                                <MenuIcon/>
+                            </IconButton>
+                        </aside>
+                        <main className="flex flex-col sm:gap-4 md:gap-5 pb-4 xl:grid xl:grid-cols-12 xl:grid-rows-18 xl:gap-4 xl:h-[93vh] xl:p-4">
+                            <AccountsModal theme={theme} buttonStyles={buttonStyles}/>
+                            <GoalsModal theme={theme} buttonStyles={buttonStyles}/>
+                            <SpendingModal theme={theme}/>
+                            <TransactionsModal theme={theme} buttonStyles={buttonStyles}/>
+                            <AnalyticsModal theme={theme}/>
+                        </main>  
                     </div>
-                    <main className="modal__container">
-                        <AccountsModal darkMode={darkMode}/>
-                        <GoalsModal darkMode={darkMode}/>
-                        <SpendingModal darkMode={darkMode}/>
-                        <TransactionsModal darkMode={darkMode}/>
-                        <AnalyticsModal darkMode={darkMode}/>
-                    </main>  
                 </div>
-                {showNav && <Nav darkMode={darkMode} changeTheme={changeTheme}/>}
-            </div>
             }
         </div>
     )

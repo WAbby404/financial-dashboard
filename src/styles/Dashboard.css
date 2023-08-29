@@ -1,0 +1,59 @@
+.container{
+    width: 100%;
+    padding: 20px;
+    height: 100vh;
+    display:flex;
+    gap: 10px;
+}
+
+.dark{
+    background-color: #1c183d;
+    color: black;
+}
+
+.light{
+    background-color:rgb(232, 232, 240);
+}
+
+.dashboard{
+    width: 100%;
+    display:flex;
+    gap: 10px;
+    flex-direction: column;
+}
+
+.dashboard__title--large{
+    font-size: 20px
+}
+
+.dashboard__info{
+    display:flex;
+    justify-content: space-between;
+}
+
+.dashboard__title{
+    color:var(--modal-title);
+}
+
+
+.modal{
+    border-radius: 6px;
+    background-color: var(--modal-background);
+    padding: 10px;
+}
+
+.modal-container{
+    width: 100%;
+    height: 90vh;
+    display:grid;
+    gap: 10px;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    grid-template-areas: 
+    'accounts accounts goals goals goals goals goals transactions transactions transactions'
+    'accounts accounts spending spending spending spending spending transactions transactions transactions'
+    'accounts accounts spending spending spending spending spending transactions transactions transactions'
+    'accounts accounts spending spending spending spending spending transactions transactions transactions'
+    'analytics analytics analytics analytics analytics analytics analytics analytics analytics analytics'
+    'analytics analytics analytics analytics analytics analytics analytics analytics analytics analytics';
+}

@@ -1,82 +1,61 @@
 import React, { useState } from 'react';
-// import { GoogleAuthProvider, signInWithPopup} from 'firebase/auth';
-// import { getDatabase, ref} from "firebase/database";
-// , push, set, onValue, remove
-// import { auth } from '../../config/Firebase';
+import Button from '@mui/material/Button';
 import Login from './Login';
 import Register from './Register';
-// import '../styles/Forms.css';
+import Logo from './logo.png';
 
 function LoginPage(props) {
     const [register, setRegister] = useState(false);
-    // const googleProvider = new GoogleAuthProvider();
-
-    // const GoogleLogin = async () => {
-    //     try {
-    //         const result = await signInWithPopup(auth, googleProvider);
-    //         console.log('Result:');
-    //         console.log(result);
-    //         if(result){
-    //             const userId = result.user.uid;
-    //             // trying out initialization
-    //             const db = getDatabase();
-    //             const dbRef = ref(db, userId);
-    //             console.log(dbRef);
-    //             // onValue(dbRef, (snapshot) => {
-    //             //     snapshot.forEach((childSnapshot) => {
-    //             //         const childKey = childSnapshot.key;
-    //             //         const childData = childSnapshot.val();
-    //             //         // if childData.id equals the id we want to delete, then remove it from the database
-    //             //         // and from allTransactions
-    //             //         if(childData.id === idToDel){
-    //             //             let newTransactions = allTransactions;
-    //             //             newTransactions.splice(index, 1);
-    //             //             setAllTransactions(newTransactions);
-    //             //             remove(ref(db, 'transactions/' + user.uid + `/${childKey}`));
-    //             //         }
-    //             //     })});
-
-
-    //         }
-    //         // console.log(result.user);
-    //     } catch (error) {
-    //         // console.log(error);
-    //     }
-    // };
-
 
     return (
-        <div className = 'flex'>
-            <div>
-                <div>
-                    {register ?
-                    <>
-                        <Register />
-                        <div>Already have an account?</div>
-                        <button onClick={() => setRegister(false)}>Login</button>
-                        {/* <button onClick={GoogleLogin}>
-                            <FaGoogle />
-                            Login with Google
-                        </button> */}
-                    </>
-                
+        <main className='w-full h-screen flex flex-col p-5 gap-4 justify-center sm:flex-row md:flex-col md:p-1 md:gap-10'>
+            <section className="w-9/12 flex flex-col mx-auto items-center justify-center">
+                <img src={Logo} alt='Moonlit Logo' className="max-h-52 sm:max-h-36 md:max-h-64"/>
+                <h1 className="text-indigo-200 font-bold text-4xl sm:text-2xl md:text-4xl">Moonlit</h1>
+                <h2 className="text-sky-400 text-xl sm:text-base md:text-2xl">Personal Finance Dashboard</h2>
+                {register ? 
+                    <div className="hidden sm:flex sm:flex-row sm:gap-3 sm:items-center sm:justify-center sm:pt-3 md:hidden">
+                        <h3 className="text-indigo-300 text-center text-sm">Already have an account?</h3>
+                        <Button onClick={() => setRegister(false)}
+                        size="small"
+                        sx={props.buttonStyles}>
+                            Login
+                        </Button>
+                    </div>
                     :
-                    <>
-                        <Login />
-                        {/* <button className="btn--submit" onClick={GoogleLogin}>
-                            <FaGoogle />
-                            Sign in with Google
-                        </button> */}
-                        <div>Dont have an account?</div>
-                        <button className="btn--submit"
-                        onClick={() => setRegister(true)}>Register</button>
-                    </>
-                }</div>
+                    <div className="hidden sm:flex sm:flex-row sm:gap-3 sm:items-center sm:justify-center sm:pt-3 md:hidden">
+                            <h3 className="text-indigo-300 text-center text-sm">Dont have an account?</h3>
+                            <Button sx={props.buttonStyles}
+                            size="small"
+                            onClick={() => setRegister(true)}>Register</Button>
+                    </div>
+                }
+            </section>
+            <div className="w-9/12 mx-auto flex justify-center items-center">
+                {register ?
+                    <div className="flex flex-col gap-5 justify-center items-center">
+                        <Register buttonStyles={props.buttonStyles}/>
+                        <div className="flex flex-row gap-3 items-center justify-center sm:hidden md:flex">
+                            <h3 className="text-indigo-300 text-center text-sm">Already have an account?</h3>
+                            <Button onClick={() => setRegister(false)}
+                                size="small"
+                                sx={props.buttonStyles}>Login</Button>
+                        </div>
+                    </div>
+                    :
+                    <div className="flex flex-col gap-5">
+                        <Login buttonStyles={props.buttonStyles}/>
+                        <div className="flex flex-row gap-3 items-center justify-center sm:hidden md:flex">
+                            <h3 className="text-indigo-300 text-center text-sm">Dont have an account?</h3>
+                            <Button sx={props.buttonStyles}
+                            size="small"
+                            onClick={() => setRegister(true)}>Register</Button>
+                        </div>
+                    </div>
+                }
             </div>
-            <div className="login--right">
-                <h1>Moonlit Personal Finance Dashboard</h1>
-            </div>
-        </div>
+
+        </main>
     );
 };
 

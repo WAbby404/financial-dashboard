@@ -7,8 +7,8 @@ import GoalsForm from './GoalsForm';
 import Button from '@mui/material/Button';
 import EditDialogBox from '../EditDialogBox';
 import SuccessSnackbar from '../SuccessSnackbar';
-import './Goals.css';
-import '../Dashboard.css';
+import ErrorSnackbar from '../ErrorSnackbar';
+import DeleteSnackbar from '../DeleteSnackbar';
 
 function GoalsModal(props) {
     const [ user ] = useAuthState(auth);
@@ -19,14 +19,18 @@ function GoalsModal(props) {
     // Sets edit mode on, necessary for useEffect in GoalsForm, exiting while editing (with cancel and X) & dialog box
     const [ editOn, setEditOn ] = useState(false);
     const [ goalToEdit, setGoalToEdit ] = useState(null); 
-    const [ successSnackBarOn, setSuccessSnackBarOn ] = useState(false);
+    const [ successSnackbarOn, setSuccessSnackbarOn ] = useState(false);
+    const [ errorSnackbarOn, setErrorSnackbarOn ] = useState(false);
+    const [ deleteSnackbarOn, setDeleteSnackbarOn ] = useState(false);
     const [ dialogBoxOn, setDialogBoxOn ] = useState(false);
     const [ exitWithCancelOn, setExitWithCancelOn ] = useState(false);
 
 
     // vvv this is odd, i have an issue where if i modify an element in a state array or obj React wont push for an update, so i add 1 to a count which DOES push for an update
     // maybe i can try force update here
-    const [ count, setCount ] = useState(0);
+
+    // stale state?????? gotta look into this
+    // const [ count, setCount ] = useState(0);
     
 
     
@@ -39,9 +43,11 @@ function GoalsModal(props) {
         setExitWithCancelOn(false);
     };
 
-
     const toSetModalOn = () => {
         setModalOn(true);
+        window.scroll(0, 0);
+        const body = document.querySelector("body");
+        body.style.overflow = "hidden";
     }
 
     const toSetModalOff = () => {
@@ -53,6 +59,8 @@ function GoalsModal(props) {
             setModalOn(!modalOn);
             setFormOn(false);
             setEditOn(false);
+            const body = document.querySelector("body");
+            body.style.overflow = "auto";
         }
     };
     
@@ -108,8 +116,16 @@ function GoalsModal(props) {
 
     
     // Turns off success snackbar alert
-    const toSetSuccessSnackBarOff = () => {
-        setSuccessSnackBarOn(false);
+    const toSetSuccessSnackbarOff = () => {
+        setSuccessSnackbarOn(false);
+    };
+
+    const toSetErrorSnackbarOff = () => {
+        setErrorSnackbarOn(false);
+    };
+
+    const toSetDeleteSnackbarOff = () => {
+        setDeleteSnackbarOn(false);
     };
 
     const createGoal = (cleanFormValues) =>{
@@ -118,16 +134,22 @@ function GoalsModal(props) {
         const newPostRef = push(postListRef);
         set(newPostRef, {
             ...cleanFormValues
-        });
-        setCount(count + 1);
+        })
+        .then(() => {
+            setSuccessSnackbarOn(true);
+        })
+        .catch((error) => {
+            console.log(error);
+            setErrorSnackbarOn(true, error);
+        })
         setEditOn(false);
-        setSuccessSnackBarOn(true);
     };
 
-    const deleteGoal = (goalToDelete, index) => {
+    const deleteGoal = (goalToDelete, index, editOnTrue) => {
         const idToDel = goalToDelete.id;
         const db = getDatabase();
         const dbRef = ref(db, user.uid + '/goals');
+        // maybe have to change this to get
         onValue(dbRef, (snapshot) => {
             snapshot.forEach((childSnapshot) => {
                 const childKey = childSnapshot.key;
@@ -136,68 +158,94 @@ function GoalsModal(props) {
                     let newgoal = allGoals;
                     newgoal.splice(index, 1);
                     setAllGoals(newgoal);
-                    remove(ref(db, user.uid + `/goals/${childKey}`));
+                    remove(ref(db, user.uid + `/goals/${childKey}`))
+                    .then(() => {
+                        if(!editOnTrue){
+                            setDeleteSnackbarOn(true);
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        setErrorSnackbarOn(true, error);
+                    })
                 }
-        })});
-        setCount(count + 1);
+        })},
+        {onlyOnce: true});
+        // if(!editOnTrue){
+        //     setDeleteSnackbarOn(true);
+        // }
     };
 
     return (
-        <div className="modal goalsModal">
-            <div className="goals__spacebetween">
-                <h3 className="modal--title">
-                    Goals
-                </h3>
-                <Button onClick={() => toSetModalOn()} variant='contained'>
-                    Manage Goals
-                </Button>
+        <section className="w-full order-3 xl:order-2 xl:col-span-6 xl:row-span-4">
+            <div className="bg-indigo-900 rounded-sm p-3 m-3 sm:w-10/12 sm:m-auto md:w-9/12 xl:w-full xl:h-full">
+                <header className="flex justify-between">
+                    <h2 className="text-indigo-300 font-bold text-xl">
+                        Goals
+                    </h2>
+                    <Button onClick={() => toSetModalOn()} sx={props.buttonStyles}>
+                        Manage Goals
+                    </Button>
+                </header>
+                <Goals 
+                    allGoals={allGoals}
+                    toSetAllGoals={toSetAllGoals}
+                    darkMode={props.darkMode}/>
             </div>
-            <Goals 
-                allGoals={allGoals}
-                toSetAllGoals={toSetAllGoals}
-                darkMode={props.darkMode}/>
             {modalOn &&
-            <div className="overlay">
+            <div className='absolute bg-gray-950/75 w-full h-screen z-50 top-0 p-3 flex flex-col justify-center items-center xl:inset-x-0'>
+                <DeleteSnackbar
+                    message='Goal deleted.'
+                    deleteSnackbarOn={deleteSnackbarOn}
+                    toSetDeleteSnackbarOff={toSetDeleteSnackbarOff}/>
+                <ErrorSnackbar
+                    message='Error with goal.'
+                    errorSnackbarOn={errorSnackbarOn}
+                    toSetErrorSnackbarOff={toSetErrorSnackbarOff}/>
                 <SuccessSnackbar 
                     message='Goal created!'
-                    successSnackBarOn={successSnackBarOn} 
-                    toSetSuccessSnackBarOff={toSetSuccessSnackBarOff}/>
+                    successSnackbarOn={successSnackbarOn} 
+                    toSetSuccessSnackbarOff={toSetSuccessSnackbarOff}/>
                 <EditDialogBox 
                     dialogBoxOn={dialogBoxOn}
                     toSetDialogBoxOff={toSetDialogBoxOff} 
                     toSetDialogBoxOffAndClearGoal={exitWithCancelOn ? exitDialogWithCancel : exitDialogWithX} 
                     dialogTitle="Exit while editing your goal?"
                     dialogText="Exiting now will cause the goal you are editing to be lost."/>
-                <div className="overlay__modal">
-                    <div className="overlay__title--spacing">
-                        <h3 className="modal--title">Goals</h3>
-                        <Button onClick={() => toSetModalOff()} variant='contained'>
+                <article className="container h-[30rem] w-full bg-indigo-900 p-3 md:w-10/12 md:max-h-[60%] lg:max-h-[80%] xl:max-w-[50%] xl:max-h-[80%]">
+                    <header className="flex justify-between">
+                        <h3 className="text-indigo-300 font-bold text-xl">Goals</h3>
+                        <Button onClick={() => toSetModalOff()} sx={props.buttonStyles} size='small'>
                             X
                         </Button>
+                    </header>
+                    <div className="flex flex-col gap-2 sm:gap-1 xl:gap-5">
+                        <Goals
+                            modalOn={modalOn}
+                            toSetAllGoals={toSetAllGoals}
+                            allGoals={allGoals}
+                            editOn={editOn}
+                            deleteGoal={deleteGoal}
+                            editGoal={editGoal}
+                            darkMode={props.darkMode}/>
+                        <GoalsForm
+                            formOn={formOn}
+                            toSetFormOn={toSetFormOn}
+                            toSetFormOff={toSetFormOff}
+                            editOn={editOn}
+                            goalToEdit={goalToEdit}
+                            toSetEditOn={toSetEditOn}
+                            toSetEditOff={toSetEditOff}
+                            toSetExitWithCancelOn={toSetExitWithCancelOn}
+                            toSetDialogBoxOn={toSetDialogBoxOn}
+                            createGoal={createGoal}
+                            deleteGoal={deleteGoal}
+                            buttonStyles={props.buttonStyles}/>
                     </div>
-                    <Goals 
-                        modalOn={modalOn}
-                        toSetAllGoals={toSetAllGoals}
-                        allGoals={allGoals}
-                        deleteGoal={deleteGoal}
-                        editGoal={editGoal}
-                        darkMode={props.darkMode}/>
-                    <GoalsForm
-                        formOn={formOn}
-                        toSetFormOn={toSetFormOn}
-                        toSetFormOff={toSetFormOff}
-                        editOn={editOn}
-                        goalToEdit={goalToEdit}
-                        toSetEditOn={toSetEditOn}
-                        toSetEditOff={toSetEditOff}
-                        toSetExitWithCancelOn={toSetExitWithCancelOn}
-                        toSetDialogBoxOn={toSetDialogBoxOn}
-                        createGoal={createGoal}
-                        deleteGoal={deleteGoal}/>
-                </div>
+                </article>
             </div>
             }
-        </div>
+        </section>
     );
 }
 

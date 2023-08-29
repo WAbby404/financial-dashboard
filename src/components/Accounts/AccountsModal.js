@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../../config/Firebase';
-import { getDatabase, ref, push, set } from "firebase/database";
-// , onValue, remove, get
+import { getDatabase, ref, push, set, onValue, remove } from "firebase/database";
 import Accounts from './Accounts';
 import AccountsForm from './AccountsForm';
 import Button from '@mui/material/Button';
-import './Accounts.css';
-import '../Dashboard.css';
-
+import EditDialogBox from '../EditDialogBox';
+import SuccessSnackbar from '../SuccessSnackbar';
+import ErrorSnackbar from '../ErrorSnackbar';
+import DeleteSnackbar from '../DeleteSnackbar';
 
 function AccountsModal(props) {
     const [ user ] = useAuthState(auth);
@@ -17,7 +17,13 @@ function AccountsModal(props) {
     const [ modalOn, setModalOn ] = useState(false);
     const [ formOn, setFormOn ] = useState(false);
 
-    const [ count, setCount ] = useState(0);
+    const [ editOn, setEditOn ] = useState(false);
+    const [ accountToEdit, setAccountToEdit ] = useState(null); 
+    const [ successSnackbarOn, setSuccessSnackbarOn ] = useState(false);
+    const [ errorSnackbarOn, setErrorSnackbarOn ] = useState(false);
+    const [ deleteSnackbarOn, setDeleteSnackbarOn ] = useState(false);
+    const [ dialogBoxOn, setDialogBoxOn ] = useState(false);
+    const [ exitWithCancelOn, setExitWithCancelOn ] = useState(false);
 
     const toSetFormOn = () => {
         setFormOn(true);
@@ -25,35 +31,89 @@ function AccountsModal(props) {
 
     const toSetFormOff = () => {
         setFormOn(false);
-        // setExitWithCancelOn(false);
+        setExitWithCancelOn(false);
     };
 
     const toSetModalOn = () => {
         setModalOn(true);
+        const body = document.querySelector("body");
+        body.style.overflow = "hidden";
     }
 
     const toSetModalOff = () => {
-        // setExitWithCancelOn(false);
+        setExitWithCancelOn(false);
         // alerts with dialog box while goal is being edited
-        // if(editOn){
-        //     setDialogBoxOn(true);
-        // } else {
+        if(editOn){
+            setDialogBoxOn(true);
+        } else {
             setModalOn(!modalOn);
             setFormOn(false);
-            // setEditOn(false);
-        // }
+            const body = document.querySelector("body");
+            body.style.overflow = "auto";
+            setEditOn(false);
+        }
+    };
+
+    const toSetEditOn = () => {
+        setEditOn(true);
+    };
+
+    const toSetEditOff = () => {
+        setEditOn(false);
+    };
+
+    // Sets which goal to edit, turn on form  & edit mode for GoalsForm useEffect
+    const editAccount = (goalToEdit, index) => {
+        setAccountToEdit(goalToEdit, index);
+        setEditOn(true);
+        setFormOn(true);
     };
 
     const toSetAllAccounts = (newAccounts) => {
         setAllAccounts(newAccounts);
     };
 
-    const editAccount = () => {
+    const toSetExitWithCancelOn = () => {
+        setExitWithCancelOn(true);
+    }
 
+    // Open / turn off the dialog box from cancel (in form while editing)
+    const toSetDialogBoxOn = () => {
+        setDialogBoxOn(true);
+    };
+        
+    const toSetDialogBoxOff = () => {
+        setDialogBoxOn(false);
     };
 
-    const deleteAccount = () => {
+    // Called when pressing 'exit anyway' on dialog box after pressing x
+    const exitDialogWithX = () => {
+        setExitWithCancelOn(false);
+        setModalOn(!modalOn);
+        setFormOn(false);
+        setEditOn(false);
+        setDialogBoxOn(false);
+    }
 
+    // Called when pressing 'exit anyway' on dialog box after pressing cancel
+    const exitDialogWithCancel = () => {
+        setFormOn(false);
+        setEditOn(false);
+        setDialogBoxOn(false);
+        setExitWithCancelOn(false);
+    }
+
+    // Turns off creation, deletion & error snackbar alert
+    const toSetSuccessSnackbarOff = () => {
+        setSuccessSnackbarOn(false);
+    };
+
+    const toSetErrorSnackbarOff = () => {
+        setErrorSnackbarOn(false);
+    };
+
+    const toSetDeleteSnackbarOff = () => {
+        setDeleteSnackbarOn(false);
     };
 
     const createAccount = (cleanFormValues) =>{
@@ -62,54 +122,115 @@ function AccountsModal(props) {
         const newPostRef = push(postListRef);
         set(newPostRef, {
             ...cleanFormValues
-        });
-        setCount(count + 1);
-        // setEditOn(false);
-        // setSuccessSnackBarOn(true);
+        })
+        .then(() => {
+            setSuccessSnackbarOn(true);
+        })
+        .catch((error) => {
+            console.log(error);
+            setErrorSnackbarOn(true, error);
+        })
+        setEditOn(false);
+    };
+
+    const deleteAccount = (accountToDelete, index, editOnTrue) => {
+        const idToDel = accountToDelete.id;
+        const db = getDatabase();
+        const dbRef = ref(db, user.uid + '/accounts');
+        onValue(dbRef, (snapshot) => {
+            snapshot.forEach((childSnapshot) => {
+                const childKey = childSnapshot.key;
+                const childData = childSnapshot.val();
+                if(childData.id === idToDel){
+                    let newAccounts = allAccounts;
+                    newAccounts.splice(index, 1);
+                    setAllAccounts(newAccounts);
+                    remove(ref(db, user.uid + `/accounts/${childKey}`))
+                    .then(() => {
+                        if(!editOnTrue){
+                            setDeleteSnackbarOn(true);
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        setErrorSnackbarOn(true, error);
+                    })
+                }
+            })
+        },
+        {onlyOnce: true});
     };
 
     return (
-        <div className="modal accountsModal">
-            <div className="goals__spacebetween">
-                <h3 className="modal--title">
-                    Accounts
-                </h3>
-                <Button className="btn" onClick={() => toSetModalOn()}>
-                    Manage Accounts
-                </Button>
+        <section className="w-full order-1 xl:col-span-3 xl:row-span-12 xl:w-full xl:h-full">
+            <div className="bg-indigo-900 rounded-sm p-3 m-3 flex flex-col gap-2 h-80 sm:w-10/12 sm:m-auto md:w-9/12 xl:w-full xl:h-full">
+                <header className="flex justify-between">
+                    <h2 className="text-indigo-300 font-bold text-xl">
+                        Accounts
+                    </h2>
+                    <Button sx={props.buttonStyles} onClick={() => toSetModalOn()} variant='contained'>
+                        Manage Accounts
+                    </Button>
+                </header>
+                <Accounts
+                    allAccounts={allAccounts}
+                    toSetAllAccounts={toSetAllAccounts}
+                    darkMode={props.darkMode}/>
             </div>
-            <Accounts
-                allAccounts={allAccounts}
-                toSetAllAccounts={toSetAllAccounts}
-                darkMode={props.darkMode}/>
             { modalOn && 
-                <div className='overlay'>
-                    <div className='overlay__modal'>
-                        <div className="overlay__title--spacing">
-                            <h3 className="modal--title">Accounts</h3>
-                            <Button className="btn" onClick={() => toSetModalOff()}>
-                                X
-                            </Button>
-                        </div>
-                        <div className="overlay--spacing">
-                            <Accounts
-                                modalOn={modalOn}
-                                allAccounts={allAccounts}
-                                toSetAllAccounts={toSetAllAccounts}
-                                darkMode={props.darkMode}
-                                editAccount={editAccount}
-                                deleteAccount={deleteAccount}
-                            />
-                            <AccountsForm
-                                formOn={formOn}
-                                toSetFormOn={toSetFormOn}
-                                toSetFormOff={toSetFormOff}
-                                createAccount={createAccount}/>
-                        </div>
+            <div className='absolute bg-gray-950/75 w-full h-screen z-50 top-0 p-3 flex flex-col justify-center items-center xl:inset-x-0'>
+                <DeleteSnackbar
+                    message='Account deleted'
+                    deleteSnackbarOn={deleteSnackbarOn}
+                    toSetDeleteSnackbarOff={toSetDeleteSnackbarOff}/>
+                <ErrorSnackbar
+                    message='Error creating account'
+                    errorSnackbarOn={errorSnackbarOn}
+                    toSetErrorSnackbarOff={toSetErrorSnackbarOff}/>
+                <SuccessSnackbar 
+                    message='Account created!'
+                    successSnackbarOn={successSnackbarOn} 
+                    toSetSuccessSnackbarOff={toSetSuccessSnackbarOff}/>
+                <EditDialogBox 
+                    dialogBoxOn={dialogBoxOn}
+                    toSetDialogBoxOff={toSetDialogBoxOff} 
+                    toSetDialogBoxOffAndClearGoal={exitWithCancelOn ? exitDialogWithCancel : exitDialogWithX} 
+                    dialogTitle="Exit while editing your account?"
+                    dialogText="Exiting now will cause the account you are editing to be lost."/>
+                <article className='container h-4/6 w-full bg-indigo-900 p-3 max-h-96 sm:m-auto sm:h-[90vh] md:w-10/12 md:max-h-[60%] xl:max-w-[50%] xl:flex xl:flex-col'>
+                    <header className="flex justify-between">
+                        <h2 className="text-indigo-300 font-bold text-xl">Accounts</h2>
+                        <Button sx={props.buttonStyles} onClick={() => toSetModalOff()}>
+                            X
+                        </Button>
+                    </header>
+                    <div className="flex gap-2 mt-2 h-5/6 justify-center sm:gap-3 xl:w-11/12 xl:m-auto xl:gap-10">
+                        <Accounts
+                            modalOn={modalOn}
+                            allAccounts={allAccounts}
+                            toSetAllAccounts={toSetAllAccounts}
+                            darkMode={props.darkMode}
+                            editOn={editOn}
+                            editAccount={editAccount}
+                            deleteAccount={deleteAccount}/>
+                        <AccountsForm
+                            formOn={formOn}
+                            toSetFormOn={toSetFormOn}
+                            toSetFormOff={toSetFormOff}
+                            editOn={editOn}
+                            accountToEdit={accountToEdit}
+                            toSetEditOn={toSetEditOn}
+                            toSetEditOff={toSetEditOff}
+                            toSetExitWithCancelOn={toSetExitWithCancelOn}
+                            toSetDialogBoxOn={toSetDialogBoxOn}
+                            createAccount={createAccount}
+                            deleteAccount={deleteAccount}
+                            buttonStyles={props.buttonStyles}/>
                     </div>
-                </div>
+                </article>
+            </div>
             }
-        </div>
+        </section>
     );
 }
 

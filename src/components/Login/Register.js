@@ -1,35 +1,42 @@
 import React, { useState } from 'react';
 import { auth } from '../../config/Firebase';
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-
-import { getDatabase, ref, push} from "firebase/database";
-// , set
+import TextField from '@mui/material/TextField';
+import { getDatabase, ref, update } from "firebase/database";
+import Button from '@mui/material/Button';
+import capitalizeName from '../capitalizeName';
+import ErrorIcon from '@mui/icons-material/Error';
 
 function Register(props) {
     const initialUserInfo = {name: "", email: "", password:""};
     const [ userInfo, setUserInfo ] = useState(initialUserInfo);
-    const [ cleanUserInfo, setCleanUserInfo] = useState({});
     const [ formErrors, setFormErrors] = useState({});
+    const [ loginError, setLoginError ] = useState(null);
 
     const handleChange = (e) => {
        const { name, value } = e.target;
        setUserInfo({...userInfo, [name]: value});
+       setFormErrors({...formErrors, [name]: null});
+       setLoginError(null);
     };
 
     const validate = (values) => {
         const errors = {};
-        if( !values.name ){
-            errors.name = 'Name required';
+        if(!values.name){
+            errors.name = 'Required';
         }
         // follow email format
         if(!values.email){
             errors.email = 'Email required.';
         }
         if(!values.email.includes('@') || !values.email.includes('.')){
-            errors.email = 'Email must follow Email format ex. Email@email.com';
+            errors.email = 'Email must follow Email format';
         }
         if(!values.password){
-            errors.password = 'Password required.';
+            errors.password = 'Required.';
+        }
+        if(values.password.length < 6 ){
+            errors.password = 'Password must be at least 6 characters';
         }
         return errors;
     };
@@ -38,112 +45,153 @@ function Register(props) {
         e.preventDefault();
         const errors = validate(userInfo);
         setFormErrors(errors);
+        setLoginError(null);
 
         if(Object.keys(errors).length === 0){
-            setCleanUserInfo(userInfo);
             registerFirebase();
         }
     };
 
     const registerFirebase = () =>{
-        createUserWithEmailAndPassword(auth, cleanUserInfo.email, cleanUserInfo.password)
+        createUserWithEmailAndPassword(auth, userInfo.email, userInfo.password)
         .then((userCredential) =>{
             updateProfile(auth.currentUser, {
-                displayName: `${cleanUserInfo.name}`})
+                displayName: `${userInfo.name}`})
             const user = userCredential.user;
-            // console.log(user);
-            alert("Account successfully created!");
-            // redirect to dashboard (Router)
-            setCleanUserInfo({});
 
-
-            const newUserAccounts = [
-                {name: 'Checking', checkingAccount: true, total: 0, id:Math.random()*1000, notEditable:true},
-                {name: 'Savings', checkingAccount: true, total: 0, id:Math.random()*1000, notEditable:true},
-                {name: 'Credit Card', checkingAccount: false, total: 0, id:Math.random()*1000, notEditable:true}
-            ];
+            setUserInfo({});
+            
+            const newUserAccounts = {
+                'Checking': {name: 'Checking', debit: true, total: 0, id:Math.random()*1000, notEditable:true},
+                'Savings': {name: 'Savings', debit: true, total: 0, id:Math.random()*1000, notEditable:true},
+                'Credit Card':{name: 'Credit Card', debit: false, total: 0, id:Math.random()*1000, notEditable:true}
+            }
 
             const db = getDatabase();
-            const dbAccountsRef = ref(db, user.uid + '/accounts');
-            const newAccountPostRef = push(dbAccountsRef);
-            newUserAccounts.forEach((account) => {
-                push(newAccountPostRef, {
-                    ...account
-                });
-            })
+            const accountsRef = ref(db, user.uid + '/accounts');
+            update(accountsRef, newUserAccounts);
 
-            // console.log(user.uid);
-            // console.log(newAccountPostRef);
-            // set(newAccountPostRef, {
-            //     ...newUserAccountsObj
-            // });
+            const getInitials = (name) => {
+                var initials = [];
+                initials.push(name[0].toUpperCase());
+                for (var i = 0; i < name.length; i++) {
+                  if (name[i] === ' ') {
+                    initials.push(name[i + 1].toUpperCase());
+                  }
+                }
+                return initials.join('');
+            };
 
-            // set(newAccountPostRef, {
-            //     ...creditAccount
-            // });
-
-            // newUserAccounts.forEach((account) =>  {
-            //     set(newAccountPostRef, {
-            //         ...account
-            //     })
-            // })
-
-            // set(newTransactionPostRef, {
-            //     ...debitAccount
-            // });
-            // set(newTransactionPostRef, {
-            //     ...savingAccount
-            // });
-            // set(newTransactionPostRef, {
-            //     ...creditAccount
-            // });
-
-    
+            const userData = {
+                name: `${capitalizeName(userInfo.name)}`,
+                initials: getInitials(userInfo.name),
+                // darkMode: true
+            }
+            const userDataRef = ref(db, user.uid + '/userData');
+            console.log(userData);
+            update(userDataRef, userData);
         })
         .catch((error) => {
+            console.log(error);
             const errorCode = error.code;
             const errorMessage = error.message;
+            if(errorCode === 'auth/email-already-in-use'){
+                setLoginError('Email already in use.');
+            }
             console.log(errorCode);
             console.log(errorMessage);
         })
     };
 
     return (
-         <div>
-            <form onSubmit={handleSubmit} className="border">
-                <label className="labels">Name:</label>
-                <br/>
-                <input className="input-fields"
-                    name="name" 
-                    placeholder="Name"
-                    type="text"
+        <div className="flex flex-col gap-2 sm:gap-0.5 md:m-auto">
+            <h2 className="text-indigo-300 text-lg">Register an account</h2>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:gap-1 md:w-full md:justify-center">
+                <TextField
+                    id="filled-basic" 
+                    label="Name" 
+                    variant="filled" 
+                    name="name"
+                    size="small"
                     value={userInfo.name}
-                    onChange={handleChange}>
-                </input>
-                <p>{formErrors.name}</p>
-                <label className="labels">Email:
-                <br/>
-                    <input className="input-fields"
-                    name="email" 
-                    placeholder="Email"
-                    type="email"
+                    onChange={handleChange}
+                    error={formErrors?.name ? true : false}
+                    helperText={formErrors?.name}
+                    sx={{backgroundColor: '#2e2270',
+                        ".MuiInputLabel-root": {
+                            color:'#A5B4FC'
+                        },
+                        input:{
+                            color:'#A5B4FC',
+                        },
+                        width:{
+                            sm:'300px',
+                        }
+                    }}
+                />
+                <TextField
+                    id="filled-basic" 
+                    label="Email"
+                    variant="filled"
+                    name="email"
+                    size="small"
                     value={userInfo.email}
-                    onChange={handleChange}></input>
-                </label>
-                <p>{formErrors.email}</p>
-                <label className="labels">Password:
-                <br/>
-                    <input className="input-fields"
-                    name="password" 
-                    placeholder="Password"
-                    type="text"
+                    onChange={handleChange}
+                    error={formErrors?.email ? true : false}
+                    helperText={formErrors?.email}
+                    sx={{backgroundColor: '#2e2270',
+                        ".MuiInputLabel-root": {
+                            color:'#A5B4FC'
+                        },
+                        input:{
+                            color:'#A5B4FC',
+                        },
+                        width:{
+                            sm:'300px',
+                        }
+                    }}
+                />
+                <TextField
+                    id="filled-basic" 
+                    label="Password" 
+                    variant="filled"
+                    size="small"
+                    name="password"
                     value={userInfo.password}
-                    onChange={handleChange}></input>
-                </label>
-                <p>{formErrors.password}</p>
-                <input type="submit" value='Register' className="submit-btn"></input>
+                    onChange={handleChange}
+                    error={formErrors?.password ? true : false}
+                    helperText={formErrors?.password}
+                    sx={{backgroundColor: '#2e2270',
+                        ".MuiInputLabel-root": {
+                            color:'#A5B4FC'
+                        },
+                        input:{
+                            color:'#A5B4FC',
+                        },
+                        width:{
+                            sm:'300px',
+                        },
+                    }}
+                />
+                <Button type="submit"
+                    // sx={props.buttonStyle, {width:{
+                    //     sm:'300px'
+                    //   },
+                    //   margin: {
+                    //     lg: '10px 0 0 0'
+                    //   },}}
+                    sx={props.buttonStyles}
+                      >
+                        Register
+                </Button>
+                {loginError && 
+                    <div className="text-rose-600 flex gap-2 items-center justify-center">
+                        <ErrorIcon sx={{ color:'red', fontSize: 20 }}/>
+                        {loginError}
+                    </div>}
             </form>
         </div>
+            
     );
 }
 

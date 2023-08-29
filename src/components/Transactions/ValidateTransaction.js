@@ -1,26 +1,26 @@
-function ValidateTransaction(values) {
+function validateTransaction(values) {
     const errors = {};
 
     if(!values.name){
-        errors.name = 'Transaction name required.';
+        errors.name = 'Title required.';
     }
     if(values.name.length > 10){
-        errors.name = 'Transaction name cannot exceed 10 characters.';
+        errors.name = 'Title cannot exceed 10 characters.';
     }
 
     if(!values.account){
-        errors.account = 'Transaction account required.';
+        errors.account = 'Account required.';
     }
 
     if(!values.category){
-        errors.category = 'Transaction category required.';
+        errors.category = 'Category required.';
     }
 
     if( isNaN(values.date) || values.date < 1 || values.date > 30){
         errors.date = 'Date must be a number between 1 and 30.';
     }
     if(!values.date){
-        errors.date = 'Transaction date required.';
+        errors.date = 'Date required.';
     }
 
 
@@ -28,9 +28,14 @@ function ValidateTransaction(values) {
         errors.value = 'Value must be a number between 0.01 and 1,000,000.00.';
     }
     if(!values.value){
-        errors.value = 'Transaction value required.';
+        errors.value = 'Value required.';
+    }
+
+    if(values.category === 'Transfer' && typeof values.transferTo === 'object'){
+        errors.transferTo = 'Account required.';
     }
     return errors;
+
 }
 
-export default ValidateTransaction;
+export default validateTransaction;

@@ -30,16 +30,32 @@
     flex-direction: column;
 }
 
-.goal__wrapper span{
-    font-size: 11px;
-}
-
 .goalsModal{
     grid-area: goals;
 }
 
 .goal__title{
     color:var(--btn-text);
+}
+
+.goal__bar{
+    position:relative;
+}
+
+.goal__percent{
+    position: absolute;
+    left:0;
+    right:0;
+    top: 25%;
+    margin: auto;
+    color: var(--modal-background);
+    font-size: 20px;
+    font-weight: 900;
+}
+
+.goal__percentage{
+    font-size: 15px;
+    font-weight: 900;
 }
 
 .temp--background{
