@@ -8,7 +8,6 @@ import SpendingModal from "./Spending/SpendingModal";
 import AnalyticsModal from './Analytics/AnalyticsModal';
 import TransactionsModal from './Transactions/TransactionsModal';
 import GoalsModal from './Goals/GoalsModal';
-// import './Dashboard.css';
 import PulseLoader from "react-spinners/PulseLoader";
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -17,7 +16,6 @@ function Dashboard() {
     const [ theme, setTheme ] = useState('dark');
     const [ showNav, setShowNav ] = useState(false);
     const [ user, loading ] = useAuthState(auth);
-
 
     useEffect(() => {
         if(theme === 'dark'){
@@ -84,7 +82,7 @@ function Dashboard() {
                 <div className="static">
                     {showNav && <Nav theme={theme} changeTheme={changeTheme} buttonStyles={buttonStyles} toSetShowNavOff={toSetShowNavOff}/>}
                     <div className="h-full w-full">
-                        <aside className="flex flex-row justify-between items-center p-3 text-indigo-300">
+                        <aside className="flex flex-row justify-between items-center p-3 text-indigo-300 dark:text-indigo-800">
                             <div className="basis-1/3">
                                 <h1 className="">{capitalize(user?.displayName)}'s</h1>
                                 <h2>Monthly Dashboard</h2>

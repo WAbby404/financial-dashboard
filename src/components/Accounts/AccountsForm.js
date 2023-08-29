@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-import validateAccounts from './validateAccounts';
+import validateAccounts from './validateAccounts.js';
 import capitalizeName from '../capitalizeName';
 
 function AccountsForm(props) {

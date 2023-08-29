@@ -163,9 +163,9 @@ function AccountsModal(props) {
 
     return (
         <section className="w-full order-1 xl:col-span-3 xl:row-span-12 xl:w-full xl:h-full">
-            <div className="bg-indigo-900 rounded-sm p-3 m-3 flex flex-col gap-2 h-80 sm:w-10/12 sm:m-auto md:w-9/12 xl:w-full xl:h-full">
+            <div className="bg-indigo-900 rounded-sm p-3 m-3 flex flex-col gap-2 h-80 sm:w-10/12 sm:m-auto md:w-9/12 xl:w-full xl:h-full dark:bg-indigo-500">
                 <header className="flex justify-between">
-                    <h2 className="text-indigo-300 font-bold text-xl">
+                    <h2 className="text-indigo-300 font-bold text-xl dark:text-indigo-800">
                         Accounts
                     </h2>
                     <Button sx={props.buttonStyles} onClick={() => toSetModalOn()} variant='contained'>

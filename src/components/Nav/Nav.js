@@ -33,7 +33,7 @@ function Nav(props) {
                 <footer className="flex flex-col gap-5 sm:gap-3 md:pb-12">
                     <div className="flex flex-col gap-2 w-2/5 m-auto md:w-4/5">
                         <Button size='small' onClick={() => props.toSetShowNavOff()} variant='outlined' sx={{color:'rgb(224 231 255)'}}>Close Navigation</Button>
-                        <Button size='small' onClick={() => props.changeTheme()} sx={props.buttonStyles}>{props.theme ? 'Light Mode' : 'Dark Mode'}</Button>
+                        <Button size='small' onClick={() => props.changeTheme()} sx={props.buttonStyles}>{props.theme === 'light' ? 'Light Mode' : 'Dark Mode'}</Button>
                         <Button size='small' onClick={() => auth.signOut()} sx={props.buttonStyles}>Sign out</Button>
                     </div>
                     <div className="flex gap-7 justify-center">

@@ -7,7 +7,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
 function Accounts(props) {
-    // const [ count, setCount ] = useState(0);
     const [ user ] = useAuthState(auth);
 
     useEffect(()=> {
