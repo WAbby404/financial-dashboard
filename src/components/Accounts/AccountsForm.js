@@ -2,14 +2,13 @@ import React, { useState, useRef, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-import validateAccounts from './validateAccounts.js';
+import validateAccounts from './validateAccounts';
 import capitalizeName from '../capitalizeName';
 
 function AccountsForm(props) {
     const initialValues = { name: "", total: 0, debit: undefined, id:Math.random()*1000 };
     const [ formValues, setFormValues ] = useState(initialValues);
     const [ formErrors, setFormErrors ] = useState(null);
-    // const [ uniqueAccountNames, setUniqueAccountNames ] = useState(['Checking', 'Credit Card', 'Savings']);
     const topInputBox = useRef();
 
     const accountTypes = [{label: 'Debit'},

@@ -7,9 +7,6 @@ function validateAccounts(values) {
     if(values.name.length > 10){
         errors.name = 'Name cannot exceed 10 characters.';
     }
-    // if(uniqueAccountNames.includes(values.name)){
-    //     errors.name = 'Account name must be unique.'
-    // }
 
     if(values.debit === undefined){
         errors.debit = 'Type required.';
