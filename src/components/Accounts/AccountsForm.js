@@ -95,7 +95,7 @@ function AccountsForm(props) {
     const accountsForm = () => {
         return(
             <form onSubmit={handleSubmit} className="flex flex-col gap-2 sm:gap-1 md:gap-4">
-                <h3 className="text-indigo-300 font-medium">
+                <h3 className="text-indigo-900 font-medium dark:text-indigo-300">
                     Create your Account
                 </h3>
                 <TextField
@@ -151,7 +151,7 @@ function AccountsForm(props) {
         <article className="basis-1/2">
             {props.formOn === true ? accountsForm() :
                 <header className="flex flex-col text-center m-auto">
-                    <h3 className="text-indigo-300 font-medium">
+                    <h3 className="text-indigo-900 font-medium dark:text-indigo-300">
                         Edit, Delete or
                     </h3>
                     <Button sx={props.buttonStyles} 

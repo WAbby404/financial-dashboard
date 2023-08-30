@@ -196,9 +196,9 @@ function TransactionsModal(props) {
 
     return (
         <section className="w-full order-2 xl:col-span-3 xl:row-span-12 xl:w-full xl:h-full xl:order-3">
-            <div className="bg-indigo-900 rounded-sm p-3 m-3 flex flex-col gap-2 max-h-80 sm:w-10/12 sm:m-auto md:w-9/12 xl:w-full xl:h-full xl:max-h-none">
+            <div className="bg-slate-50 dark:bg-indigo-900 rounded-sm p-3 m-3 flex flex-col gap-2 max-h-80 sm:w-10/12 sm:m-auto md:w-9/12 xl:w-full xl:h-full xl:max-h-none">
                 <header className="flex justify-between">
-                    <h2 className="text-indigo-300 font-bold text-xl">Transactions</h2>
+                    <h2 className="text-indigo-900 dark:text-indigo-300 font-bold text-xl">Transactions</h2>
                     <Button sx={props.buttonStyles} onClick={() => toSetModalOn()}>
                         Manage Transactions
                     </Button>
@@ -228,9 +228,9 @@ function TransactionsModal(props) {
                         toSetDialogBoxOffAndClearGoal={exitWithCancelOn ? exitDialogWithCancel : exitDialogWithX} 
                         dialogTitle="Exit while editing your transaction?"
                         dialogText="Exiting now will cause the transaction you are editing to be lost."/>
-                    <article className="container h-[37rem] w-full bg-indigo-900 p-3 sm:max-h-[98vh] md:w-10/12 md:max-h-[60%] lg:max-h-[85%] xl:max-w-[50%]">
+                    <article className="container h-[37rem] w-full bg-slate-50 dark:bg-indigo-900 p-3 sm:max-h-[98vh] md:w-10/12 md:max-h-[60%] lg:max-h-[85%] xl:max-w-[50%]">
                         <header className="flex justify-between">
-                            <h2 className="text-indigo-300 font-bold text-xl">Transactions</h2>
+                            <h2 className="text-indigo-900 dark:text-indigo-300 font-bold text-xl">Transactions</h2>
                             <Button onClick={() => toSetModalOff()} className="btn" size="small" sx={props.buttonStyles}>
                                 X
                             </Button>

@@ -80,7 +80,7 @@ function GoalsForm(props) {
     const goalForm = () => {
         return(
             <form onSubmit={handleSubmit} className="flex flex-col gap-2 sm:gap-1 md:gap-5 xl:gap-3">
-                <h4 className="m-atuo text-center text-indigo-300 text-base font-medium">
+                <h4 className="m-atuo text-center text-indigo-900 dark:text-indigo-300 text-base font-medium">
                     {props.editOn === false ? 'Create your goal' : 'Edit your goal' }
                 </h4>
                 <div className="flex flex-col gap-2 sm:flex-row sm:pr-12 md:flex-col md:pr-0 md:gap-5">
@@ -150,7 +150,7 @@ function GoalsForm(props) {
         <article>
             {props.formOn === true ? goalForm() : 
                 <div className="w-full flex justify-center gap-2">
-                    <div className="text-indigo-300 font-medium">
+                    <div className="text-indigo-900 dark:text-indigo-300 font-medium">
                         Edit, Delete or
                     </div>
                     <Button sx={props.buttonStyles} onClick={() => toSetFormOn()}>

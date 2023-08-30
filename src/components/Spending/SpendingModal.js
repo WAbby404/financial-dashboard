@@ -75,14 +75,14 @@ function SpendingModal(props) {
     }
 
     return (
-        <section className="bg-indigo-900 rounded-sm p-3 m-3 flex flex-col gap-2 order-4 sm:w-10/12 sm:m-auto md:w-9/12 xl:w-full xl:h-full xl:col-span-6 xl:row-span-8">
-            <h2 className="text-indigo-300 font-bold text-xl">Spending per category</h2>
+        <section className="bg-slate-50 dark:bg-indigo-900 rounded-sm p-3 m-3 flex flex-col gap-2 order-4 sm:w-10/12 sm:m-auto md:w-9/12 xl:w-full xl:h-full xl:col-span-6 xl:row-span-8">
+            <h2 className="text-indigo-900 dark:text-indigo-300 font-bold text-xl">Spending per category</h2>
             {allTransactions.length === 0 ? 
-                    <h3 className="text-indigo-300 text-center">Add transactions to see your spending chart</h3> 
+                    <h3 className="text-indigo-900 dark:text-indigo-300 text-center">Add transactions to see your spending chart</h3> 
             :
                 <div className="flex flex-col xl:flex-row xl:w-full xl:h-full">
                     <div className="basis-1/2 xl:m-auto">
-                        <h3 className="text-indigo-300 text-lg h-8 text-center self-center pt-3">{categories[currentCategory]}</h3>
+                        <h3 className="text-indigo-900 dark:text-indigo-300 text-lg h-8 text-center self-center pt-3">{categories[currentCategory]}</h3>
                         <SpendingGraph
                             formattedTransactions={formattedTransactions}
                             currentCategory={currentCategory}
@@ -90,11 +90,12 @@ function SpendingModal(props) {
                     </div>
                     <div className="basis-1/2 max-h-full">
                         <div className="flex justify-between pb-2 items-center md:w-10/12 md:m-auto">
-                            <h4 className="text-indigo-300 text-xl">Categories</h4>
-                            <h4 className="text-indigo-300 font-medium text-xl text-right">{`$${transactionsTotal()} total`}</h4>
+                            <h4 className="text-indigo-900 dark:text-indigo-300 text-xl">Categories</h4>
+                            <h4 className="text-indigo-900 dark:text-indigo-300 font-medium text-xl text-right">{`$${transactionsTotal()} total`}</h4>
                         </div>
-                        <div className='xl:overflow-y-auto xl:max-h-56 2xl:max-h-64'>
+                        <div className='xl:overflow-y-auto xl:max-h-56 2xl:max-h-64 2xl:w-11/12 2xl:m-auto'>
                             <SpendingAccordion
+                            theme={props.theme}
                             formattedTransactions={formattedTransactions}
                             allTransactions={allTransactions}
                             currentCategory={currentCategory}

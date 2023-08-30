@@ -48,7 +48,7 @@ function Goals(props) {
                 return (
                     <li key={goalList[0].id} className="w-28 xl:pb-2">
                         <div className="flex flex-col justify-center text-center">
-                            <h3 className={`text-indigo-300 font-medium sm:text-sm ${ props.modalOn ? 'xl:text-lg' : 'xl:text-base'}`}>{goalList[0].name}</h3>
+                            <h3 className={`text-indigo-900 dark:text-indigo-300 font-medium sm:text-sm ${ props.modalOn ? 'xl:text-lg' : 'xl:text-base'}`}>{goalList[0].name}</h3>
                             <div className="w-full h-full relative">
                                 <LinearProgress variant="determinate" value={Math.floor(goalList[0].current / goalList[0].total * 100)}
                                     sx={{
@@ -67,7 +67,7 @@ function Goals(props) {
                                     <span className="">%</span>
                                 </div>
                             </div>
-                            <p className={`text-indigo-300 font-medium sm:text-sm ${ props.modalOn ? 'xl:text-lg' : 'xl:text-base'}`}>
+                            <p className={`text-indigo-900 dark:text-indigo-300 font-medium sm:text-sm ${ props.modalOn ? 'xl:text-lg' : 'xl:text-base'}`}>
                                 <span className="text-xs">$</span>
                                 {` ${goalList[0].current} / `}
                                 <span className="text-xs">$</span>
@@ -100,7 +100,7 @@ function Goals(props) {
                         return(
                             <li key={goal.id} className="w-28 xl:pb-2">
                                 <div className="flex flex-col justify-center text-center">
-                                    <h3 className={`text-indigo-300 font-medium sm:text-sm ${ props.modalOn ? 'xl:text-lg' : 'xl:text-base'}`}>{goal.name}</h3>
+                                    <h3 className={`text-indigo-900 dark:text-indigo-300 font-medium sm:text-sm ${ props.modalOn ? 'xl:text-lg' : 'xl:text-base'}`}>{goal.name}</h3>
                                     <div className="w-full h-full relative">
                                         <LinearProgress variant="determinate" value={Math.floor(goal.current / goal.total * 100)}
                                         sx={{
@@ -118,7 +118,7 @@ function Goals(props) {
                                             <span>%</span>
                                         </div>
                                     </div>
-                                    <p className={`text-indigo-300 font-medium sm:text-sm ${ props.modalOn ? 'xl:text-lg' : 'xl:text-base'}`}>
+                                    <p className={`text-indigo-900 dark:text-indigo-300 font-medium sm:text-sm ${ props.modalOn ? 'xl:text-lg' : 'xl:text-base'}`}>
                                         <span className="text-xs">$</span>
                                         {` ${goal.current} / `}
                                         <span className="text-xs">$</span>

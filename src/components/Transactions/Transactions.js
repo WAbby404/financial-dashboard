@@ -56,9 +56,9 @@ function Transactions(props) {
                             <div className={`${props.modalOn ? 'flex flex-col md:flex-row md:w-full md:gap-1 md:items-center' : 'flex justify-between w-full' }`}>
                                 <div className="basis-1/3 text-left">
                                     <div className={`${items[0].category === 'Transfer' ? 'text-yellow-400' : (items[0].positive ? 'text-green-600' : 'text-rose-600')} font-bold`}>{items[0].name}</div>
-                                    <div className="text-indigo-300 text-sm">{items[0].transferTo ? `Transfer to ${items[0].transferTo}` : items[0].category}</div>
+                                    <div className="text-indigo-900 dark:text-indigo-300 text-sm">{items[0].transferTo ? `Transfer to ${items[0].transferTo}` : items[0].category}</div>
                                 </div>
-                                <div className={`${props.modalOn ? 'text-left md:text-center' : 'text-center self-center' } text-indigo-300 basis-1/3`}>
+                                <div className={`${props.modalOn ? 'text-left md:text-center' : 'text-center self-center' } text-indigo-900 dark:text-indigo-300 basis-1/3`}>
                                     {items[0].date}
                                 </div>
                                 <div className={`${props.modalOn ? 'text-left md:text-right' : 'text-right' } basis-1/3`}>
@@ -67,7 +67,7 @@ function Transactions(props) {
                                         $
                                         {items[0].value}
                                     </div>
-                                    <div className="text-indigo-300 text-sm">
+                                    <div className="text-indigo-900 dark:text-indigo-300 text-sm">
                                         {items[0].transferTo ? `from ${items[0].account}` : items[0].account}
                                     </div>
                                 </div>
@@ -101,9 +101,9 @@ function Transactions(props) {
                                     <div className={`${props.modalOn ? 'flex flex-col md:flex-row md:w-full md:gap-1 md:items-center' : 'flex justify-between w-full' }`}>
                                         <div className="basis-1/3 text-left">
                                             <h3 className={`${item.category === 'Transfer' ? 'text-yellow-400' : (item.positive ? 'text-green-600' : 'text-rose-600')} font-bold`}>{item.name}</h3>
-                                            <div className="text-indigo-300 text-sm">{item.transferTo ? `Transfer to ${item.transferTo}` : item.category}</div>
+                                            <div className="text-indigo-900 dark:text-indigo-300 text-sm xl:text-base">{item.transferTo ? `Transfer to ${item.transferTo}` : item.category}</div>
                                         </div>
-                                        <div className={`${props.modalOn ? 'text-left md:text-center' : 'text-center self-center' } text-indigo-300 basis-1/3`}>
+                                        <div className={`${props.modalOn ? 'text-left md:text-center' : 'text-center self-center' } text-indigo-900 dark:text-indigo-300 basis-1/3`}>
                                             {item.date}
                                         </div>
                                         <div className={`${props.modalOn ? 'text-left md:text-right' : 'text-right' } basis-1/3`}>
@@ -112,7 +112,7 @@ function Transactions(props) {
                                                 $
                                                 {item.value}
                                             </h3>
-                                            <div className="text-indigo-300 text-sm">
+                                            <div className="text-indigo-900 dark:text-indigo-300 text-sm xl:text-base">
                                                 {item.transferTo ? `From ${item.account}` : item.account}
                                             </div>
                                         </div>
@@ -133,7 +133,7 @@ function Transactions(props) {
                                         </div>
                                     }
                                 </div>
-                                <div className="w-5/6 h-0.5 bg-indigo-800 m-auto xl:my-2"></div>
+                                <div className="w-5/6 h-0.5 bg-indigo-200 dark:bg-indigo-800 m-auto xl:my-2"></div>
                             </li>
                         );
                     })

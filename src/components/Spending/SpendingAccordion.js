@@ -14,20 +14,22 @@ function SpendingAccordion(props) {
 
   let colors = ['#fcba03', '#ec03fc', '#fc6f03', '#03befc', '#52fc03', '#3503fc'];
 
+  let accordionStyles = {
+    backgroundColor: props.theme === 'dark' ? 'rgb(49 46 129)' : 'rgb(248 250 252)',
+    margin: '3px auto',
+    borderRadius: 5,
+    padding: 0,
+    boxShadow: "none",
+    color: '#312e81'
+  }
+
   return(
       props.formattedTransactions.map((value, index) => {
         return(
             <Accordion key={index} 
               expanded={props.currentCategory === index} 
               onChange={handleChange(index)}
-              sx={{
-                backgroundColor: 'rgb(49 46 129)',
-                borderRadius: 5,
-                padding: 0,
-                margin: '3px',
-                boxShadow: "none",
-                color: '#312e81'
-              }}
+              sx={accordionStyles}
             >
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
@@ -35,10 +37,6 @@ function SpendingAccordion(props) {
                 id="panel1a-header"
                 sx={{
                   backgroundColor: `${colors[index]}`,
-                  width:{
-                    xs: '90%',
-                    sm: '80%'
-                  },
                   borderRadius: 2,
                   margin: 'auto',
                   display: 'flex',
@@ -76,12 +74,12 @@ function SpendingAccordion(props) {
                 </Typography>
               </AccordionSummary>
               <AccordionDetails 
-              sx={{overflowY: 'auto'}}>
+              sx={{overflowY: 'auto', margin: 'auto'}}>
                 {props.allTransactions
                   .filter((transaction) => transaction.category === value.name)
                   .map((filteredTransaction, index) => {
                     return(
-                      <div className="flex justify-between text-indigo-300 m-auto w-8/12 sm:w-9/12 sm:m-auto" key={index}>
+                      <div className="flex justify-between text-indigo-900 dark:text-indigo-300 m-auto w-8/12 sm:w-9/12 sm:m-auto" key={index}>
                         <Typography
                           sx={{textAlign:"left", flexBasis: '50%'}}>{filteredTransaction.name}</Typography>
                         <Typography

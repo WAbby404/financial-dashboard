@@ -220,7 +220,7 @@ function TransactionsForm(props) {
     const transactionForm = () => {
         return(
             <div className='flex flex-col justify-center md:gap-3'>
-                <h4 className="text-indigo-300 font-medium sm:text-base xl:text-lg">
+                <h4 className="text-indigo-900 dark:text-indigo-300 font-medium sm:text-base xl:text-lg">
                     {props.editOn === false ? 'Create your transaction' : 'Edit your transaction'}
                 </h4>
                 <form onSubmit={handleSubmit} className="flex flex-col gap-1">
@@ -307,7 +307,7 @@ function TransactionsForm(props) {
                                 }}/>
                         : ''}
                         <div className="flex items-center m-auto">
-                            <div className="text-indigo-300">{formValues?.positive ? <AddIcon/> : <RemoveIcon/> }</div>
+                            <div className="text-indigo-900 dark:text-indigo-300">{formValues?.positive ? <AddIcon/> : <RemoveIcon/> }</div>
                             <TextField
                                 id="filled-basic"
                                 label="Value"
@@ -361,7 +361,7 @@ function TransactionsForm(props) {
         <article className="basis-40 sm:basis-7/12 md:basis-1/2">
             {props.formOn === true ? transactionForm() :
                 <div className="flex flex-col">
-                    <div className="text-indigo-300 font-medium">
+                    <div className="text-indigo-900 dark:text-indigo-300 font-medium">
                         Edit, Delete or
                     </div>
                     <Button sx={props.buttonStyles}

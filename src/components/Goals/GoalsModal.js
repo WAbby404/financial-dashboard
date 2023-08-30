@@ -171,16 +171,13 @@ function GoalsModal(props) {
                 }
         })},
         {onlyOnce: true});
-        // if(!editOnTrue){
-        //     setDeleteSnackbarOn(true);
-        // }
     };
 
     return (
         <section className="w-full order-3 xl:order-2 xl:col-span-6 xl:row-span-4">
-            <div className="bg-indigo-900 rounded-sm p-3 m-3 sm:w-10/12 sm:m-auto md:w-9/12 xl:w-full xl:h-full">
+            <div className="bg-slate-50 rounded-sm p-3 m-3 sm:w-10/12 sm:m-auto md:w-9/12 xl:w-full xl:h-full dark:bg-indigo-900">
                 <header className="flex justify-between">
-                    <h2 className="text-indigo-300 font-bold text-xl">
+                    <h2 className="text-indigo-900 font-bold text-xl dark:text-indigo-300">
                         Goals
                     </h2>
                     <Button onClick={() => toSetModalOn()} sx={props.buttonStyles}>
@@ -212,9 +209,9 @@ function GoalsModal(props) {
                     toSetDialogBoxOffAndClearGoal={exitWithCancelOn ? exitDialogWithCancel : exitDialogWithX} 
                     dialogTitle="Exit while editing your goal?"
                     dialogText="Exiting now will cause the goal you are editing to be lost."/>
-                <article className="container h-[30rem] w-full bg-indigo-900 p-3 md:w-10/12 md:max-h-[60%] lg:max-h-[80%] xl:max-w-[50%] xl:max-h-[80%]">
+                <article className="container h-[30rem] w-full bg-slate-50 p-3 md:w-10/12 md:max-h-[60%] lg:max-h-[80%] xl:max-w-[50%] xl:max-h-[80%] dark:bg-indigo-900">
                     <header className="flex justify-between">
-                        <h3 className="text-indigo-300 font-bold text-xl">Goals</h3>
+                        <h3 className="text-indigo-900 dark:text-indigo-300 font-bold text-xl">Goals</h3>
                         <Button onClick={() => toSetModalOff()} sx={props.buttonStyles} size='small'>
                             X
                         </Button>

@@ -66,30 +66,34 @@ function Dashboard() {
     const buttonStyles = {
         fontSize: 13,
         color: 'rgb(224 231 255)',
-        backgroundColor: 'rgb(37 99 235)',
+        backgroundColor: theme === 'dark' ? 'rgb(37 99 235)' : '#525298',
         '&:hover': {
-            backgroundColor: 'rgb(30 64 175)'
+            backgroundColor: theme === 'dark' ? 'rgb(30 64 175)' : 'rgb(49 46 129)',
         },
         boxShadow: 2
-        // textTransform: 'lowercase !important'
+    }
+
+    const navButtonStyle = {
+        color: theme === 'dark' ? 'rgb(165 180 252)' : 'rgb(49 46 129)'
     }
 
     return(
-        <div className={`bg-indigo-300 container h-full max-w-full dark:bg-indigo-950`} >
-            {console.log(theme)}
+        // rgb(230,230,240)
+        <div className={`bg-indigo-100 container h-full max-w-full dark:bg-indigo-950`} >
+            {/* {console.log(theme)} */}
             { loading && <PulseLoader color="#523eed" />}
             { !user ? <LoginPage buttonStyles={buttonStyles}/> :
                 <div className="static">
                     {showNav && <Nav theme={theme} changeTheme={changeTheme} buttonStyles={buttonStyles} toSetShowNavOff={toSetShowNavOff}/>}
                     <div className="h-full w-full">
-                        <aside className="flex flex-row justify-between items-center p-3 text-indigo-800 dark:text-indigo-300">
+                        <aside className="flex flex-row justify-between items-center p-3 text-indigo-900 dark:text-indigo-300">
                             <div className="basis-1/3">
                                 <h1 className="">{capitalize(user?.displayName)}'s</h1>
                                 <h2>Monthly Dashboard</h2>
                             </div>
                             {setDate()}
                             <IconButton onClick={() => toSetShowNavOn()}
-                                sx={{color: 'white'}}
+                                sx={navButtonStyle}
                                 size="large">
                                 <MenuIcon/>
                             </IconButton>
