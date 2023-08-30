@@ -75,7 +75,7 @@ function AnalyticsGraph(props) {
   return (
     <div className="w-full h-[20rem] flex flex-col gap-1 pt-2 xl:max-h-full">
       <h3 className="text-indigo-300 text-xl xl:hidden">Trends</h3>
-      {console.log(props.transactions)}
+      {/* {console.log(props.transactions)} */}
       {props.transactions === undefined ?
         <div className="text-indigo-300 text-center py-4">Add Transactions to see your Trends chart</div>  
       :

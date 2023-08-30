@@ -7,54 +7,61 @@ import AnalyticsGraph from './AnalyticsGraph';
 function AnalyticsModal(props) {
     const [ user ] = useAuthState(auth);
     const [ transactions, setTransactions ] = useState([]);
-    const [ accounts, setAccounts ] = useState([]);
+    // const [ accounts, setAccounts ] = useState([]);
     const [ income, setIncome ] = useState(0);
     const [ expenses, setExpenses ] = useState(0);
+    const [ accountTotals, setAccountTotals ] = useState({debit: 0, savings: 0, creditCards: 0});
 
     useEffect(() => {
         const db = getDatabase();
         const dbRefTransactions = ref(db, user.uid);
         let accountsData;
         let transactionsData;
-        // console.log(user.uid);
         onValue(dbRefTransactions, (snapshot) => {
-            // console.log(snapshot.val());
             accountsData = snapshot.val().accounts;
             transactionsData = snapshot.val().transactions;
-            // console.log(accountsData);
-            // console.log(transactionsData);
 
             setTransactions(transactionsData);
-            setAccounts(accountsData);
 
         });
 
-        let total = 0;
-        if(typeof transactions === 'object'){
-            Object.values(transactions).forEach((transaction) => {
+
+        if(typeof transactionsData === 'object'){
+            let transactionsTotal = 0;
+            Object.values(transactionsData).forEach((transaction) => {
                 if(transaction.category === 'Money In'){
-                    total += parseFloat(transaction.value);
+                    transactionsTotal += parseFloat(transaction.value);
                 }
             })
+            setIncome(transactionsTotal);
 
-            setIncome(total);
-            expensesTotal(transactions);
+            let expensesTotal = 0;
+            Object.values(transactionsData).forEach((transaction) => {
+                if(transaction.category !== 'Money In' && transaction.category !== 'Transfer' && transaction.category !== 'Credit Card Payment'){
+                    expensesTotal += parseFloat(transaction.value);
+                }
+            })
+            setExpenses(expensesTotal);
         }
+
+        if(typeof accountsData === 'object'){
+            let debitTotal = 0;
+            let creditCardTotal = 0;
+            Object.values(accountsData).forEach((transaction) => {
+                if(transaction.name === 'Savings'){
+                    setAccountTotals({...accountTotals, savings: transaction.total});
+                } else if(transaction.name !== 'Savings' && transaction.debit) {
+                    debitTotal += transaction.total;
+                } else if(!transaction.debit){
+                    creditCardTotal += transaction.total;
+                }
+            });
+            setAccountTotals({...accountTotals, debit: debitTotal, creditCards: creditCardTotal});
+        }
+
+
     }, []); // eslint-disable-line
 
-
-    // move these 2 to useeffect & condense
-    const expensesTotal = (allTransactions) => {
-        if(allTransactions){
-            let total = 0;
-            Object.values(allTransactions).forEach((transaction) => {
-                if(transaction.category !== 'Money In' && transaction.category !== 'Transfer' && transaction.category !== 'Credit Card Payment'){
-                    total += parseFloat(transaction.value);
-                }
-            })
-            setExpenses(total);
-        }
-    };
 
     return (
         <section className="bg-indigo-900 rounded-sm p-3 m-3 flex flex-col gap-2 order-5 sm:w-10/12 sm:m-auto md:w-9/12 xl:w-full xl:h-full xl:col-span-12 xl:row-span-6">
@@ -99,24 +106,24 @@ function AnalyticsModal(props) {
                         <div className="flex flex-col justify-center text-center items-center xl:flex-row xl:gap-10 ">
                             <div className='flex flex-col'>
                                 <h5 className="text-indigo-300 text-lg">Debit Accs. Total</h5>
-                                <div className="text-green-600 xl:text-2xl">$947.00</div>
+                                <div className="text-green-600 xl:text-2xl">{accountTotals.debit}</div>
                             </div>
                             <div className="text-indigo-300">+</div>
                             <div>
                                 <h5 className="text-indigo-300 text-lg">Savings</h5>
-                                <div className="text-green-600 xl:text-2xl">$3037.22</div>
+                                <div className="text-green-600 xl:text-2xl">{accountTotals.savings}</div>
                             </div>
                             <div className="text-indigo-300 xl:text-2xl">-</div>
                             <div>
                                 <h5 className="text-indigo-300 text-lg">Credit Cards Total</h5>
-                                <div className="text-rose-600 xl:text-2xl">$7,099.77</div>
+                                <div className="text-rose-600 xl:text-2xl">{accountTotals.creditCards}</div>
                             </div>
                             <div className="w-4/6 h-0.5 bg-indigo-300 m-auto sm:w-3/6 lg:w-2/6 xl:hidden"></div>
                             <div className="hidden text-indigo-300 xl:block">
                                 =
                             </div>
                             <div className="flex text-center m-auto gap-2 xl:flex-col-reverse">
-                                <div className="text-green-600 xl:text-2xl">$30,500.27</div>
+                                <div className="text-green-600 xl:text-2xl">{accountTotals.debit + accountTotals.savings - accountTotals.creditCards}</div>
                                 <h5 className="text-indigo-300">Total</h5>
                             </div>
                         </div>
