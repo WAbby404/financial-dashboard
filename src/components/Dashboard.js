@@ -75,14 +75,14 @@ function Dashboard() {
     }
 
     return(
-        <div className={`bg-indigo-950 container h-full max-w-full dark:bg-indigo-300`} >
+        <div className={`bg-indigo-300 container h-full max-w-full dark:bg-indigo-950`} >
             {console.log(theme)}
             { loading && <PulseLoader color="#523eed" />}
             { !user ? <LoginPage buttonStyles={buttonStyles}/> :
                 <div className="static">
                     {showNav && <Nav theme={theme} changeTheme={changeTheme} buttonStyles={buttonStyles} toSetShowNavOff={toSetShowNavOff}/>}
                     <div className="h-full w-full">
-                        <aside className="flex flex-row justify-between items-center p-3 text-indigo-300 dark:text-indigo-800">
+                        <aside className="flex flex-row justify-between items-center p-3 text-indigo-800 dark:text-indigo-300">
                             <div className="basis-1/3">
                                 <h1 className="">{capitalize(user?.displayName)}'s</h1>
                                 <h2>Monthly Dashboard</h2>
