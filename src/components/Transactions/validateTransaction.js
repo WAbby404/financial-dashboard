@@ -1,4 +1,4 @@
-function validateTransactions(values) {
+function validateTransaction(values) {
     const errors = {};
 
     if(!values.name){
@@ -38,4 +38,4 @@ function validateTransactions(values) {
 
 }
 
-export default validateTransactions;
+export default validateTransaction;

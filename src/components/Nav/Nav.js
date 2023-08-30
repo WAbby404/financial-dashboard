@@ -21,7 +21,7 @@ function Nav(props) {
             imgData = snapshot.val();
             setProfileImgData(imgData);
         },{onlyOnce: true})
-    }, [])
+    }, []); // eslint-disable-line
 
     return (
         <div className="absolute bg-gray-950/75 w-full h-screen z-50 top-0 p-3 flex flex-col justify-center items-center xl:inset-x-0">

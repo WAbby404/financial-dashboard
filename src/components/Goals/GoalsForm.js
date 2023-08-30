@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import validateGoals from './validateGoals';
+import validateGoal from './validateGoal';
 import capitalizeName from '../capitalizeName';
 
 function GoalsForm(props) {
@@ -33,7 +33,7 @@ function GoalsForm(props) {
     const handleSubmit = (e) =>{
         e.preventDefault();
         // capture any unacceptable answers from form input
-        const errors = validateGoals(formValues);
+        const errors = validateGoal(formValues);
         // if there are no errors in error object send to database and clear form & set focus to first input box
         if(Object.keys(errors).length === 0){
             props.createGoal(formValues);

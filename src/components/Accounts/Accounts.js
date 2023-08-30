@@ -26,9 +26,7 @@ function Accounts(props) {
                 }
                 props.toSetAllAccounts(newAccounts);
         })});
-    }, []); 
-
-// eslint-disable-line
+    }, []); // eslint-disable-line
 
     const editAccount = (accountToEdit, index) => {
         props.editAccount(accountToEdit, index);
@@ -63,7 +61,7 @@ function Accounts(props) {
                     return (
                         <li key={account.id} className={`pb-2 flex flex-col ${props.modalOn ? 'md:flex-row' : ''}`}>
                             <div className="flex flex-col md:justify-center md:w-full">
-                                <h3 className="text-indigo-300 font-medium pl-3 md:text-lg">{account.name}</h3>
+                                <h3 className="text-indigo-300 font-medium pl-3 md:text-lg dark:text-indigo-800">{account.name}</h3>
                                 <div className="flex justify-center">
                                     {/* {console.log(account.total)} */}
                                     <h4 className={`${account.debit ? 'text-green-600' : 'text-rose-600'} font-bold text-3xl xl:text-5xl ${props.modalOn ? '' : 'text-4xl '}`}>

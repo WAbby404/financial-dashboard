@@ -16,6 +16,8 @@ function AnalyticsGraph(props) {
         let newCategories = uniqueCategories.filter((category) => {
           if(category !== 'Money In' && category !== 'Transfer' && category !== 'Credit Card Payment'){
             return category;
+          } else {
+            return false;
           }
         });
         setGraphCategories(newCategories);
@@ -66,7 +68,7 @@ function AnalyticsGraph(props) {
 
     };
     createDataPoints(props.transactions);
-  }, [props.transactions])
+  }, [props.transactions]); // eslint-disable-line
 
   let colors = ['#fcba03', '#ec03fc', '#fc6f03', '#03befc', '#52fc03', '#3503fc'];
 

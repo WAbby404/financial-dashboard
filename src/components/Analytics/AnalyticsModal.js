@@ -32,7 +32,6 @@ function AnalyticsModal(props) {
         let total = 0;
         if(typeof transactions === 'object'){
             Object.values(transactions).forEach((transaction) => {
-                // console.log(transaction);
                 if(transaction.category === 'Money In'){
                     total += parseFloat(transaction.value);
                 }
@@ -41,12 +40,11 @@ function AnalyticsModal(props) {
             setIncome(total);
             expensesTotal(transactions);
         }
-    }, []);
+    }, []); // eslint-disable-line
 
 
     // move these 2 to useeffect & condense
     const expensesTotal = (allTransactions) => {
-        // console.log(allTransactions);
         if(allTransactions){
             let total = 0;
             Object.values(allTransactions).forEach((transaction) => {
@@ -128,11 +126,11 @@ function AnalyticsModal(props) {
                     {/* {console.log(transactions)} */}
 
                     {/* need to fix this, maybe with default data??? */}
-                    {/* {(transactions && Object.keys(transactions).length > 0) ?
+                    {(transactions && Object.keys(transactions).length > 0) ?
                         <AnalyticsGraph transactions={transactions}/>
                         :
                         <div className="text-indigo-300">Create Transactions to see your Spending Trends</div> 
-                    } */}
+                    }
                 </figure>
             </div>
         </section>

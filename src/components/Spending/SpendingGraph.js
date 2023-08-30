@@ -1,32 +1,18 @@
-import React, { useState, useEffect, useCallback } from 'react';
-// import { VictoryPie } from 'victory';
+import React, { useCallback } from 'react';
 import { ResponsiveContainer, PieChart, Pie, Sector, Cell } from "recharts";
-// import { getDatabase, ref, onValue } from "firebase/database";
-// import { useAuthState } from 'react-firebase-hooks/auth';
-// import { auth } from '../../config/Firebase';
-
 
 function Spending(props) {
-    // const [ user ] = useAuthState(auth);
-
-    // move activeIndex to modal so onclick we can make that categories accordion expand and 
-    // make the category get selected
-
     const onMouseOver = useCallback((data, index) => {
-      // console.log(index);
-      // setActiveIndex(index);
       props.toSetCurrentCategory(index);
-    }, []);
+    }, []); // eslint-disable-line
 
     const onMouseLeave = useCallback((data, index) => {
-      // setActiveIndex(null);
       props.toSetCurrentCategory(null);
-    }, []);
+    }, []); // eslint-disable-line
 
     let colors = ['#fcba03', '#ec03fc', '#fc6f03', '#03befc', '#52fc03', '#3503fc'  ];
 
     const renderActiveShape = props => {
-      // console.log(props);
       const RADIAN = Math.PI / 180;
       const {
         cx,
