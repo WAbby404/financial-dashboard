@@ -1,4 +1,4 @@
-function validateGoal(values) {
+function validateGoals(values) {
     const errors = {}; 
     if(!values.name){
         errors.name = 'Name required.';
@@ -36,4 +36,4 @@ function validateGoal(values) {
     return errors;
 }
 
-export default validateGoal;
+export default validateGoals;

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
-import validateTransaction from './validateTransaction';
+import validateTransactions from './validateTransactions';
 import capitalizeName from '../capitalizeName';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
@@ -51,7 +51,7 @@ function TransactionsForm(props) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const errors = validateTransaction(formValues);
+        const errors = validateTransactions(formValues);
         // If there are no errors, send transaction to database
         // console.log(Object.keys(errors));
         if(Object.keys(errors).length === 0){
