@@ -98,7 +98,7 @@ function Goals(props) {
                 return (
                     goalList.map((goal, index) => {
                         return(
-                            <li key={goal.id} className="w-28 xl:pb-2">
+                            <li key={goal.id} className="max-w-sm xl:pb-2 ">
                                 <div className="flex flex-col justify-center text-center">
                                     <h3 className={`text-indigo-900 dark:text-indigo-300 font-medium sm:text-sm ${ props.modalOn ? 'xl:text-lg' : 'xl:text-base'}`}>{goal.name}</h3>
                                     <div className="w-full h-full relative">
