@@ -11,6 +11,7 @@ function AnalyticsModal(props) {
     const [ income, setIncome ] = useState(0);
     const [ expenses, setExpenses ] = useState(0);
     const [ accountTotals, setAccountTotals ] = useState({debit: 0, savings: 0, creditCards: 0});
+    const [ count, setCount ] = useState(0);
 
     useEffect(() => {
         const db = getDatabase();
@@ -20,11 +21,12 @@ function AnalyticsModal(props) {
         onValue(dbRefTransactions, (snapshot) => {
             accountsData = snapshot.val().accounts;
             transactionsData = snapshot.val().transactions;
-
+ 
             setTransactions(transactionsData);
-
+            setCount(count + 1);
         });
 
+        
 
         if(typeof transactionsData === 'object'){
             let transactionsTotal = 0;
@@ -59,7 +61,7 @@ function AnalyticsModal(props) {
             setAccountTotals({...accountTotals, debit: debitTotal, creditCards: creditCardTotal});
         }
 
-
+        setCount(count + 1);
     }, []); // eslint-disable-line
 
 
@@ -67,7 +69,11 @@ function AnalyticsModal(props) {
         <section className="bg-slate-50 dark:bg-indigo-900 rounded-sm p-3 m-3 flex flex-col gap-2 order-5 sm:w-10/12 sm:m-auto md:w-9/12 xl:w-full xl:h-full xl:col-span-12 xl:row-span-6">
             <div className="flex">
                 <h2 className="text-indigo-900 dark:text-indigo-300 font-bold text-xl basis-7/12">Analytics</h2>
-                <h2 className="text-indigo-900 dark:text-indigo-300 font-semibold text-lg hidden xl:block">Trends</h2>
+                {/* <div className='flex gap-5'> */}
+                    <h2 className="text-indigo-900 dark:text-indigo-300 font-semibold text-lg hidden xl:inline">Trends</h2>
+                    {/* <h3 className="text-indigo-900 dark:text-indigo-300 pl-5 text-base hidden xl:inline">Amount spent on days of the month</h3> */}
+                {/* </div> */}
+
             </div>
             <div className="flex flex-col xl:flex-row xl:h-5/6 xl:px-5"> 
                 <div className="flex flex-col pb-3 xl:flex-col xl:basis-2/3">
@@ -86,7 +92,7 @@ function AnalyticsModal(props) {
                                 </div>
                                 <div className="text-indigo-900 dark:text-indigo-300 xl:text-4xl self-end">=</div>
                             </div>
-                            <div className="w-4/6 h-0.5 bg-indigo-900 dark:bg-indigo-300m-auto sm:w-3/6 lg:w-2/6 xl:hidden"></div>
+                            <div className="w-4/6 h-0.5 bg-indigo-900 m-auto dark:bg-indigo-300m-auto sm:w-3/6 lg:w-2/6 xl:hidden"></div>
                             <div className="flex justify-center gap-3 items-center xl:gap-10">
                                 <div className="flex flex-col justify-center items-center">
                                     <h5 className="text-indigo-900 dark:text-indigo-300 text-lg">{income - expenses > 0 ? 'Pos. Cashflow' : 'Neg. Cashflow'}</h5>

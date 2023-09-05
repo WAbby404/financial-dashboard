@@ -45,6 +45,7 @@ function TransactionsForm(props) {
         if(props.transactionToEdit?.name.length !== 0 && props.editOn === true){
             setFocus();
             setFormValues(props.transactionToEdit);
+            setFormErrors(null);
         }
     }, [props.transactionToEdit]);  // eslint-disable-line
 
@@ -59,7 +60,6 @@ function TransactionsForm(props) {
             setFocus();
             // Reset form and show success message
             toSetFormOn();
-
             reflectTransactionInAccounts(formValues);
             // reflect transaction in account here
 
@@ -104,13 +104,16 @@ function TransactionsForm(props) {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormValues({...formValues, [name]: value});
-        setFormErrors({...formErrors, [name]: null});
         if(name === 'positive' && value === 'true'){
             setFormValues({...formValues, positive: true});
         } else if (name === 'positive' && value === 'false'){
             setFormValues({...formValues, positive: false});
+        } else if (name === 'value' || name === 'date'){
+            setFormValues({...formValues, [name]: value.replace(/^0+/, '').trim()});
+        } else {
+            setFormValues({...formValues, [name]: value});
         }
+        setFormErrors({...formErrors, [name]: null});
     }
 
     // Exit form with cancel button

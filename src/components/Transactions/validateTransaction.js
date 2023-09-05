@@ -1,38 +1,47 @@
 function validateTransaction(values) {
+    let monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    let currentMonth = monthDays[new Date().getMonth()];
+
     const errors = {};
 
-    if(!values.name){
-        errors.name = 'Title required.';
+    if(!values.name || values.name.trim().length === 0){
+        errors.name = 'Title required';
     }
-    if(values.name.length > 10){
-        errors.name = 'Title cannot exceed 10 characters.';
+    if(values.name.length > 12){
+        errors.name = 'Title cannot exceed 12 characters';
     }
 
     if(!values.account){
-        errors.account = 'Account required.';
+        errors.account = 'Account required';
     }
 
     if(!values.category){
-        errors.category = 'Category required.';
+        errors.category = 'Category required';
     }
 
-    if( isNaN(values.date) || values.date < 1 || values.date > 30){
-        errors.date = 'Date must be a number between 1 and 30.';
+    if( isNaN(values.date) || values.date < 1 || values.date > currentMonth){
+        errors.date = `Date must be a number between 1 and ${currentMonth}`;
     }
     if(!values.date){
-        errors.date = 'Date required.';
+        errors.date = 'Date required';
     }
 
 
-    if( isNaN(values.value) || values.value < 0.01 || values.value > 1000000){
-        errors.value = 'Value must be a number between 0.01 and 1,000,000.00.';
+    if( values.value > 9999999.99){
+        errors.value = 'Value cannot exceed $9,999,999.99';
+    }
+    if(isNaN(values.value)){
+        errors.value = "Value must be a number";
     }
     if(!values.value){
-        errors.value = 'Value required.';
+        errors.value = 'Value required';
+    }
+    if(values.value <= 0){
+        errors.value = 'Value must be positive';
     }
 
     if(values.category === 'Transfer' && typeof values.transferTo === 'object'){
-        errors.transferTo = 'Account required.';
+        errors.transferTo = 'Account required';
     }
     return errors;
 

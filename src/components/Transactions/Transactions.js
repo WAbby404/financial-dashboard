@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getDatabase, ref, onValue } from "firebase/database";
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../../config/Firebase';
@@ -8,6 +8,7 @@ import EditIcon from '@mui/icons-material/Edit';
 
 function Transactions(props) {
     const [ user ] = useAuthState(auth);
+    const [ count, setCount ] = useState(0);
 
     useEffect(()=> {
         console.log('Transaction useeffect called');
@@ -25,6 +26,7 @@ function Transactions(props) {
                     oldTransactions.push(childData);
                     props.toSetAllTransactions(oldTransactions);
                 }
+                setCount(count + 1);
             })});
     }, []); // eslint-disable-line
 
@@ -46,6 +48,55 @@ function Transactions(props) {
         }
     };
 
+    const formatDate = (date) => {
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const currentMonth = months[new Date().getMonth()];
+        if(date === '1' || date === '21' || date === '31'){
+            return (
+                <div className="flex m-auto gap-0.5 md:justify-center">
+                    <div className="text-sm pr-1">{currentMonth}</div>
+                    {date}
+                    <div className="text-xs">st</div>
+                </div>
+                );
+        } else if (date === '2' || date === '22'){
+            return(
+                <div className="flex m-auto gap-0.5 md:justify-center">
+                    <div className="text-sm pr-1">{currentMonth}</div>
+                    {date}
+                    <div className="text-xs">nd</div>
+                </div>
+            )
+        } else if (date === '3' || date === '23'){
+            return(
+                <div className="flex m-auto gap-0.5 md:justify-center">
+                    <div className="text-sm pr-1">{currentMonth}</div>
+                    {date}
+                    <div className="text-xs">rd</div>
+                </div>
+            )
+        }
+        return (
+            <div className="flex m-auto gap-0.5 md:justify-center">
+                <div className="text-sm pr-1">{currentMonth}</div>
+                {date}
+                <div className="text-xs">th</div>
+            </div>
+        );
+    };
+
+    const formatMoney = (money, transaction) => {
+        let formattedMoney = money.split('.');
+        return(
+            <div className={`${props.modalOn ? 'md:justify-end' : 'justify-end' } flex`}>
+                <div>{transaction.category === 'Transfer' ? '' : (transaction.positive ? '+' : '-')}</div>
+                <div className="self-center">$</div>
+                <div>{formattedMoney[0]}</div>
+                <div className="text-xs self-center">.{formattedMoney[1] ? formattedMoney[1] : '00'}</div>
+            </div>
+        )
+    };
+
     const renderSwitch = (items) => {
         switch(true) {
             // case for 1 transaction
@@ -54,18 +105,17 @@ function Transactions(props) {
                     <li key={items[0].id}>
                         <div className="flex flex-col justify-center p-1 md:flex-row-reverse md:w-full md:justify-between md:gap-2">
                             <div className={`${props.modalOn ? 'flex flex-col md:flex-row md:w-full md:gap-1 md:items-center' : 'flex justify-between w-full' }`}>
-                                <div className="basis-1/3 text-left">
+                                <div className="basis-2/6 text-left">
                                     <div className={`${items[0].category === 'Transfer' ? 'text-yellow-400' : (items[0].positive ? 'text-green-600' : 'text-rose-600')} font-bold`}>{items[0].name}</div>
                                     <div className="text-indigo-900 dark:text-indigo-300 text-sm">{items[0].transferTo ? `Transfer to ${items[0].transferTo}` : items[0].category}</div>
                                 </div>
-                                <div className={`${props.modalOn ? 'text-left md:text-center' : 'text-center self-center' } text-indigo-900 dark:text-indigo-300 basis-1/3`}>
-                                    {items[0].date}
+                                <div className={`${props.modalOn ? 'text-left md:text-center' : 'text-center self-center' } text-indigo-900 dark:text-indigo-300 basis-1/6`}>
+                                    {formatDate(items[0].date)}
                                 </div>
-                                <div className={`${props.modalOn ? 'text-left md:text-right' : 'text-right' } basis-1/3`}>
-                                    <div className={`${items[0].category === 'Transfer' ? 'text-yellow-400' : (items[0].positive ? 'text-green-600' : 'text-rose-600')} font-bold`}>
+                                <div className={`${props.modalOn ? 'text-left md:text-right' : 'text-right' } basis-2/6`}>
+                                    <div className={`${items[0].category === 'Transfer' ? 'text-yellow-400' : (items[0].positive ? 'text-green-600' : 'text-rose-600')} font-bold flex`}>
                                         {items[0].category === 'Transfer' ? '' : (items[0].positive ? '+' : '-')}
-                                        $
-                                        {items[0].value}
+                                        {formatMoney(items[0].value, items[0])}
                                     </div>
                                     <div className="text-indigo-900 dark:text-indigo-300 text-sm">
                                         {items[0].transferTo ? `from ${items[0].account}` : items[0].account}
@@ -98,21 +148,19 @@ function Transactions(props) {
                         return(
                             <li key={item.id}>
                                 <div className="flex flex-col justify-center p-1 md:flex-row-reverse md:w-full md:justify-between md:gap-2">
-                                    <div className={`${props.modalOn ? 'flex flex-col md:flex-row md:w-full md:gap-1 md:items-center' : 'flex justify-between w-full' }`}>
-                                        <div className="basis-1/3 text-left">
+                                    <div className={`${props.modalOn ? 'flex flex-col md:flex-row md:w-full md:gap-1 md:items-center md:justify-between' : 'flex justify-between w-full' }`}>
+                                        <div className="basis-2/6 text-left">
                                             <h3 className={`${item.category === 'Transfer' ? 'text-yellow-400' : (item.positive ? 'text-green-600' : 'text-rose-600')} font-bold`}>{item.name}</h3>
-                                            <div className="text-indigo-900 dark:text-indigo-300 text-sm xl:text-base">{item.transferTo ? `Transfer to ${item.transferTo}` : item.category}</div>
+                                            <div className="text-indigo-900 dark:text-indigo-300 text-sm">{item.transferTo ? `Transfer to ${item.transferTo}` : item.category}</div>
                                         </div>
-                                        <div className={`${props.modalOn ? 'text-left md:text-center' : 'text-center self-center' } text-indigo-900 dark:text-indigo-300 basis-1/3`}>
-                                            {item.date}
+                                        <div className={`${props.modalOn ? 'text-left md:text-center' : 'self-center' } text-indigo-900 dark:text-indigo-300 basis-1/6`}>
+                                            {formatDate(item.date)}
                                         </div>
-                                        <div className={`${props.modalOn ? 'text-left md:text-right' : 'text-right' } basis-1/3`}>
+                                        <div className={`${props.modalOn ? 'text-left md:text-right ' : 'text-right' } basis-2/6`}>
                                             <h3 className={`${item.category === 'Transfer' ? 'text-yellow-400' : (item.positive ? 'text-green-600' : 'text-rose-600')} font-bold`}>
-                                                { item.category === 'Transfer' ? '' : (item.positive ? '+' : '-')}
-                                                $
-                                                {item.value}
+                                                {formatMoney(item.value, item)}
                                             </h3>
-                                            <div className="text-indigo-900 dark:text-indigo-300 text-sm xl:text-base">
+                                            <div className="text-indigo-900 dark:text-indigo-300 text-sm">
                                                 {item.transferTo ? `From ${item.account}` : item.account}
                                             </div>
                                         </div>

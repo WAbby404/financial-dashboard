@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getDatabase, ref, onValue } from "firebase/database";
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../../config/Firebase';
@@ -9,6 +9,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 
 function Goals(props) {
     const [ user ] = useAuthState(auth);
+    const [ count, setCount ] = useState(0);
 
     // Get all goals from database & store in an array to render on screen
     useEffect(()=> {
@@ -23,7 +24,9 @@ function Goals(props) {
                     let oldGoals = props.allGoals;
                     oldGoals.push(childData);
                     props.toSetAllGoals(oldGoals);
+                    // console.log(oldGoals);
                 }
+                setCount(count + 1);
             })});
     }, []); // eslint-disable-line
     
@@ -41,6 +44,21 @@ function Goals(props) {
         return `hsl(${goalColor}, 100%, 50%)`
     }
 
+    const renderBackgroundColor = () => {
+        return props.theme === 'dark' ? '#D7CDFF' : 'rgb(224 231 255)';
+    }
+
+    const formatMoney = (money) => {
+        let formattedMoney = money.split('.');
+        return (
+            <div className="flex">
+                <div className="text-xs pt-1">$</div>
+                <div>{formattedMoney[0]}</div>
+                <div className="text-xs pt-1">{formattedMoney[1] && `.${formattedMoney[1]}`}</div>
+            </div>
+        )
+    }
+
     const renderSwitch = (goalList) => {
         switch(true) {
             // case for 1 transaction
@@ -48,11 +66,11 @@ function Goals(props) {
                 return (
                     <li key={goalList[0].id} className="w-28 xl:pb-2">
                         <div className="flex flex-col justify-center text-center">
-                            <h3 className={`text-indigo-900 dark:text-indigo-300 font-medium sm:text-sm ${ props.modalOn ? 'xl:text-lg' : 'xl:text-base'}`}>{goalList[0].name}</h3>
+                            <h3 className='text-indigo-900 flex items-center basis-1/3 text-ellipsis font-medium h-4 dark:text-indigo-300 sm:text-sm xl:text-base'>{goalList[0].name}</h3>
                             <div className="w-full h-full relative">
                                 <LinearProgress variant="determinate" value={Math.floor(goalList[0].current / goalList[0].total * 100)}
                                     sx={{
-                                        backgroundColor: '#D7CDFF',
+                                        backgroundColor: renderBackgroundColor(),
                                         '& .MuiLinearProgress-bar': {
                                                 backgroundColor: goalBarColor(goalList[0])
                                                 },
@@ -67,11 +85,10 @@ function Goals(props) {
                                     <span className="">%</span>
                                 </div>
                             </div>
-                            <p className={`text-indigo-900 dark:text-indigo-300 font-medium sm:text-sm ${ props.modalOn ? 'xl:text-lg' : 'xl:text-base'}`}>
-                                <span className="text-xs">$</span>
-                                {` ${goalList[0].current} / `}
-                                <span className="text-xs">$</span>
-                                {` ${goalList[0].total}`}
+                            <p className={`text-indigo-900 dark:text-indigo-300 flex justify-center items-center gap-1 font-medium sm:text-sm ${ props.modalOn ? 'xl:text-lg' : 'xl:text-base'}`}>
+                                {formatMoney(goalList[0].current)}
+                                <span className="text-xs">/</span>
+                                {formatMoney(goalList[0].total)}
                             </p> 
                             <div className="flex justify-center gap-1">
                                 {props.modalOn &&
@@ -89,7 +106,6 @@ function Goals(props) {
                                 }
                             </div>
                         </div>
-                        
                     </li>
                 );
 
@@ -98,13 +114,13 @@ function Goals(props) {
                 return (
                     goalList.map((goal, index) => {
                         return(
-                            <li key={goal.id} className="max-w-sm xl:pb-2 ">
-                                <div className="flex flex-col justify-center text-center">
-                                    <h3 className={`text-indigo-900 dark:text-indigo-300 font-medium sm:text-sm ${ props.modalOn ? 'xl:text-lg' : 'xl:text-base'}`}>{goal.name}</h3>
-                                    <div className="w-full h-full relative">
+                            <li key={goal.id} className="xl:pb-2 xl:max-w-sm flex">
+                                <div className={`flex flex-col justify-center items-center text-center ${props.modalOn ? 'gap-0.5' : 'gap-1'}`}>
+                                    <h3 className='text-indigo-900 flex items-center basis-1/3 text-ellipsis font-medium h-4 dark:text-indigo-300 sm:text-sm xl:text-base'>{goal.name}</h3>
+                                    <div className="w-full h-full relative basis-1/3">
                                         <LinearProgress variant="determinate" value={Math.floor(goal.current / goal.total * 100)}
                                         sx={{
-                                            backgroundColor: '#D7CDFF',
+                                            backgroundColor: renderBackgroundColor(),
                                             '& .MuiLinearProgress-bar': {
                                                     backgroundColor: goalBarColor(goal)
                                                     },
@@ -118,11 +134,10 @@ function Goals(props) {
                                             <span>%</span>
                                         </div>
                                     </div>
-                                    <p className={`text-indigo-900 dark:text-indigo-300 font-medium sm:text-sm ${ props.modalOn ? 'xl:text-lg' : 'xl:text-base'}`}>
-                                        <span className="text-xs">$</span>
-                                        {` ${goal.current} / `}
-                                        <span className="text-xs">$</span>
-                                        {` ${goal.total}`}
+                                    <p className='flex basis-1/3 justify-center gap-1 pt-1 text-indigo-900 dark:text-indigo-300 font-medium sm:text-sm xl:text-base'>
+                                        {formatMoney(goal.current)}
+                                        <div>/</div>
+                                        {formatMoney(goal.total)}
                                     </p>
                                     <div className="flex justify-center gap-1">
                                         {props.modalOn &&
@@ -153,9 +168,8 @@ function Goals(props) {
     return (
         <article className="w-full h-full relative lg:w-10/12 lg:m-auto">
             {/* <div className="absolute z-40 w-24 h-4/6 bg-gradient-to-r from-indigo-900 "></div> */}
-            <ul className="overflow-x-auto flex gap-9 w-full pl-3 py-2 xl:py-0">
+            <ul className="overflow-x-auto overflow-y-hidden flex gap-9 w-full pl-3 py-2 xl:py-0">
                 {renderSwitch(props.allGoals)}
-                
             </ul>
             {/* <div className="absolute z-40 w-24 h-4/6 bg-gradient-to-r from-transparent to-indigo-900 "></div> */}
         </article>

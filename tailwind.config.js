@@ -5,6 +5,9 @@ module.exports = {
   ],
   darkMode: "class",
   theme: {
+    fontFamily: {
+      'poppins': ['poppins', 'sans-serif']
+    },
     extend: {
       gridTemplateRows: {
         '18': 'repeat(18, minmax(0, 1fr))',

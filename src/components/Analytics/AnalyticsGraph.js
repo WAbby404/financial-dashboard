@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { LineChart, Line, ResponsiveContainer, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
+import { LineChart, Line, ResponsiveContainer, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Label } from 'recharts';
 
 function AnalyticsGraph(props) {
   const [ graphDataPoints , setGraphDataPoints ] = useState([]);
@@ -74,17 +74,44 @@ function AnalyticsGraph(props) {
 
   return (
     <div className="w-full h-[20rem] flex flex-col gap-1 pt-2 xl:max-h-full">
-      <h3 className="text-indigo-300 text-xl xl:hidden">Trends</h3>
+      {/* <div className="flex items-center gap-5"> */}
+        <h3 className="text-indigo-900 dark:text-indigo-300 text-xl xl:hidden">Trends</h3>
+        {/* <h4 className="text-indigo-900 dark:text-indigo-300 text-sm xl:hidden">Amount spent on days of the month</h4> */}
+      {/* </div> */}
+      
       {/* {console.log(props.transactions)} */}
       {props.transactions === undefined ?
-        <div className="text-indigo-300 text-center py-4">Add Transactions to see your Trends chart</div>  
+        <div className="text-indigo-900 dark:text-indigo-300 text-center py-4">Add Transactions to see your Trends chart</div>  
       :
         <div className="w-full h-full">
           <ResponsiveContainer width="99%" height="100%">
-            <LineChart width="100%" height="100%" data={graphDataPoints}>
+            <LineChart width="100%" height="100%" data={graphDataPoints}
+              margin={{top: 10, right: 10, left: 20, bottom: 20}}>
                 <CartesianGrid strokeDasharray="5 5" />
-                <XAxis dataKey="date" type='number' tickCount="6" ticks={[5, 10, 15, 20, 25, 30]}/>
-                <YAxis dataKey="amount" width={50}/>
+                <XAxis dataKey="date" type='number' height={25} tickCount="6" ticks={[5, 10, 15, 20, 25, 30]}>
+                  <Label
+                    style={{
+                      textAnchor: "middle",
+                      fontSize: "100%",
+                      fill: "grey",
+                      paddingBottom: '10px',
+                    }}
+                    position='bottom'
+                    value={"Day of month"}
+                  />
+                </XAxis>
+                <YAxis dataKey="amount" width={55}>
+                  <Label 
+                  style={{
+                    textAnchor: "middle",
+                    fontSize: "100%",
+                    fill: "grey",
+                    paddingBottom: '10px',
+                  }}
+                  position='left'
+                  angle={270} 
+                  value={"Amount ($)"}/>
+                </YAxis>
                 <Tooltip />
                 <Legend />
                 {/* use same colors as spending chart? */}
@@ -104,7 +131,6 @@ function AnalyticsGraph(props) {
           </ResponsiveContainer>
         </div>
       }
-      
     </div>
   );
 }

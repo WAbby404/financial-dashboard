@@ -204,12 +204,14 @@ function GoalsModal(props) {
                     successSnackbarOn={successSnackbarOn} 
                     toSetSuccessSnackbarOff={toSetSuccessSnackbarOff}/>
                 <EditDialogBox 
+                    buttonStyles={props.buttonStyles}
+                    theme={props.theme}
                     dialogBoxOn={dialogBoxOn}
                     toSetDialogBoxOff={toSetDialogBoxOff} 
                     toSetDialogBoxOffAndClearGoal={exitWithCancelOn ? exitDialogWithCancel : exitDialogWithX} 
                     dialogTitle="Exit while editing your goal?"
                     dialogText="Exiting now will cause the goal you are editing to be lost."/>
-                <article className="container h-[30rem] w-full bg-slate-50 p-3 md:w-10/12 md:max-h-[60%] lg:max-h-[80%] xl:max-w-[50%] xl:max-h-[80%] dark:bg-indigo-900">
+                <article className="h-[30rem] w-full bg-slate-50 p-3 md:w-10/12 md:max-h-[60%] lg:max-h-[80%] xl:max-w-[50%] xl:max-h-[80%] dark:bg-indigo-900">
                     <header className="flex justify-between">
                         <h3 className="text-indigo-900 dark:text-indigo-300 font-bold text-xl">Goals</h3>
                         <Button onClick={() => toSetModalOff()} sx={props.buttonStyles} size='small'>

@@ -26,6 +26,7 @@ function GoalsForm(props) {
         if(props.goalToEdit?.name.length !== 0 && props.editOn === true){
             setFormValues(props.goalToEdit);
             setFocus();
+            setFormErrors(null);
         }
     }, [props.goalToEdit]);  // eslint-disable-line
 
@@ -48,9 +49,14 @@ function GoalsForm(props) {
     // Handles formatting input for formValues state
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormValues({...formValues, [name]: value});
+        if(name === 'current' || name === 'total'){
+            setFormValues({...formValues, [name]: value.replace(/^0+/, '').trim()});
+        } else {
+            setFormValues({...formValues, [name]: value});
+        }
         // If there was an error on this textfield, once a change happens it'll disappear
         setFormErrors({...formErrors, [name]: null});
+        // console.log(value.replace(/^0+/, ""));
     }
 
     // Exit form with cancel button

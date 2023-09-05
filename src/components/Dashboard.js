@@ -33,10 +33,21 @@ function Dashboard() {
         const today = new Date().toLocaleDateString().split('/');
         const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'Septemper', 'October', 'November', 'December'];
         today[0] = months[today[0]-1];
+        let dateSuffix;
+        if(today[1] === '1' || today[1] === '21' || today[1] === '31'){
+            dateSuffix = 'st';
+        } else if(today[1] === '2' || today[1] === '22'){
+            dateSuffix = 'nd';
+        } else if(today[1] === '3' || today[1] === '23'){
+            dateSuffix = 'rd';
+        } else {
+            dateSuffix = 'th';
+        }
+
         return (
             <time className="flex basis-1/3 gap-2 items-center">
-                <h3 className="text-lg font-semibold">{today[0]}</h3>
-                <span>{today[1]}</span>
+                <h3 className="text-lg xl:text-2xl font-semibold">{today[0]}</h3>
+                <span>{today[1] + dateSuffix}</span>
             </time>
         )
     }
@@ -74,27 +85,25 @@ function Dashboard() {
     }
 
     const navButtonStyle = {
-        color: theme === 'dark' ? 'rgb(165 180 252)' : 'rgb(49 46 129)'
+        color: theme === 'dark' ? 'rgb(165 180 252)' : 'rgb(49 46 129)',
+        fontSize: 30,
     }
 
     return(
-        // rgb(230,230,240)
-        <div className={`bg-indigo-100 container h-full max-w-full dark:bg-indigo-950`} >
-            {/* {console.log(theme)} */}
+        <div className='bg-indigo-100 dark:bg-indigo-950 h-full xl:h-screen max-w-full transition-all'>
             { loading && <PulseLoader color="#523eed" />}
             { !user ? <LoginPage buttonStyles={buttonStyles}/> :
                 <div className="static">
-                    {showNav && <Nav theme={theme} changeTheme={changeTheme} buttonStyles={buttonStyles} toSetShowNavOff={toSetShowNavOff}/>}
+                    <Nav theme={theme} changeTheme={changeTheme} showNav={showNav} buttonStyles={buttonStyles} toSetShowNavOff={toSetShowNavOff}/>
+                    {/* {showNav && <Nav theme={theme} changeTheme={changeTheme} showNav={showNav} buttonStyles={buttonStyles} toSetShowNavOff={toSetShowNavOff}/>} */}
                     <div className="h-full w-full">
                         <aside className="flex flex-row justify-between items-center p-3 text-indigo-900 dark:text-indigo-300">
-                            <div className="basis-1/3">
-                                <h1 className="">{capitalize(user?.displayName)}'s</h1>
-                                <h2>Monthly Dashboard</h2>
+                            <div className="basis-1/3 flex flex-col gap-1 md:gap-2 sm:items-center sm:flex-row">
+                                <h1 className="text-lg md:text-2xl font-semibold">{capitalize(user?.displayName)}'s</h1>
+                                <h2>Dashboard</h2>
                             </div>
                             {setDate()}
-                            <IconButton onClick={() => toSetShowNavOn()}
-                                sx={navButtonStyle}
-                                size="large">
+                            <IconButton onClick={() => toSetShowNavOn()} sx={navButtonStyle}>
                                 <MenuIcon/>
                             </IconButton>
                         </aside>
