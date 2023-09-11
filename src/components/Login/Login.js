@@ -79,17 +79,18 @@ function Login(props) {
                     onChange={handleChange}
                     error={formErrors?.email ? true : false}
                     helperText={formErrors?.email}
-                    sx={{backgroundColor: '#2e2270',
-                        ".MuiInputLabel-root": {
-                            color:'#A5B4FC'
-                        },
-                        input:{
-                            color:'#A5B4FC',
-                        },
-                        width:{
-                            sm:'300px',
-                        }
-                    }}
+                    sx={props.inputStyles}
+                    // sx={{backgroundColor: '#2e2270',
+                    //     ".MuiInputLabel-root": {
+                    //         color:'#A5B4FC'
+                    //     },
+                    //     input:{
+                    //         color:'#A5B4FC',
+                    //     },
+                    //     width:{
+                    //         sm:'300px',
+                    //     }
+                    // }}
                 />
                 <TextField
                     id="filled-basic" 
@@ -101,28 +102,20 @@ function Login(props) {
                     onChange={handleChange}
                     error={formErrors?.password ? true : false}
                     helperText={formErrors?.password}
-                    sx={{backgroundColor: '#2e2270',
-                    ".MuiInputLabel-root": {
-                        color:'#A5B4FC'
-                    },
-                    input:{
-                        color:'#A5B4FC',
-                    },
-                    width:{
-                        sm:'300px',
-                    }
-                    }}
-                />
-                <Button type="submit" 
-                    sx={props.buttonStyles}
-                    // sx={{width:{
-                    //     sm:'300px'
+                    sx={props.inputStyles}
+                    // sx={{backgroundColor: '#2e2270',
+                    // ".MuiInputLabel-root": {
+                    //     color:'#A5B4FC'
                     // },
-                    // margin: {
-                    //     lg: '10px 0 0 0'
+                    // input:{
+                    //     color:'#A5B4FC',
+                    // },
+                    // width:{
+                    //     sm:'300px',
                     // }
                     // }}
-                >Login</Button>
+                />
+                <Button type="submit" sx={props.buttonStyles}>Login</Button>
                 {loginError && 
                     <div className="text-rose-600 flex gap-2 items-center justify-center">
                         <ErrorIcon sx={{ color:'red', fontSize: 20 }}/>

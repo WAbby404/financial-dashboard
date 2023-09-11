@@ -220,28 +220,6 @@ function TransactionsForm(props) {
         setAllAccounts(formattedAccounts);
     }
 
-    const valueInputStyles = {
-        backgroundColor: props.theme === 'dark' ? '#2e2270' : '',
-        ".MuiInputLabel-root": {
-            color:'#A5B4FC'
-        },
-        input:{
-            color:'#A5B4FC',
-        },
-        '& .MuiInputBase-root.Mui-disabled': {
-            backgroundColor: 'rgb(49 46 129)',
-        },
-        width: {
-            xs: 125,
-            sm: 125,
-            md: 275,
-        },
-        margin:'auto',
-        border: 'none'
-    };
-
-
-
     const transactionForm = () => {
         return(
             <div className='flex flex-col justify-center md:gap-3'>
@@ -311,7 +289,7 @@ function TransactionsForm(props) {
                                     return option.label === value;
                                 }}/>
                         : ''}
-                        <div className="flex items-center m-auto">
+                        <div className="flex items-center m-auto max-w-[150px] md:max-w-[300px]">
                             <div className="text-indigo-900 dark:text-indigo-300">{formValues?.positive ? <AddIcon/> : <RemoveIcon/> }</div>
                             <TextField
                                 id="filled-basic"
@@ -322,7 +300,7 @@ function TransactionsForm(props) {
                                 disabled={formValues?.category ? false : true}
                                 value={formValues.value}
                                 onChange={handleChange}
-                                sx={valueInputStyles}
+                                sx={props.inputStyles}
                                 error={formErrors?.value ? true : false}
                                 helperText={formErrors?.value}/>
                         </div>

@@ -82,6 +82,25 @@ function GoalsForm(props) {
         capitalizeName(formValues, setFormValues);
     }
 
+    const bottomInputStyles = {
+        backgroundColor: props.theme === 'dark' ? '#2e2270' : '',
+        ".MuiInputLabel-root": {
+            color: props.theme === 'dark' ? '#A5B4FC' : '',
+        },
+        input:{
+            color: props.theme === 'dark' ? '#A5B4FC' : '',
+        },
+        '& .MuiInputBase-root.Mui-disabled': {
+            backgroundColor: props.theme === 'dark' ? 'rgb(49 46 129)' : '',
+        },
+        width: {
+            xs: 150,
+            sm: 150,
+            md: 300,
+        },
+    };
+
+
     // Goal form to render on open
     const goalForm = () => {
         return(
@@ -97,12 +116,6 @@ function GoalsForm(props) {
                         name="name"
                         size="small"
                         sx={props.inputStyles}
-                        // sx={{ width: {
-                        //     xs: 150,
-                        //     sm: 150,
-                        //     md: 300,
-                        //     },
-                        //     margin:'auto'  }}
                         value={formValues.name}
                         onChange={handleChange}
                         error={formErrors?.name ? true : false}
@@ -115,12 +128,7 @@ function GoalsForm(props) {
                             variant="filled"
                             size="small"
                             name="current"
-                           
-                            // sx={{ width: {
-                            //     xs: 150,
-                            //     sm: 150,
-                            //     md: 300,
-                            //     }}}
+                            sx={bottomInputStyles}
                             value={formValues.current}
                             onChange={handleChange}
                             error={formErrors?.current ? true : false}
@@ -131,12 +139,7 @@ function GoalsForm(props) {
                             variant="filled"
                             size="small"
                             name="total"
-                            // sx={props.inputStyles}
-                            sx={{ width: {
-                                xs: 150,
-                                sm: 150,
-                                md: 300,
-                                }}}
+                            sx={bottomInputStyles}
                             value={formValues.total}
                             onChange={handleChange}
                             error={formErrors?.total  ? true : false}

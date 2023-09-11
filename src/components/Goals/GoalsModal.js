@@ -240,7 +240,8 @@ function GoalsModal(props) {
                             createGoal={createGoal}
                             deleteGoal={deleteGoal}
                             buttonStyles={props.buttonStyles}
-                            inputStyles={props.inputStyles}/>
+                            inputStyles={props.inputStyles}
+                            theme={props.theme}/>
                     </div>
                 </article>
             </div>

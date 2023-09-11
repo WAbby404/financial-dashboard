@@ -140,17 +140,18 @@ function Register(props) {
                     onChange={handleChange}
                     error={formErrors?.email ? true : false}
                     helperText={formErrors?.email}
-                    sx={{backgroundColor: '#2e2270',
-                        ".MuiInputLabel-root": {
-                            color:'#A5B4FC'
-                        },
-                        input:{
-                            color:'#A5B4FC',
-                        },
-                        width:{
-                            sm:'300px',
-                        }
-                    }}
+                    sx={props.inputStyles}
+                    // sx={{backgroundColor: '#2e2270',
+                    //     ".MuiInputLabel-root": {
+                    //         color:'#A5B4FC'
+                    //     },
+                    //     input:{
+                    //         color:'#A5B4FC',
+                    //     },
+                    //     width:{
+                    //         sm:'300px',
+                    //     }
+                    // }}
                 />
                 <TextField
                     id="filled-basic" 
@@ -162,29 +163,9 @@ function Register(props) {
                     onChange={handleChange}
                     error={formErrors?.password ? true : false}
                     helperText={formErrors?.password}
-                    sx={{backgroundColor: '#2e2270',
-                        ".MuiInputLabel-root": {
-                            color:'#A5B4FC'
-                        },
-                        input:{
-                            color:'#A5B4FC',
-                        },
-                        width:{
-                            sm:'300px',
-                        },
-                    }}
+                    sx={props.inputStyles}
                 />
-                <Button type="submit"
-                    // sx={props.buttonStyle, {width:{
-                    //     sm:'300px'
-                    //   },
-                    //   margin: {
-                    //     lg: '10px 0 0 0'
-                    //   },}}
-                    sx={props.buttonStyles}
-                      >
-                        Register
-                </Button>
+                <Button type="submit" sx={props.buttonStyles}>Register</Button>
                 {loginError && 
                     <div className="text-rose-600 flex gap-2 items-center justify-center">
                         <ErrorIcon sx={{ color:'red', fontSize: 20 }}/>

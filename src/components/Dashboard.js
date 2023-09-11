@@ -92,20 +92,20 @@ function Dashboard() {
     const inputStyles = {
         backgroundColor: theme === 'dark' ? '#2e2270' : '',
         ".MuiInputLabel-root": {
-            color:'#A5B4FC'
+            color: theme === 'dark' ? '#A5B4FC' : ''
         },
         input:{
-            color:'#A5B4FC',
+            color: theme === 'dark' ? '#A5B4FC' : '',
         },
         '& .MuiInputBase-root.Mui-disabled': {
-            backgroundColor: 'rgb(49 46 129)',
+            backgroundColor:  theme === 'dark' ? 'rgb(49 46 129)' : '',
         },
         width: {
             xs: 150,
             sm: 150,
             md: 300,
         },
-        margin:'auto',
+        margin: 'auto',
         border: 'none'
     };
 
