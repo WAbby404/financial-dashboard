@@ -5,14 +5,14 @@ function validateAccount(values) {
     console.log(values.name.trim().length);
     console.log(values.name.length);
     if(!values.name || values.name.trim().length === 0){
-        errors.name = 'Name required.';
+        errors.name = 'Name required';
     }
     if(values.name.length > 12){
-        errors.name = 'Name cannot exceed 12 characters.';
+        errors.name = 'Name cannot exceed 12 characters';
     }
 
     if(values.debit === undefined){
-        errors.debit = 'Type required.';
+        errors.debit = 'Type required';
     }
     return errors;
 }

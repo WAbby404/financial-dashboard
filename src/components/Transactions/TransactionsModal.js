@@ -228,7 +228,7 @@ function TransactionsModal(props) {
                         toSetDialogBoxOffAndClearGoal={exitWithCancelOn ? exitDialogWithCancel : exitDialogWithX} 
                         dialogTitle="Exit while editing your transaction?"
                         dialogText="Exiting now will cause the transaction you are editing to be lost."/>
-                    <article className="container h-[37rem] w-full bg-slate-50 dark:bg-indigo-900 p-3 sm:max-h-[98vh] md:w-10/12 md:max-h-[60%] lg:max-h-[85%] xl:max-w-[50%]">
+                    <article className="container h-[37rem] w-full bg-slate-50 dark:bg-indigo-900 p-3 sm:max-h-[98vh] md:w-11/12 md:max-h-[60%] lg:max-h-[85%] xl:max-w-[50%]">
                         <header className="flex justify-between">
                             <h2 className="text-indigo-900 dark:text-indigo-300 font-bold text-xl">Transactions</h2>
                             <Button onClick={() => toSetModalOff()} className="btn" size="small" sx={props.buttonStyles}>
@@ -256,7 +256,9 @@ function TransactionsModal(props) {
                                 toSetDialogBoxOn={toSetDialogBoxOn}
                                 createTransaction={createTransaction}
                                 deleteTransaction={deleteTransaction}
-                                buttonStyles={props.buttonStyles}/>
+                                buttonStyles={props.buttonStyles}
+                                inputStyles={props.inputStyles}
+                                theme={props.theme}/>
                         </div>
                     </article>
                 </div>

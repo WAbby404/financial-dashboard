@@ -96,12 +96,13 @@ function GoalsForm(props) {
                         variant="filled" 
                         name="name"
                         size="small"
-                        sx={{ width: {
-                            xs: 150,
-                            sm: 150,
-                            md: 300,
-                            },
-                            margin:'auto'  }}
+                        sx={props.inputStyles}
+                        // sx={{ width: {
+                        //     xs: 150,
+                        //     sm: 150,
+                        //     md: 300,
+                        //     },
+                        //     margin:'auto'  }}
                         value={formValues.name}
                         onChange={handleChange}
                         error={formErrors?.name ? true : false}
@@ -114,11 +115,12 @@ function GoalsForm(props) {
                             variant="filled"
                             size="small"
                             name="current"
-                            sx={{ width: {
-                                xs: 150,
-                                sm: 150,
-                                md: 300,
-                                }}}
+                           
+                            // sx={{ width: {
+                            //     xs: 150,
+                            //     sm: 150,
+                            //     md: 300,
+                            //     }}}
                             value={formValues.current}
                             onChange={handleChange}
                             error={formErrors?.current ? true : false}
@@ -129,6 +131,7 @@ function GoalsForm(props) {
                             variant="filled"
                             size="small"
                             name="total"
+                            // sx={props.inputStyles}
                             sx={{ width: {
                                 xs: 150,
                                 sm: 150,

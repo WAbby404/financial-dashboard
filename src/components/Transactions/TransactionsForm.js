@@ -220,6 +220,28 @@ function TransactionsForm(props) {
         setAllAccounts(formattedAccounts);
     }
 
+    const valueInputStyles = {
+        backgroundColor: props.theme === 'dark' ? '#2e2270' : '',
+        ".MuiInputLabel-root": {
+            color:'#A5B4FC'
+        },
+        input:{
+            color:'#A5B4FC',
+        },
+        '& .MuiInputBase-root.Mui-disabled': {
+            backgroundColor: 'rgb(49 46 129)',
+        },
+        width: {
+            xs: 125,
+            sm: 125,
+            md: 275,
+        },
+        margin:'auto',
+        border: 'none'
+    };
+
+
+
     const transactionForm = () => {
         return(
             <div className='flex flex-col justify-center md:gap-3'>
@@ -238,12 +260,7 @@ function TransactionsForm(props) {
                             onChange={handleChange}
                             error={formErrors?.name ? true : false}
                             helperText={formErrors?.name}
-                            sx={{ width: {
-                                xs: 150,
-                                sm: 150,
-                                md: 300,
-                                },
-                                margin:'auto'  }}
+                            sx={props.inputStyles}
                             inputRef={topInputBox}/>
                         <Autocomplete
                             name="account"
@@ -253,12 +270,7 @@ function TransactionsForm(props) {
                             id="combo-box-demo"
                             size="small"
                             options={allAccounts}
-                            sx={{ width: {
-                                xs: 150,
-                                sm: 150,
-                                md: 300,
-                                },
-                                margin:'auto'  }}
+                            sx={props.inputStyles}
                             renderInput={(params) => <TextField {...params} label="Account"
                                                         name="account"
                                                         error={formErrors?.account ? true : false}
@@ -273,12 +285,7 @@ function TransactionsForm(props) {
                             disabled={formValues?.account ? false : true}
                             id="combo-box-demo"
                             options={categories}
-                            sx={{ width: {
-                                xs: 150,
-                                sm: 150,
-                                md: 300,
-                                },
-                                margin:'auto'  }}
+                            sx={props.inputStyles}
                             renderInput={(params) => <TextField {...params} label="Category"
                                                         name="category"
                                                         error={formErrors?.category ? true : false}
@@ -294,12 +301,7 @@ function TransactionsForm(props) {
                                 size="small"
                                 id="combo-box-demo"
                                 options={setTransferToAccounts()}
-                                sx={{ width: {
-                                    xs: 150,
-                                    sm: 150,
-                                    md: 300,
-                                    },
-                                    margin:'auto'  }}
+                                sx={props.inputStyles}
                                 renderInput={(params) => <TextField {...params} label="Transfer To"
                                                             name="category"
                                                             error={formErrors?.transferTo ? true : false}
@@ -320,12 +322,7 @@ function TransactionsForm(props) {
                                 disabled={formValues?.category ? false : true}
                                 value={formValues.value}
                                 onChange={handleChange}
-                                sx={{ width: {
-                                    xs: 125,
-                                    sm: 125,
-                                    md: 275,
-                                    },
-                                    margin:'auto'  }}
+                                sx={valueInputStyles}
                                 error={formErrors?.value ? true : false}
                                 helperText={formErrors?.value}/>
                         </div>
@@ -338,12 +335,7 @@ function TransactionsForm(props) {
                             disabled={formValues?.category ? false : true}
                             value={formValues.date}
                             onChange={handleChange}
-                            sx={{ width: {
-                                xs: 150,
-                                sm: 150,
-                                md: 300,
-                                },
-                                margin:'auto'  }}
+                            sx={props.inputStyles}
                             error={formErrors?.date ? true : false}
                             helperText={formErrors?.date}/>
                     </div>

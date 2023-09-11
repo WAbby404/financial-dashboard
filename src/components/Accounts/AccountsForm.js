@@ -103,12 +103,13 @@ function AccountsForm(props) {
                     id="filled-basic" 
                     label="Account name" 
                     variant="filled"
-                    sx={{ width: {
-                        xs: 150,
-                        sm: 150,
-                        md: 300,
-                        },
-                        margin:'auto'  }}
+                    sx={props.inputStyles}
+                    // sx={{ width: {
+                    //     xs: 150,
+                    //     sm: 150,
+                    //     md: 300,
+                    //     },
+                    //     margin:'auto'  }}
                     size="small"
                     name="name"
                     value={formValues.name}
@@ -121,12 +122,13 @@ function AccountsForm(props) {
                     value={ formValues?.debit === undefined ? null : (formValues?.debit ? 'Debit' : 'Credit') }
                     onChange={(event, newValue) => handleOptionChangeAccount(event, newValue)}
                     disablePortal
-                    sx={{ width: {
-                        xs: 150,
-                        sm: 150,
-                        md: 300,
-                        },
-                        margin:'auto'  }}
+                    // sx={{ width: {
+                    //     xs: 150,
+                    //     sm: 150,
+                    //     md: 300,
+                    //     },
+                    //     margin:'auto'  }}
+                    sx={props.inputStyles}
                     size="small"
                     id="combo-box-demo"
                     options={accountTypes}

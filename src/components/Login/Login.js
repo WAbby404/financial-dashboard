@@ -67,7 +67,7 @@ function Login(props) {
 
     return (
         <div className="flex flex-col gap-2 sm:gap-1 md:m-auto">
-            <h2 className="text-indigo-300 text-lg">Sign In</h2>
+            <h2 className="text-indigo-900 dark:text-indigo-300 text-lg">Sign In</h2>
             <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:gap-1 md:w-full md:justify-center">
                 <TextField
                     id="filled-basic" 

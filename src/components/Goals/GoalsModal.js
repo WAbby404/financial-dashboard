@@ -239,7 +239,8 @@ function GoalsModal(props) {
                             toSetDialogBoxOn={toSetDialogBoxOn}
                             createGoal={createGoal}
                             deleteGoal={deleteGoal}
-                            buttonStyles={props.buttonStyles}/>
+                            buttonStyles={props.buttonStyles}
+                            inputStyles={props.inputStyles}/>
                     </div>
                 </article>
             </div>

@@ -225,7 +225,8 @@ function AccountsModal(props) {
                             toSetDialogBoxOn={toSetDialogBoxOn}
                             createAccount={createAccount}
                             deleteAccount={deleteAccount}
-                            buttonStyles={props.buttonStyles}/>
+                            buttonStyles={props.buttonStyles}
+                            inputStyles={props.inputStyles}/>
                     </div>
                 </article>
             </div>

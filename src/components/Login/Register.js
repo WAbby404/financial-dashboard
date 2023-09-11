@@ -105,7 +105,7 @@ function Register(props) {
 
     return (
         <div className="flex flex-col gap-2 sm:gap-0.5 md:m-auto">
-            <h2 className="text-indigo-300 text-lg">Register an account</h2>
+            <h2 className="text-indigo-900 dark:text-indigo-300 text-lg">Register an account</h2>
             <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:gap-1 md:w-full md:justify-center">
                 <TextField
                     id="filled-basic" 
@@ -117,17 +117,18 @@ function Register(props) {
                     onChange={handleChange}
                     error={formErrors?.name ? true : false}
                     helperText={formErrors?.name}
-                    sx={{backgroundColor: '#2e2270',
-                        ".MuiInputLabel-root": {
-                            color:'#A5B4FC'
-                        },
-                        input:{
-                            color:'#A5B4FC',
-                        },
-                        width:{
-                            sm:'300px',
-                        }
-                    }}
+                    sx={props.inputStyles}
+                    // sx={{backgroundColor: '#2e2270',
+                    //     ".MuiInputLabel-root": {
+                    //         color:'#A5B4FC'
+                    //     },
+                    //     input:{
+                    //         color:'#A5B4FC',
+                    //     },
+                    //     width:{
+                    //         sm:'300px',
+                    //     }
+                    // }}
                 />
                 <TextField
                     id="filled-basic" 

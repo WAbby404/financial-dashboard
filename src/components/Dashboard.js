@@ -82,25 +82,44 @@ function Dashboard() {
             backgroundColor: theme === 'dark' ? 'rgb(30 64 175)' : 'rgb(49 46 129)',
         },
         boxShadow: 2
-    }
+    };
 
     const navButtonStyle = {
         color: theme === 'dark' ? 'rgb(165 180 252)' : 'rgb(49 46 129)',
         fontSize: 30,
-    }
+    };
+
+    const inputStyles = {
+        backgroundColor: theme === 'dark' ? '#2e2270' : '',
+        ".MuiInputLabel-root": {
+            color:'#A5B4FC'
+        },
+        input:{
+            color:'#A5B4FC',
+        },
+        '& .MuiInputBase-root.Mui-disabled': {
+            backgroundColor: 'rgb(49 46 129)',
+        },
+        width: {
+            xs: 150,
+            sm: 150,
+            md: 300,
+        },
+        margin:'auto',
+        border: 'none'
+    };
 
     return(
         <div className='bg-indigo-100 dark:bg-indigo-950 h-full xl:h-screen max-w-full transition-all'>
             { loading && <PulseLoader color="#523eed" />}
-            { !user ? <LoginPage buttonStyles={buttonStyles}/> :
+            { !user ? <LoginPage buttonStyles={buttonStyles} inputStyles={inputStyles}/> :
                 <div className="static">
                     <Nav theme={theme} changeTheme={changeTheme} showNav={showNav} buttonStyles={buttonStyles} toSetShowNavOff={toSetShowNavOff}/>
-                    {/* {showNav && <Nav theme={theme} changeTheme={changeTheme} showNav={showNav} buttonStyles={buttonStyles} toSetShowNavOff={toSetShowNavOff}/>} */}
                     <div className="h-full w-full">
                         <aside className="flex flex-row justify-between items-center p-3 text-indigo-900 dark:text-indigo-300">
                             <div className="basis-1/3 flex flex-col gap-1 md:gap-2 sm:items-center sm:flex-row">
                                 <h1 className="text-lg md:text-2xl font-semibold">{capitalize(user?.displayName)}'s</h1>
-                                <h2>Dashboard</h2>
+                                <h2 className="self-end">Dashboard</h2>
                             </div>
                             {setDate()}
                             <IconButton onClick={() => toSetShowNavOn()} sx={navButtonStyle}>
@@ -108,10 +127,10 @@ function Dashboard() {
                             </IconButton>
                         </aside>
                         <main className="flex flex-col sm:gap-4 md:gap-5 pb-4 xl:grid xl:grid-cols-12 xl:grid-rows-18 xl:gap-4 xl:h-[93vh] xl:p-4">
-                            <AccountsModal theme={theme} buttonStyles={buttonStyles}/>
-                            <GoalsModal theme={theme} buttonStyles={buttonStyles}/>
+                            <AccountsModal theme={theme} buttonStyles={buttonStyles} inputStyles={inputStyles}/>
+                            <GoalsModal theme={theme} buttonStyles={buttonStyles} inputStyles={inputStyles}/>
                             <SpendingModal theme={theme}/>
-                            <TransactionsModal theme={theme} buttonStyles={buttonStyles}/>
+                            <TransactionsModal theme={theme} buttonStyles={buttonStyles} inputStyles={inputStyles}/>
                             <AnalyticsModal theme={theme}/>
                         </main>  
                     </div>
