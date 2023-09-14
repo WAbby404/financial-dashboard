@@ -87,11 +87,29 @@ function Transactions(props) {
 
     const formatMoney = (money, transaction) => {
         let formattedMoney = money.split('.');
+
+        let newMoney = [];
+        if(formattedMoney[0].length > 3){
+            let stringArray = formattedMoney[0].split('');
+            // console.log(stringArray);
+            while(stringArray.length){
+                newMoney.push(stringArray[0]);
+                stringArray.shift();
+                // console.log(stringArray);
+                if(stringArray.length % 3 === 0 && stringArray.length !== 0){
+                    newMoney.push(',');
+                }
+                // console.log(newMoney);
+            }
+            // console.log(newMoney);
+            newMoney.join('');
+        }
+
         return(
             <div className={`${props.modalOn ? 'md:justify-end' : 'justify-end' } flex`}>
                 <div>{transaction.category === 'Transfer' ? '' : (transaction.positive ? '+' : '-')}</div>
                 <div className="self-center">$</div>
-                <div>{formattedMoney[0]}</div>
+                <div>{newMoney.length > 0 ? newMoney : formattedMoney[0]}</div>
                 <div className="text-xs self-center">.{formattedMoney[1] ? formattedMoney[1] : '00'}</div>
             </div>
         )
@@ -113,8 +131,7 @@ function Transactions(props) {
                                     {formatDate(items[0].date)}
                                 </div>
                                 <div className={`${props.modalOn ? 'text-left md:text-right' : 'text-right' } basis-2/6`}>
-                                    <div className={`${items[0].category === 'Transfer' ? 'text-yellow-400' : (items[0].positive ? 'text-green-600' : 'text-rose-600')} font-bold flex`}>
-                                        {items[0].category === 'Transfer' ? '' : (items[0].positive ? '+' : '-')}
+                                    <div className={`${items[0].category === 'Transfer' ? 'text-yellow-400' : (items[0].positive ? 'text-green-600' : 'text-rose-600')} font-bold`}>
                                         {formatMoney(items[0].value, items[0])}
                                     </div>
                                     <div className="text-indigo-900 dark:text-indigo-300 text-sm">

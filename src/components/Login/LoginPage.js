@@ -7,6 +7,22 @@ import Logo from './logo.png';
 function LoginPage(props) {
     const [register, setRegister] = useState(false);
 
+    const inputLoginStyles = {
+        backgroundColor: props.theme === 'dark' ? '#2e2270' : '',
+        ".MuiInputLabel-root": {
+            color: props.theme === 'dark' ? '#A5B4FC' : ''
+        },
+        input:{
+            color: props.theme === 'dark' ? '#A5B4FC' : '',
+        },
+        '& .MuiInputBase-root.Mui-disabled': {
+            backgroundColor: props.theme === 'dark' ? 'rgb(49 46 129)' : '',
+        },
+        width: 300,
+        margin: 'auto',
+        border: 'none'
+    };
+
     return (
         <main className='w-full h-screen flex flex-col p-5 gap-4 justify-center sm:flex-row md:flex-col md:p-1 md:gap-10'>
             <section className="w-9/12 flex flex-col mx-auto items-center justify-center">
@@ -34,7 +50,7 @@ function LoginPage(props) {
             <div className="w-9/12 mx-auto flex justify-center items-center">
                 {register ?
                     <div className="flex flex-col gap-5 justify-center items-center">
-                        <Register buttonStyles={props.buttonStyles} inputStyles={props.inputStyles}/>
+                        <Register buttonStyles={props.buttonStyles} inputStyles={inputLoginStyles}/>
                         <div className="flex flex-row gap-3 items-center justify-center sm:hidden md:flex">
                             <h3 className="text-indigo-900 dark:text-indigo-300 text-center text-sm">Already have an account?</h3>
                             <Button onClick={() => setRegister(false)}
@@ -44,7 +60,7 @@ function LoginPage(props) {
                     </div>
                     :
                     <div className="flex flex-col gap-5">
-                        <Login buttonStyles={props.buttonStyles} inputStyles={props.inputStyles}/>
+                        <Login buttonStyles={props.buttonStyles} inputStyles={inputLoginStyles}/>
                         <div className="flex flex-row gap-3 items-center justify-center sm:hidden md:flex">
                             <h3 className="text-indigo-900 dark:text-indigo-300 text-center text-sm">Dont have an account?</h3>
                             <Button sx={props.buttonStyles}

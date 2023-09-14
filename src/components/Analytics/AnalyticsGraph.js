@@ -41,14 +41,17 @@ function AnalyticsGraph(props) {
           }
         })
 
-        dataPoints.forEach((point) => {
-          Object.values(point).forEach((value, index) => {
-            if(biggestAmount < value && index !== 0){
-              biggestAmount = value;
-            }
-          });
-        })
-        dataPoints[0].amount = biggestAmount;
+        if(dataPoints.length){
+          dataPoints.forEach((point) => {
+            Object.values(point).forEach((value, index) => {
+              if(biggestAmount < value && index !== 0){
+                biggestAmount = value;
+              }
+            });
+          })
+          dataPoints[0].amount = biggestAmount;
+        }
+        
 
         let sortedPoints = [];
         while(dataPoints.length){

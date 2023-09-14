@@ -80,6 +80,12 @@ function TransactionsForm(props) {
             snapshot.forEach((childSnapshot) => {
                 const childData = childSnapshot.val();
                 if (childData.name === formValues.account){
+                    // console.log(formValues.value);
+                    // console.log(typeof formValues.value);
+                    // console.log(childData.total);
+                    // console.log(typeof childData.total);
+                    // console.log((parseFloat(childData.total)).toFixed(2));
+                    // console.log(typeof +(parseFloat(childData.total)).toFixed(2));
                     accountId += `${childSnapshot.key}`;
                     if(formValues.positive){
                         // unary operator (+ infront of childData.total & formValues.value) convert strings to numbers to add them together
@@ -87,6 +93,7 @@ function TransactionsForm(props) {
                     } else {
                         accountTotal = +childData.total - +(parseFloat(formValues.value)).toFixed(2);
                     }
+                    // console.log(accountTotal.toFixed(2));
                 }
                 if(formValues.transferTo){
                     if (childData.name === formValues.transferTo){
@@ -94,12 +101,12 @@ function TransactionsForm(props) {
                         transferToTotal = +childData.total + +(parseFloat(formValues.value)).toFixed(2);
                     }
                     let transferUpdatedRef = ref(db, transferToId);
-                    update(transferUpdatedRef, {total: transferToTotal});
+                    update(transferUpdatedRef, {total: transferToTotal.toFixed(2)});
                 }
         })
         },{onlyOnce: true});
         let updatedRef = ref(db, accountId);
-        update(updatedRef, {total: accountTotal});
+        update(updatedRef, {total: accountTotal.toFixed(2)});
     }
 
     const handleChange = (e) => {

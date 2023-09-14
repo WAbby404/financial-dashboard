@@ -23,6 +23,42 @@ function SpendingAccordion(props) {
     color: '#312e81'
   }
 
+
+  const formatMoney = (money) => {
+    if(money){
+        let formattedMoney = money.toString().split('.');
+        let newMoney = [];
+        if(formattedMoney[0].length > 3){
+            let stringArray = formattedMoney[0].split('');
+            // console.log(stringArray);
+            while(stringArray.length){
+                newMoney.push(stringArray[0]);
+                stringArray.shift();
+                // console.log(stringArray);
+                if(stringArray.length % 3 === 0 && stringArray.length !== 0){
+                    newMoney.push(',');
+                }
+                // console.log(newMoney);
+            }
+            // console.log(newMoney);
+            newMoney.join('');
+            // console.log(newMoney.join(''));
+        } else {
+          if(formattedMoney[1]){
+            return formattedMoney[0] + '.' + formattedMoney[1];
+          }
+          return formattedMoney[0] + '.00';
+        }
+        // console.log(newMoney.join('') + '.' + formattedMoney[1]);
+        if(formattedMoney[1]){
+          return (newMoney.join('') + '.' + formattedMoney[1]);
+        }
+        return newMoney.join('') + '.00';
+        
+    }
+    return '0.00';
+}
+
   return(
       props.formattedTransactions.map((value, index) => {
         return(
@@ -70,7 +106,7 @@ function SpendingAccordion(props) {
                     fontWeight: 600,
                     justifySelf: 'flex-end',
                   }}>
-                  ${value.value}
+                  ${formatMoney(value.value)}
                 </Typography>
               </AccordionSummary>
               <AccordionDetails 
@@ -83,7 +119,7 @@ function SpendingAccordion(props) {
                         <Typography
                           sx={{textAlign:"left", flexBasis: '50%'}}>{filteredTransaction.name}</Typography>
                         <Typography
-                          sx={{textAlign:"right", flexBasis: '50%'}}>${filteredTransaction.value}</Typography>
+                          sx={{textAlign:"right", flexBasis: '50%'}}>${formatMoney(filteredTransaction.value)}</Typography>
                       </div>
                     )
                   })

@@ -71,7 +71,34 @@ function SpendingModal(props) {
             // console.log(transaction);
             total += transaction.value;
         })
-        return total.toString();
+
+        let formattedMoney;
+        if(total > 0){
+            formattedMoney = total.toString().split('.');
+        } else {
+            formattedMoney = (total * -1).toString().split('.');
+        }
+    
+        
+        let newMoney = [];
+        if(formattedMoney[0].length > 3){
+            let stringArray = formattedMoney[0].split('');
+            // console.log(stringArray);
+            while(stringArray.length){
+                newMoney.push(stringArray[0]);
+                stringArray.shift();
+                // console.log(stringArray);
+                if(stringArray.length % 3 === 0 && stringArray.length !== 0){
+                    newMoney.push(',');
+                }
+                // console.log(newMoney);
+            }
+            // console.log(newMoney);
+            newMoney.join('');
+        }
+        // console.log(newMoney);
+
+        return newMoney.join('');
     }
 
     return (
@@ -89,7 +116,7 @@ function SpendingModal(props) {
                             toSetCurrentCategory={toSetCurrentCategory} />
                     </div>
                     <div className="basis-1/2 max-h-full">
-                        <div className="flex justify-between pb-2 items-center md:w-10/12 md:m-auto">
+                        <div className="flex justify-between pb-2 items-center md:w-10/12 md:m-auto lg:w-11/12">
                             <h4 className="text-indigo-900 dark:text-indigo-300 text-xl">Categories</h4>
                             <h4 className="text-indigo-900 dark:text-indigo-300 font-medium text-xl text-right">{`$${transactionsTotal()} total`}</h4>
                         </div>

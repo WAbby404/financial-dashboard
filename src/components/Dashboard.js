@@ -8,9 +8,9 @@ import SpendingModal from "./Spending/SpendingModal";
 import AnalyticsModal from './Analytics/AnalyticsModal';
 import TransactionsModal from './Transactions/TransactionsModal';
 import GoalsModal from './Goals/GoalsModal';
-import PulseLoader from "react-spinners/PulseLoader";
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
+import LoadingScreen from './LoadingScreen';
  
 function Dashboard() {
     const [ theme, setTheme ] = useState('dark');
@@ -111,15 +111,15 @@ function Dashboard() {
 
     return(
         <div className='bg-indigo-100 dark:bg-indigo-950 h-full xl:h-screen max-w-full transition-all'>
-            { loading && <PulseLoader color="#523eed" />}
-            { !user ? <LoginPage buttonStyles={buttonStyles} inputStyles={inputStyles}/> :
+            { loading && <LoadingScreen/>}
+            { !user ? <LoginPage buttonStyles={buttonStyles} inputStyles={inputStyles} theme={theme}/> :
                 <div className="static">
                     <Nav theme={theme} changeTheme={changeTheme} showNav={showNav} buttonStyles={buttonStyles} toSetShowNavOff={toSetShowNavOff}/>
                     <div className="h-full w-full">
                         <aside className="flex flex-row justify-between items-center p-3 text-indigo-900 dark:text-indigo-300">
                             <div className="basis-1/3 flex flex-col gap-1 md:gap-2 sm:items-center sm:flex-row">
                                 <h1 className="text-lg md:text-2xl font-semibold">{capitalize(user?.displayName)}'s</h1>
-                                <h2 className="self-end">Dashboard</h2>
+                                <h2 className="md:self-end">Dashboard</h2>
                             </div>
                             {setDate()}
                             <IconButton onClick={() => toSetShowNavOn()} sx={navButtonStyle}>

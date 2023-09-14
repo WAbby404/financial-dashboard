@@ -62,12 +62,30 @@ function Accounts(props) {
         } else {
             formattedMoney = (money * -1).toString().split('.');
         }
+    
+        
+        let newMoney = [];
+        if(formattedMoney[0].length > 3){
+            let stringArray = formattedMoney[0].split('');
+            // console.log(stringArray);
+            while(stringArray.length){
+                newMoney.push(stringArray[0]);
+                stringArray.shift();
+                // console.log(stringArray);
+                if(stringArray.length % 3 === 0 && stringArray.length !== 0){
+                    newMoney.push(',');
+                }
+                // console.log(newMoney);
+            }
+            // console.log(newMoney);
+            newMoney.join('');
+        }
         
         return(
             <div className="flex items-center">
                 <div className="font-bold text-2xl xl:text-4xl">{money < 0 && '-'}</div>
                 <div className="font-bold text-2xl xl:text-4xl">$</div>
-                <div className="font-bold text-3xl xl:text-5xl">{formattedMoney[0]}</div>
+                <div className="font-bold text-3xl xl:text-5xl">{newMoney.length > 0 ? newMoney : formattedMoney[0]}</div>
                 <div className="font-bold self-end text-xl xl:text-3xl">.{formattedMoney[1] ? formattedMoney[1] : '00'}</div>
             </div>
         )
@@ -79,13 +97,13 @@ function Accounts(props) {
                     return (
                         <li key={account.id} className={`pb-2 flex flex-col ${props.modalOn ? 'md:flex-row' : ''}`}>
                             <div className="flex flex-col md:justify-center md:w-full">
-                                <h3 className="text-indigo-900 font-medium pl-3 md:text-lg dark:text-indigo-300">{account.name}</h3>
+                                <div className="flex items-center">
+                                    <h3 className="text-indigo-900 font-medium pl-3 md:text-lg dark:text-indigo-300">{account.name}</h3>
+                                    <h4 className="text-indigo-400 font-light pl-2 text-sm dark:text-indigo-500">{account.debit ? 'Debit' : 'Credit'}</h4>
+                                </div>
                                 <div className="flex justify-center">
-                                    {/* {console.log(account.total)} */}
-                                    <h4 className={`${account.debit ? 'text-green-600' : 'text-rose-600'} font-bold text-3xl xl:text-5xl ${props.modalOn ? '' : 'text-4xl '}`}>
+                                    <h4 className={`${((account.debit && account.total > 0) || (!account.debit && account.total === 0)) ? 'text-green-600' : 'text-rose-600'} font-bold text-3xl xl:text-5xl ${props.modalOn ? '' : 'text-4xl '}`}>
                                         {formatMoney(account.total)}
-                                        {/* <span className="">$</span>
-                                        {account.total > 0 ?  account.total : account.total * -1} */}
                                     </h4>
                                 </div>
                             </div>
@@ -102,7 +120,6 @@ function Accounts(props) {
                                         <DeleteIcon/>
                                     </Button>}
                             </div>
-                            {/* <div className="w-4/6 h-0.5 bg-indigo-800 m-auto"></div> */}
                         </li>
                     )
                 })

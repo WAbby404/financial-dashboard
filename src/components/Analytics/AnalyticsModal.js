@@ -7,7 +7,6 @@ import AnalyticsGraph from './AnalyticsGraph';
 function AnalyticsModal(props) {
     const [ user ] = useAuthState(auth);
     const [ transactions, setTransactions ] = useState([]);
-    // const [ accounts, setAccounts ] = useState([]);
     const [ income, setIncome ] = useState(0);
     const [ expenses, setExpenses ] = useState(0);
     const [ accountTotals, setAccountTotals ] = useState({debit: 0, savings: 0, creditCards: 0});
@@ -19,50 +18,87 @@ function AnalyticsModal(props) {
         let accountsData;
         let transactionsData;
         onValue(dbRefTransactions, (snapshot) => {
-            accountsData = snapshot.val().accounts;
-            transactionsData = snapshot.val().transactions;
+            snapshot.forEach((childSnapshot) => {
+                const childData = childSnapshot.val();
+                // console.log('childsnapshot');
+                // console.log(childData);
+                // console.log(Object.keys(childData));
+                if(Object.keys(childData).includes('Checking')){
+                    // console.log('accountsData set');
+                    accountsData = childData;
+                }
+                if((Object.keys(childData).includes('Checking') !== true) && (Object.keys(childData).includes('initials') !== true)){
+                    // console.log('transactionsData set');
+                    // console.log(childData);
+                    transactionsData = childData;
+                }
+            })
  
             setTransactions(transactionsData);
             setCount(count + 1);
+
+            if(typeof transactionsData === 'object'){
+                let transactionsTotal = 0;
+                Object.values(transactionsData).forEach((transaction) => {
+                    if(transaction.category === 'Money In'){
+                        transactionsTotal += parseFloat(transaction.value);
+                    }
+                })
+                setIncome(transactionsTotal);
+    
+                let expensesTotal = 0;
+                Object.values(transactionsData).forEach((transaction) => {
+                    // console.log(transaction);
+                    if(transaction.category !== 'Money In' && transaction.category !== 'Transfer' && transaction.category !== 'Credit Card Payment'){
+                        expensesTotal += parseFloat(transaction.value);
+                    }
+                })
+                setExpenses(expensesTotal);
+            }
+    
+            if(typeof accountsData === 'object'){
+                let debitTotal = 0;
+                let creditCardTotal = 0;
+                Object.values(accountsData).forEach((transaction) => {
+                    if(transaction.name === 'Savings'){
+                        setAccountTotals({...accountTotals, savings: transaction.total});
+                    } else if(transaction.name !== 'Savings' && transaction.debit) {
+                        debitTotal += transaction.total;
+                    } else if(!transaction.debit){
+                        creditCardTotal += transaction.total;
+                    }
+                });
+                setAccountTotals({...accountTotals, debit: debitTotal, creditCards: creditCardTotal});
+            }
         });
-
-        
-
-        if(typeof transactionsData === 'object'){
-            let transactionsTotal = 0;
-            Object.values(transactionsData).forEach((transaction) => {
-                if(transaction.category === 'Money In'){
-                    transactionsTotal += parseFloat(transaction.value);
-                }
-            })
-            setIncome(transactionsTotal);
-
-            let expensesTotal = 0;
-            Object.values(transactionsData).forEach((transaction) => {
-                if(transaction.category !== 'Money In' && transaction.category !== 'Transfer' && transaction.category !== 'Credit Card Payment'){
-                    expensesTotal += parseFloat(transaction.value);
-                }
-            })
-            setExpenses(expensesTotal);
-        }
-
-        if(typeof accountsData === 'object'){
-            let debitTotal = 0;
-            let creditCardTotal = 0;
-            Object.values(accountsData).forEach((transaction) => {
-                if(transaction.name === 'Savings'){
-                    setAccountTotals({...accountTotals, savings: transaction.total});
-                } else if(transaction.name !== 'Savings' && transaction.debit) {
-                    debitTotal += transaction.total;
-                } else if(!transaction.debit){
-                    creditCardTotal += transaction.total;
-                }
-            });
-            setAccountTotals({...accountTotals, debit: debitTotal, creditCards: creditCardTotal});
-        }
-
         setCount(count + 1);
     }, []); // eslint-disable-line
+
+    const formatMoney = (money) => {
+        if(money){
+            let formattedMoney = money.toString().split('.');
+            let newMoney = [];
+            if(formattedMoney[0].length > 3){
+                let stringArray = formattedMoney[0].split('');
+                // console.log(stringArray);
+                while(stringArray.length){
+                    newMoney.push(stringArray[0]);
+                    stringArray.shift();
+                    // console.log(stringArray);
+                    if(stringArray.length % 3 === 0 && stringArray.length !== 0){
+                        newMoney.push(',');
+                    }
+                    // console.log(newMoney);
+                }
+                // console.log(newMoney);
+                newMoney.join('');
+                // console.log(newMoney.join(''));
+            }
+            // console.log(newMoney.join('') + '.' + formattedMoney[1]);
+            return (newMoney.join('') + '.' + formattedMoney[1]);
+        }
+        return '0.00';
+    }
 
 
     return (
@@ -83,12 +119,12 @@ function AnalyticsModal(props) {
                             <div className="flex justify-center gap-3 items-center xl:gap-10">
                                 <div className="flex flex-col justify-center items-center">
                                     <h5 className="text-indigo-900 dark:text-indigo-300 text-lg">Income</h5>
-                                    <div className="text-green-600 xl:text-2xl">${income}</div>
+                                    <div className={`${income > 0 ? 'text-green-600' : 'text-rose-600'} xl:text-2xl`}>${formatMoney(income)}</div>
                                 </div>
                                 <div className="text-indigo-900 dark:text-indigo-300 xl:text-4xl self-end">-</div>
                                 <div className="flex flex-col justify-center items-center">
                                     <h5 className="text-indigo-900 dark:text-indigo-300 text-lg">Expenses</h5>
-                                    <div className="text-rose-600 xl:text-2xl">${expenses}</div>
+                                    <div className={`${expenses > 0 ? 'text-rose-600' : 'text-green-600'} xl:text-2xl`}>${formatMoney(expenses)}</div>
                                 </div>
                                 <div className="text-indigo-900 dark:text-indigo-300 xl:text-4xl self-end">=</div>
                             </div>
@@ -96,7 +132,7 @@ function AnalyticsModal(props) {
                             <div className="flex justify-center gap-3 items-center xl:gap-10">
                                 <div className="flex flex-col justify-center items-center">
                                     <h5 className="text-indigo-900 dark:text-indigo-300 text-lg">{income - expenses > 0 ? 'Pos. Cashflow' : 'Neg. Cashflow'}</h5>
-                                    <div className={`${ income - expenses > 0 ? 'text-green-600' : 'text-rose-600' } xl:text-2xl`}>${income - expenses}</div>
+                                    <div className={`${ income - expenses > 0 ? 'text-green-600' : 'text-rose-600' } xl:text-2xl`}>${(formatMoney(income - expenses))}</div>
                                 </div>
                                 <div className="text-indigo-900 dark:text-indigo-300 xl:text-2xl self-end">or</div>
                                 <div>
@@ -112,24 +148,24 @@ function AnalyticsModal(props) {
                         <div className="flex flex-col justify-center text-center items-center xl:flex-row xl:gap-10 ">
                             <div className='flex flex-col'>
                                 <h5 className="text-indigo-900 dark:text-indigo-300 text-lg">Debit Accs. Total</h5>
-                                <div className="text-green-600 xl:text-2xl">{accountTotals.debit}</div>
+                                <div className={`${accountTotals.debit > 0 ? 'text-green-600' : 'text-rose-600'} xl:text-2xl`}>${formatMoney(accountTotals.debit)}</div>
                             </div>
                             <div className="text-indigo-900 dark:text-indigo-300">+</div>
                             <div>
                                 <h5 className="text-indigo-900 dark:text-indigo-300 text-lg">Savings</h5>
-                                <div className="text-green-600 xl:text-2xl">{accountTotals.savings}</div>
+                                <div className={`${accountTotals.saving > 0 ? 'text-green-600' : 'text-rose-600'} xl:text-2xl`}>${formatMoney(accountTotals.savings)}</div>
                             </div>
                             <div className="text-indigo-900 dark:text-indigo-300 xl:text-2xl">-</div>
                             <div>
                                 <h5 className="text-indigo-900 dark:text-indigo-300 text-lg">Credit Cards Total</h5>
-                                <div className="text-rose-600 xl:text-2xl">{accountTotals.creditCards}</div>
+                                <div className={`${accountTotals.creditCards > 0 ? 'text-rose-600' : 'text-green-600'} xl:text-2xl`}>${parseFloat(accountTotals.creditCards)}</div>
                             </div>
                             <div className="w-4/6 h-0.5 bg-indigo-900 dark:bg-indigo-300 m-auto sm:w-3/6 lg:w-2/6 xl:hidden"></div>
                             <div className="hidden text-indigo-900 dark:text-indigo-300 xl:block">
                                 =
                             </div>
                             <div className="flex text-center m-auto gap-2 xl:flex-col-reverse">
-                                <div className="text-green-600 xl:text-2xl">{accountTotals.debit + accountTotals.savings - accountTotals.creditCards}</div>
+                                <div className="text-green-600 xl:text-2xl">${formatMoney(accountTotals.debit + accountTotals.savings - accountTotals.creditCards)}</div>
                                 <h5 className="text-indigo-900 dark:text-indigo-300">Total</h5>
                             </div>
                         </div>
