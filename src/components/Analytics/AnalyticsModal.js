@@ -80,21 +80,15 @@ function AnalyticsModal(props) {
             let newMoney = [];
             if(formattedMoney[0].length > 3){
                 let stringArray = formattedMoney[0].split('');
-                // console.log(stringArray);
                 while(stringArray.length){
                     newMoney.push(stringArray[0]);
                     stringArray.shift();
-                    // console.log(stringArray);
                     if(stringArray.length % 3 === 0 && stringArray.length !== 0){
                         newMoney.push(',');
                     }
-                    // console.log(newMoney);
                 }
-                // console.log(newMoney);
                 newMoney.join('');
-                // console.log(newMoney.join(''));
             }
-            // console.log(newMoney.join('') + '.' + formattedMoney[1]);
             return (newMoney.join('') + '.' + formattedMoney[1]);
         }
         return '0.00';

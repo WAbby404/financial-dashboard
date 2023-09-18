@@ -65,9 +65,9 @@ function Goals(props) {
             case (goalList.length === 1):
                 return (
                     <li key={goalList[0].id} className="w-28 xl:pb-2">
-                        <div className="flex flex-col justify-center text-center">
+                        <div className={`flex flex-col justify-center items-center text-center ${props.modalOn ? 'gap-0.5' : 'gap-1'}`}>
                             <h3 className='text-indigo-900 flex items-center basis-1/3 text-ellipsis font-medium h-4 dark:text-indigo-300 sm:text-sm xl:text-base'>{goalList[0].name}</h3>
-                            <div className="w-full h-full relative">
+                            <div className="w-full h-full relative basis-1/3">
                                 <LinearProgress variant="determinate" value={Math.floor(goalList[0].current / goalList[0].total * 100)}
                                     sx={{
                                         backgroundColor: renderBackgroundColor(),
@@ -82,14 +82,14 @@ function Goals(props) {
                                 />
                                 <div className="absolute w-full top-1/4 m-auto text-lg font-semibold text-indigo-900">
                                     {Math.floor(goalList[0].current / goalList[0].total * 100)}
-                                    <span className="">%</span>
+                                    <span>%</span>
                                 </div>
                             </div>
-                            <p className={`text-indigo-900 dark:text-indigo-300 flex justify-center items-center gap-1 font-medium sm:text-sm ${ props.modalOn ? 'xl:text-lg' : 'xl:text-base'}`}>
+                            <div className='flex basis-1/3 justify-center gap-1 pt-1 text-indigo-900 dark:text-indigo-300 font-medium sm:text-sm xl:text-base'>
                                 {formatMoney(goalList[0].current)}
-                                <span className="text-xs">/</span>
+                                /
                                 {formatMoney(goalList[0].total)}
-                            </p> 
+                            </div> 
                             <div className="flex justify-center gap-1">
                                 {props.modalOn &&
                                     <Button onClick={() => editGoal(goalList[0], 0)} size="small" color="secondary" variant="outlined"
@@ -134,11 +134,11 @@ function Goals(props) {
                                             <span>%</span>
                                         </div>
                                     </div>
-                                    <p className='flex basis-1/3 justify-center gap-1 pt-1 text-indigo-900 dark:text-indigo-300 font-medium sm:text-sm xl:text-base'>
+                                    <div className='flex basis-1/3 justify-center gap-1 pt-1 text-indigo-900 dark:text-indigo-300 font-medium sm:text-sm xl:text-base'>
                                         {formatMoney(goal.current)}
-                                        <div>/</div>
+                                        /
                                         {formatMoney(goal.total)}
-                                    </p>
+                                    </div>
                                     <div className="flex justify-center gap-1">
                                         {props.modalOn &&
                                         <Button onClick={() => editGoal(goal, index)} size="small" color="secondary" variant="outlined"

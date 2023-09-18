@@ -1,9 +1,14 @@
-function validateAccount(values) {
+function validateAccount(values, otherAccounts) {
     // account name needs to be unqiue
     const errors = {}; 
-    console.log(values.name);
-    console.log(values.name.trim().length);
-    console.log(values.name.length);
+
+    let accountNames = [];
+    Object.values(otherAccounts).forEach((account) => {
+        accountNames.push(account.name);
+    })
+    if(accountNames.includes(values.name)){
+        errors.name = 'Name must be unique'
+    }
     if(!values.name || values.name.trim().length === 0){
         errors.name = 'Name required';
     }

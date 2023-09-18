@@ -116,6 +116,12 @@ function TransactionsForm(props) {
         } else if (name === 'positive' && value === 'false'){
             setFormValues({...formValues, positive: false});
         } else if (name === 'value' || name === 'date'){
+            // console.log(value);
+            let values = value.split('.');
+            // console.log(values);
+            if(values[1] && values[1].length > 2){
+                return;
+            }
             setFormValues({...formValues, [name]: value.replace(/^0+/, '').trim()});
         } else {
             setFormValues({...formValues, [name]: value});
@@ -227,6 +233,8 @@ function TransactionsForm(props) {
         setAllAccounts(formattedAccounts);
     }
 
+
+
     const transactionForm = () => {
         return(
             <div className='flex flex-col justify-center md:gap-3'>
@@ -298,7 +306,7 @@ function TransactionsForm(props) {
                         : ''}
                         <div className="flex items-center m-auto max-w-[150px] md:max-w-[300px]">
                             <div className="text-indigo-900 dark:text-indigo-300">{formValues?.positive ? <AddIcon/> : <RemoveIcon/> }</div>
-                            <TextField
+                            {/* <CurrencyTextField
                                 id="filled-basic"
                                 label="Value"
                                 variant="outlined"
@@ -309,7 +317,23 @@ function TransactionsForm(props) {
                                 onChange={handleChange}
                                 sx={props.inputStyles}
                                 error={formErrors?.value ? true : false}
-                                helperText={formErrors?.value}/>
+                                helperText={formErrors?.value}
+                                currencySymbol="$"
+                            /> */}
+                            <TextField
+                                id="filled-basic"
+                                label="Value"
+                                variant="outlined"
+                                name="value"
+                                size="small"
+                                type="number"
+                                disabled={formValues?.category ? false : true}
+                                value={formValues.value}
+                                onChange={handleChange}
+                                sx={props.inputStyles}
+                                error={formErrors?.value ? true : false}
+                                helperText={formErrors?.value}
+                                />
                         </div>
                         <TextField
                             id="filled-basic"

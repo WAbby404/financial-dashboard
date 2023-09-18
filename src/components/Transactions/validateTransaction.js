@@ -19,7 +19,7 @@ function validateTransaction(values) {
         errors.category = 'Category required';
     }
 
-    if( isNaN(values.date) || values.date < 1 || values.date > currentMonth || values.date % 1 !== '0'){
+    if( isNaN(values.date) || values.date < 1 || values.date > currentMonth || values.date % 1 === '1'){
         errors.date = `Date must be a whole number between 1 and ${currentMonth}`;
     }
     if(!values.date){

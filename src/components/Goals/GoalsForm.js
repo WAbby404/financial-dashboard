@@ -50,6 +50,11 @@ function GoalsForm(props) {
     const handleChange = (e) => {
         const { name, value } = e.target;
         if(name === 'current' || name === 'total'){
+            let values = value.split('.');
+            // console.log(values);
+            if(values[1] && values[1].length > 2){
+                return;
+            }
             setFormValues({...formValues, [name]: value.replace(/^0+/, '').trim()});
         } else {
             setFormValues({...formValues, [name]: value});

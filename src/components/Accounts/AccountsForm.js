@@ -33,7 +33,7 @@ function AccountsForm(props) {
         e.preventDefault();
         // console.log(formValues);
         // console.log(uniqueAccountNames);
-        const errors = validateAccount(formValues);
+        const errors = validateAccount(formValues, props.allAccounts);
         // If there are no errors, send transaction to database
         if(Object.keys(errors).length === 0){
             // let oldNames = uniqueAccountNames;

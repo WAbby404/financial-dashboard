@@ -215,6 +215,7 @@ function AccountsModal(props) {
                             deleteAccount={deleteAccount}/>
                         <AccountsForm
                             formOn={formOn}
+                            allAccounts={allAccounts}
                             toSetFormOn={toSetFormOn}
                             toSetFormOff={toSetFormOff}
                             editOn={editOn}

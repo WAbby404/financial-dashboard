@@ -51,38 +51,44 @@ function Transactions(props) {
     const formatDate = (date) => {
         const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         const currentMonth = months[new Date().getMonth()];
-        if(date === '1' || date === '21' || date === '31'){
-            return (
-                <div className="flex m-auto gap-0.5 md:justify-center">
-                    <div className="text-sm pr-1">{currentMonth}</div>
-                    {date}
-                    <div className="text-xs">st</div>
-                </div>
-                );
-        } else if (date === '2' || date === '22'){
-            return(
-                <div className="flex m-auto gap-0.5 md:justify-center">
-                    <div className="text-sm pr-1">{currentMonth}</div>
-                    {date}
-                    <div className="text-xs">nd</div>
-                </div>
-            )
-        } else if (date === '3' || date === '23'){
-            return(
-                <div className="flex m-auto gap-0.5 md:justify-center">
-                    <div className="text-sm pr-1">{currentMonth}</div>
-                    {date}
-                    <div className="text-xs">rd</div>
-                </div>
-            )
-        }
         return (
             <div className="flex m-auto gap-0.5 md:justify-center">
                 <div className="text-sm pr-1">{currentMonth}</div>
                 {date}
-                <div className="text-xs">th</div>
             </div>
-        );
+        )
+        // if(date === '1' || date === '21' || date === '31'){
+        //     return (
+        //         <div className="flex m-auto gap-0.5 md:justify-center">
+        //             <div className="text-sm pr-1">{currentMonth}</div>
+        //             {date}
+        //             <div className="text-xs">st</div>
+        //         </div>
+        //         );
+        // } else if (date === '2' || date === '22'){
+        //     return(
+        //         <div className="flex m-auto gap-0.5 md:justify-center">
+        //             <div className="text-sm pr-1">{currentMonth}</div>
+        //             {date}
+        //             <div className="text-xs">nd</div>
+        //         </div>
+        //     )
+        // } else if (date === '3' || date === '23'){
+        //     return(
+        //         <div className="flex m-auto gap-0.5 md:justify-center">
+        //             <div className="text-sm pr-1">{currentMonth}</div>
+        //             {date}
+        //             <div className="text-xs">rd</div>
+        //         </div>
+        //     )
+        // }
+        // return (
+        //     <div className="flex m-auto gap-0.5 md:justify-center">
+        //         <div className="text-sm pr-1">{currentMonth}</div>
+        //         {date}
+        //         <div className="text-xs">th</div>
+        //     </div>
+        // );
     };
 
     const formatMoney = (money, transaction) => {
@@ -122,7 +128,7 @@ function Transactions(props) {
                 return (
                     <li key={items[0].id}>
                         <div className="flex flex-col justify-center p-1 md:flex-row-reverse md:w-full md:justify-between md:gap-2">
-                            <div className={`${props.modalOn ? 'flex flex-col md:flex-row md:w-full md:gap-1 md:items-center' : 'flex justify-between w-full' }`}>
+                            <div className={`${props.modalOn ? 'flex flex-col md:flex-row md:w-full md:gap-1 md:items-center md:justify-between' : 'flex justify-between w-full' }`}>
                                 <div className="basis-2/6 text-left">
                                     <div className={`${items[0].category === 'Transfer' ? 'text-yellow-400' : (items[0].positive ? 'text-green-600' : 'text-rose-600')} font-bold`}>{items[0].name}</div>
                                     <div className="text-indigo-900 dark:text-indigo-300 text-sm">{items[0].transferTo ? `Transfer to ${items[0].transferTo}` : items[0].category}</div>
