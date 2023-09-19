@@ -109,12 +109,12 @@ function Dashboard() {
     };
 
     return(
-        <div className='bg-indigo-100 dark:bg-indigo-950 h-full overflow-x-hidden max-w-full transition-all xl:h-screen'>
+        <div className='bg-indigo-100 dark:bg-indigo-950 h-full max-w-full transition-all xl:h-screen'>
             { loading && <LoadingScreen/>}
             { !user ? <LoginPage buttonStyles={buttonStyles} inputStyles={inputStyles} theme={theme}/> :
-                <div className="static overflow-x-hidden">
+                <div className="static w-screen">
                     <Nav theme={theme} changeTheme={changeTheme} showNav={showNav} buttonStyles={buttonStyles} toSetShowNavOff={toSetShowNavOff}/>
-                    <div className="h-full w-full overflow-x-hidden">
+                    <div className="h-full w-full">
                         <aside className="flex flex-row justify-between items-center p-3 text-indigo-900 dark:text-indigo-300">
                             <div className="basis-1/3 flex flex-col gap-1 md:gap-2 sm:items-center sm:flex-row">
                                 <h1 className="text-lg md:text-2xl font-semibold">{capitalize(user?.displayName)}'s</h1>
