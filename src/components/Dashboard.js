@@ -45,9 +45,8 @@ function Dashboard() {
         }
 
         return (
-            <time className="flex basis-1/3 gap-2 items-center">
-                <h3 className="text-lg xl:text-2xl font-semibold">{today[0]}</h3>
-                <span>{today[1] + dateSuffix}</span>
+            <time className="flex basis-1/3 items-center">
+                <h3 className="text-lg xl:text-2xl font-semibold">{today[0]} <span>{today[1] + dateSuffix}</span></h3>
             </time>
         )
     }
@@ -110,7 +109,7 @@ function Dashboard() {
     };
 
     return(
-        <div className='bg-indigo-100 dark:bg-indigo-950 h-full xl:h-screen max-w-full transition-all'>
+        <div className='bg-indigo-100 dark:bg-indigo-950 h-full overflow-x-hidden max-w-full transition-all xl:h-screen'>
             { loading && <LoadingScreen/>}
             { !user ? <LoginPage buttonStyles={buttonStyles} inputStyles={inputStyles} theme={theme}/> :
                 <div className="static">
@@ -122,7 +121,7 @@ function Dashboard() {
                                 <h2 className="md:self-end">Dashboard</h2>
                             </div>
                             {setDate()}
-                            <IconButton onClick={() => toSetShowNavOn()} sx={navButtonStyle}>
+                            <IconButton onClick={() => toSetShowNavOn()} sx={navButtonStyle} aria-expanded='false' aria-controls="navsidebar" id='navcontrol'>
                                 <MenuIcon/>
                             </IconButton>
                         </aside>

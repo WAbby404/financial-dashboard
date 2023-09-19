@@ -120,8 +120,8 @@ function SpendingModal(props) {
                     </div>
                     <div className="basis-1/2 max-h-full">
                         <div className="flex justify-between pb-2 items-center md:w-10/12 md:m-auto lg:w-11/12">
-                            <h4 className="text-indigo-900 dark:text-indigo-300 text-xl">Categories</h4>
-                            <h4 className="text-indigo-900 dark:text-indigo-300 font-medium text-xl text-right">{`$${transactionsTotal()} total`}</h4>
+                            <h3 className="text-indigo-900 dark:text-indigo-300 text-xl">Categories</h3>
+                            <h3 className="text-indigo-900 dark:text-indigo-300 font-medium text-xl text-right">{`$${transactionsTotal()} total`}</h3>
                         </div>
                         <div className='xl:overflow-y-auto xl:max-h-56 2xl:max-h-64 2xl:w-11/12 2xl:m-auto'>
                             <SpendingAccordion

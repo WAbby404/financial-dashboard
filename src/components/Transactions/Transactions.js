@@ -130,16 +130,16 @@ function Transactions(props) {
                         <div className="flex flex-col justify-center p-1 md:flex-row-reverse md:w-full md:justify-between md:gap-2">
                             <div className={`${props.modalOn ? 'flex flex-col md:flex-row md:w-full md:gap-1 md:items-center md:justify-between' : 'flex justify-between w-full' }`}>
                                 <div className="basis-2/6 text-left">
-                                    <div className={`${items[0].category === 'Transfer' ? 'text-yellow-400' : (items[0].positive ? 'text-green-600' : 'text-rose-600')} font-bold`}>{items[0].name}</div>
+                                    <h3 className={`${items[0].category === 'Transfer' ? 'text-yellow-400' : (items[0].positive ? 'text-green-600' : 'text-rose-600')} font-bold`}>{items[0].name}</h3>
                                     <div className="text-indigo-900 dark:text-indigo-300 text-sm">{items[0].transferTo ? `Transfer to ${items[0].transferTo}` : items[0].category}</div>
                                 </div>
                                 <div className={`${props.modalOn ? 'text-left md:text-center' : 'text-center self-center' } text-indigo-900 dark:text-indigo-300 basis-1/6`}>
                                     {formatDate(items[0].date)}
                                 </div>
                                 <div className={`${props.modalOn ? 'text-left md:text-right' : 'text-right' } basis-2/6`}>
-                                    <div className={`${items[0].category === 'Transfer' ? 'text-yellow-400' : (items[0].positive ? 'text-green-600' : 'text-rose-600')} font-bold`}>
+                                    <h4 className={`${items[0].category === 'Transfer' ? 'text-yellow-400' : (items[0].positive ? 'text-green-600' : 'text-rose-600')} font-bold`}>
                                         {formatMoney(items[0].value, items[0])}
-                                    </div>
+                                    </h4>
                                     <div className="text-indigo-900 dark:text-indigo-300 text-sm">
                                         {items[0].transferTo ? `from ${items[0].account}` : items[0].account}
                                     </div>
@@ -180,9 +180,9 @@ function Transactions(props) {
                                             {formatDate(item.date)}
                                         </div>
                                         <div className={`${props.modalOn ? 'text-left md:text-right ' : 'text-right' } basis-2/6`}>
-                                            <h3 className={`${item.category === 'Transfer' ? 'text-yellow-400' : (item.positive ? 'text-green-600' : 'text-rose-600')} font-bold`}>
+                                            <h4 className={`${item.category === 'Transfer' ? 'text-yellow-400' : (item.positive ? 'text-green-600' : 'text-rose-600')} font-bold`}>
                                                 {formatMoney(item.value, item)}
-                                            </h3>
+                                            </h4>
                                             <div className="text-indigo-900 dark:text-indigo-300 text-sm">
                                                 {item.transferTo ? `From ${item.account}` : item.account}
                                             </div>

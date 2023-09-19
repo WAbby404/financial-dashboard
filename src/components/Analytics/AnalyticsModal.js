@@ -78,7 +78,7 @@ function AnalyticsModal(props) {
     }, []); // eslint-disable-line
 
     const formatMoney = (money, isCreditCard) => {
-        // console.log(money);
+        console.log(money);
         if(money){
             // need to account for negative so if neg times by -1 & add a - on render
             let formattedMoney = money.toString().split('.');
@@ -127,7 +127,7 @@ function AnalyticsModal(props) {
         <section className="bg-slate-50 dark:bg-indigo-900 rounded-sm p-3 m-3 flex flex-col gap-2 order-5 sm:w-10/12 sm:m-auto md:w-9/12 xl:w-full xl:h-full xl:col-span-12 xl:row-span-6">
             <div className="flex">
                 <h2 className="text-indigo-900 dark:text-indigo-300 font-bold text-xl basis-7/12">Analytics</h2>
-                <h2 className="text-indigo-900 dark:text-indigo-300 font-semibold text-lg hidden xl:inline">Trends</h2>
+                <h3 className="text-indigo-900 dark:text-indigo-300 font-semibold text-lg hidden xl:inline">Trends</h3>
             </div>
             <div className="flex flex-col xl:flex-row xl:h-5/6 xl:px-5"> 
                 <div className="flex flex-col pb-3 xl:flex-col xl:basis-2/3">
@@ -183,7 +183,7 @@ function AnalyticsModal(props) {
                                 =
                             </div>
                             <div className="flex text-center m-auto gap-2 xl:flex-col-reverse">
-                                <div className={`${parseFloat(accountTotals.debit) + parseFloat(accountTotals.savings) - parseFloat(accountTotals.creditCards) > 0 ? 'text-green-600' : 'text-rose-600'} xl:text-2xl`}>{formatMoney(parseFloat(accountTotals.debit) + parseFloat(accountTotals.savings) - parseFloat(accountTotals.creditCards))}</div>
+                                <div className={`${parseFloat(accountTotals.debit) + parseFloat(accountTotals.savings) - ( -1 * parseFloat(accountTotals.creditCards)) > 0 ? 'text-green-600' : 'text-rose-600'} xl:text-2xl`}>{formatMoney(parseFloat(accountTotals.debit) + parseFloat(accountTotals.savings) - ( -1 * parseFloat(accountTotals.creditCards)))}</div>
                                 <h5 className="text-indigo-900 dark:text-indigo-300">Total</h5>
                             </div>
                         </div>

@@ -85,11 +85,11 @@ function Goals(props) {
                                     <span>%</span>
                                 </div>
                             </div>
-                            <div className='flex basis-1/3 justify-center gap-1 pt-1 text-indigo-900 dark:text-indigo-300 font-medium sm:text-sm xl:text-base'>
+                            <h4 className='flex basis-1/3 justify-center gap-1 pt-1 text-indigo-900 dark:text-indigo-300 font-medium sm:text-sm xl:text-base'>
                                 {formatMoney(goalList[0].current)}
                                 /
                                 {formatMoney(goalList[0].total)}
-                            </div> 
+                            </h4> 
                             <div className="flex justify-center gap-1">
                                 {props.modalOn &&
                                     <Button onClick={() => editGoal(goalList[0], 0)} size="small" color="secondary" variant="outlined"
@@ -134,11 +134,11 @@ function Goals(props) {
                                             <span>%</span>
                                         </div>
                                     </div>
-                                    <div className='flex basis-1/3 justify-center gap-1 pt-1 text-indigo-900 dark:text-indigo-300 font-medium sm:text-sm xl:text-base'>
+                                    <h4 className='flex basis-1/3 justify-center gap-1 pt-1 text-indigo-900 dark:text-indigo-300 font-medium sm:text-sm xl:text-base'>
                                         {formatMoney(goal.current)}
                                         /
                                         {formatMoney(goal.total)}
-                                    </div>
+                                    </h4>
                                     <div className="flex justify-center gap-1">
                                         {props.modalOn &&
                                         <Button onClick={() => editGoal(goal, index)} size="small" color="secondary" variant="outlined"

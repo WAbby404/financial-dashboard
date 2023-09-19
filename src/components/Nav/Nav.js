@@ -24,15 +24,15 @@ function Nav(props) {
 
     return (
         <div className={`${props.showNav ? "translate-x-0" : "translate-x-full"} delay-100 ease-in-out absolute bg-gray-950/75 w-full h-screen z-50 top-0 p-3 flex flex-col justify-center items-center xl:inset-x-0`}>
-            <nav className={`${ props.theme === 'dark' ? 'dark' : ''} bg-slate-50 dark:bg-indigo-950 absolute flex flex-col z-50 w-full h-full p-3 justify-between md:w-6/12 md:left-2/4 lg:w-4/12 lg:left-[67%] xl:w-3/12 xl:left-[75%] ${props.showNav ? "translate-x-0" : "translate-x-full"} ease-in-out duration-300`}>
+            <nav id="navsidebar" role='region' aria-labelledby="navcontrol" className={`${ props.theme === 'dark' ? 'dark' : ''} bg-slate-50 dark:bg-indigo-950 absolute flex flex-col z-50 w-full h-full p-3 justify-between md:w-6/12 md:left-2/4 lg:w-4/12 lg:left-[67%] xl:w-3/12 xl:left-[75%] ${props.showNav ? "translate-x-0" : "translate-x-full"} ease-in-out duration-300`}>
                 <div className="flex flex-col gap-3 items-center justify-center">
                     <div className="flex flex-col justify-center text-center">
-                        <h2 className="text-indigo-900 dark:text-indigo-300 font-bold text-2xl">Moonlit</h2>
-                        <h3 className="text-sky-400">Personal Finance Dashboard</h3>
+                        <h1 className="text-indigo-900 dark:text-indigo-300 font-bold text-2xl">Moonlit</h1>
+                        <h2 className="text-sky-400">Personal Finance Dashboard</h2>
                     </div>
                     <figure className="flex flex-col gap-3 justify-center items-center align-center pt-12 sm:pt-4 md:pt-[30%]">
                     <div className='h-32 w-32 text-3xl font-semibold bg-indigo-300 rounded-full flex justify-center items-center sm:h-20 sm:w-20 md:h-32 md:w-32'>{profileImgData?.initials}</div>
-                    <figcaption className="text-indigo-900 dark:text-indigo-300">{profileImgData?.name}</figcaption>
+                    <h3 className="text-indigo-900 dark:text-indigo-300">{profileImgData?.name}</h3>
                 </figure>
                 </div>
                 <footer className="flex flex-col gap-5 sm:gap-3 md:pb-12">
