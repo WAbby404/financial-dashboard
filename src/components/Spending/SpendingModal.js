@@ -68,7 +68,6 @@ function SpendingModal(props) {
     const transactionsTotal = () => {
         let total = 0;
         allTransactions.forEach((transaction) => {
-            // console.log(transaction);
             total += transaction.value;
         })
 
@@ -81,23 +80,27 @@ function SpendingModal(props) {
     
         
         let newMoney = [];
-        if(formattedMoney[0].length > 3){
-            let stringArray = formattedMoney[0].split('');
+        let stringArray = formattedMoney[0].split('');
+        // console.log(stringArray);
+        while(stringArray.length){
+            newMoney.push(stringArray[0]);
+            stringArray.shift();
             // console.log(stringArray);
-            while(stringArray.length){
-                newMoney.push(stringArray[0]);
-                stringArray.shift();
-                // console.log(stringArray);
-                if(stringArray.length % 3 === 0 && stringArray.length !== 0){
-                    newMoney.push(',');
-                }
-                // console.log(newMoney);
+            if(stringArray.length % 3 === 0 && stringArray.length !== 0){
+                newMoney.push(',');
             }
             // console.log(newMoney);
-            newMoney.join('');
         }
         // console.log(newMoney);
-
+        newMoney.join('');
+        // console.log(newMoney);
+        // console.log(formattedMoney);
+        // console.log(typeof newMoney);
+        if(!formattedMoney[1]){
+            newMoney.push('.00');
+        } else {
+            newMoney.push('.' + formattedMoney[1]);
+        }
         return newMoney.join('');
     }
 

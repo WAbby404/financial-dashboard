@@ -110,7 +110,7 @@ function Transactions(props) {
             // console.log(newMoney);
             newMoney.join('');
         }
-
+        // console.log(transaction);
         return(
             <div className={`${props.modalOn ? 'md:justify-end' : 'justify-end' } flex`}>
                 <div>{transaction.category === 'Transfer' ? '' : (transaction.positive ? '+' : '-')}</div>

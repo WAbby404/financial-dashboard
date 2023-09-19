@@ -306,20 +306,6 @@ function TransactionsForm(props) {
                         : ''}
                         <div className="flex items-center m-auto max-w-[150px] md:max-w-[300px]">
                             <div className="text-indigo-900 dark:text-indigo-300">{formValues?.positive ? <AddIcon/> : <RemoveIcon/> }</div>
-                            {/* <CurrencyTextField
-                                id="filled-basic"
-                                label="Value"
-                                variant="outlined"
-                                name="value"
-                                size="small"
-                                disabled={formValues?.category ? false : true}
-                                value={formValues.value}
-                                onChange={handleChange}
-                                sx={props.inputStyles}
-                                error={formErrors?.value ? true : false}
-                                helperText={formErrors?.value}
-                                currencySymbol="$"
-                            /> */}
                             <TextField
                                 id="filled-basic"
                                 label="Value"

@@ -58,6 +58,8 @@ function TransactionsModal(props) {
             const body = document.querySelector("body");
             body.style.overflow = "auto";
             toSetSuccessSnackbarOff();
+            toSetErrorSnackbarOff();
+            toSetDeleteSnackbarOff();
         }
     };
 
@@ -191,7 +193,7 @@ function TransactionsModal(props) {
             })
         },{onlyOnce: true});
         let updatedRef = ref(db, accountId);
-        update(updatedRef, {total: accountTotal});
+        update(updatedRef, {total: accountTotal.toFixed(2)});
     }
 
     return (

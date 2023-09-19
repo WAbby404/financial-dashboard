@@ -55,7 +55,7 @@ function Accounts(props) {
         return sortedBaseArray;
     };
 
-    const formatMoney = (money) => {
+    const formatMoney = (money, account) => {
         let formattedMoney;
         if(money > 0){
             formattedMoney = money.toString().split('.');
@@ -83,7 +83,7 @@ function Accounts(props) {
         
         return(
             <div className="flex items-center">
-                <div className="font-bold text-2xl xl:text-4xl">{money < 0 && '-'}</div>
+                <div className="font-bold text-2xl xl:text-4xl">{!account.debit ? '' : money < 0 && '-' }</div>
                 <div className="font-bold text-2xl xl:text-4xl">$</div>
                 <div className="font-bold text-3xl xl:text-5xl">{newMoney.length > 0 ? newMoney : formattedMoney[0]}</div>
                 <div className="font-bold self-end text-xl xl:text-3xl">.{formattedMoney[1] ? formattedMoney[1] : '00'}</div>
@@ -103,7 +103,7 @@ function Accounts(props) {
                                 </div>
                                 <div className="flex justify-center">
                                     <h4 className={`${((account.debit && account.total > 0) || (!account.debit && account.total === 0)) ? 'text-green-600' : 'text-rose-600'} font-bold text-3xl xl:text-5xl ${props.modalOn ? '' : 'text-4xl '}`}>
-                                        {formatMoney(account.total)}
+                                        {formatMoney(account.total, account)}
                                     </h4>
                                 </div>
                             </div>

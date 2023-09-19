@@ -61,6 +61,9 @@ function GoalsModal(props) {
             setEditOn(false);
             const body = document.querySelector("body");
             body.style.overflow = "auto";
+            toSetSuccessSnackbarOff();
+            toSetErrorSnackbarOff();
+            toSetDeleteSnackbarOff();
         }
     };
     

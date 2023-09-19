@@ -20,16 +20,10 @@ function AnalyticsModal(props) {
         onValue(dbRefTransactions, (snapshot) => {
             snapshot.forEach((childSnapshot) => {
                 const childData = childSnapshot.val();
-                // console.log('childsnapshot');
-                // console.log(childData);
-                // console.log(Object.keys(childData));
                 if(Object.keys(childData).includes('Checking')){
-                    // console.log('accountsData set');
                     accountsData = childData;
                 }
                 if((Object.keys(childData).includes('Checking') !== true) && (Object.keys(childData).includes('initials') !== true)){
-                    // console.log('transactionsData set');
-                    // console.log(childData);
                     transactionsData = childData;
                 }
             })
@@ -50,35 +44,61 @@ function AnalyticsModal(props) {
                 Object.values(transactionsData).forEach((transaction) => {
                     // console.log(transaction);
                     if(transaction.category !== 'Money In' && transaction.category !== 'Transfer' && transaction.category !== 'Credit Card Payment'){
+                        // console.log(transaction.value);
+                        // console.log(parseFloat(transaction.value));
                         expensesTotal += parseFloat(transaction.value);
+                        // console.log(expensesTotal);
                     }
                 })
-                setExpenses(expensesTotal);
+                setExpenses(expensesTotal.toFixed(2));
             }
     
             if(typeof accountsData === 'object'){
-                let debitTotal = 0;
-                let creditCardTotal = 0;
-                Object.values(accountsData).forEach((transaction) => {
-                    if(transaction.name === 'Savings'){
-                        setAccountTotals({...accountTotals, savings: transaction.total});
-                    } else if(transaction.name !== 'Savings' && transaction.debit) {
-                        debitTotal += transaction.total;
-                    } else if(!transaction.debit){
-                        creditCardTotal += transaction.total;
+                let debitTotal = 0.00;
+                let savingsTotal = 0.00;
+                let creditCardTotal = 0.00;
+                Object.values(accountsData).forEach((account) => {
+                    // console.log(account);
+                    if(account.name === 'Savings'){
+                        savingsTotal = parseFloat(account.total);
+                    } else if(account.name !== 'Savings' && account.debit) {
+                        debitTotal += parseFloat(account.total);
+                    } else if(account && !account.debit){
+                        // console.log(account);
+                        // console.log(account.total);
+                        creditCardTotal += parseFloat(account.total);
+                        // console.log(creditCardTotal);
                     }
                 });
-                setAccountTotals({...accountTotals, debit: debitTotal, creditCards: creditCardTotal});
+                // console.log(creditCardTotal);
+                setAccountTotals({savings: savingsTotal.toFixed(2) , debit: (debitTotal).toFixed(2), creditCards: creditCardTotal.toFixed(2)});
             }
         });
         setCount(count + 1);
     }, []); // eslint-disable-line
 
-    const formatMoney = (money) => {
+    const formatMoney = (money, isCreditCard) => {
+        // console.log(money);
         if(money){
+            // need to account for negative so if neg times by -1 & add a - on render
             let formattedMoney = money.toString().split('.');
+            let isNegative = false;
+            if(!formattedMoney[1]){
+                formattedMoney[1] = '00';
+            }
+            if(money < 0){
+                // console.log(money);
+                // console.log(formattedMoney);
+                formattedMoney[0] = formattedMoney[0].slice(1);
+                // console.log(formattedMoney[0].slice(1));
+                // console.log(formattedMoney);
+                isNegative = true;
+                if(isCreditCard){
+                    isNegative = false;
+                }
+            }
             let newMoney = [];
-            if(formattedMoney[0].length > 3){
+            // if(formattedMoney[0].length >= 3){
                 let stringArray = formattedMoney[0].split('');
                 while(stringArray.length){
                     newMoney.push(stringArray[0]);
@@ -88,22 +108,26 @@ function AnalyticsModal(props) {
                     }
                 }
                 newMoney.join('');
-            }
-            return (newMoney.join('') + '.' + formattedMoney[1]);
+            // }
+            return ((isNegative ? '-' : '' ) + '$'+ newMoney.join('') + '.' + formattedMoney[1]);
         }
-        return '0.00';
+        return '$0.00';
     }
 
+    const calculateOverspent = () => {
+        // (100 * ((income - expenses) / ( income === 0 ? 1 : income ))).toFixed(2)
+        let overspent = (100 * (income - expenses) / ( income === 0 ? 1 : income )).toFixed(2);
+        if(overspent < 0){
+            overspent = overspent * -1;
+        }
+        return overspent;
+    }
 
     return (
         <section className="bg-slate-50 dark:bg-indigo-900 rounded-sm p-3 m-3 flex flex-col gap-2 order-5 sm:w-10/12 sm:m-auto md:w-9/12 xl:w-full xl:h-full xl:col-span-12 xl:row-span-6">
             <div className="flex">
                 <h2 className="text-indigo-900 dark:text-indigo-300 font-bold text-xl basis-7/12">Analytics</h2>
-                {/* <div className='flex gap-5'> */}
-                    <h2 className="text-indigo-900 dark:text-indigo-300 font-semibold text-lg hidden xl:inline">Trends</h2>
-                    {/* <h3 className="text-indigo-900 dark:text-indigo-300 pl-5 text-base hidden xl:inline">Amount spent on days of the month</h3> */}
-                {/* </div> */}
-
+                <h2 className="text-indigo-900 dark:text-indigo-300 font-semibold text-lg hidden xl:inline">Trends</h2>
             </div>
             <div className="flex flex-col xl:flex-row xl:h-5/6 xl:px-5"> 
                 <div className="flex flex-col pb-3 xl:flex-col xl:basis-2/3">
@@ -113,12 +137,12 @@ function AnalyticsModal(props) {
                             <div className="flex justify-center gap-3 items-center xl:gap-10">
                                 <div className="flex flex-col justify-center items-center">
                                     <h5 className="text-indigo-900 dark:text-indigo-300 text-lg">Income</h5>
-                                    <div className={`${income > 0 ? 'text-green-600' : 'text-rose-600'} xl:text-2xl`}>${formatMoney(income)}</div>
+                                    <div className={`${income > 0 ? 'text-green-600' : 'text-rose-600'} xl:text-2xl`}>{formatMoney(income)}</div>
                                 </div>
                                 <div className="text-indigo-900 dark:text-indigo-300 xl:text-4xl self-end">-</div>
                                 <div className="flex flex-col justify-center items-center">
                                     <h5 className="text-indigo-900 dark:text-indigo-300 text-lg">Expenses</h5>
-                                    <div className={`${expenses > 0 ? 'text-rose-600' : 'text-green-600'} xl:text-2xl`}>${formatMoney(expenses)}</div>
+                                    <div className={`${expenses > 0 ? 'text-rose-600' : 'text-green-600'} xl:text-2xl`}>{formatMoney(expenses)}</div>
                                 </div>
                                 <div className="text-indigo-900 dark:text-indigo-300 xl:text-4xl self-end">=</div>
                             </div>
@@ -126,12 +150,12 @@ function AnalyticsModal(props) {
                             <div className="flex justify-center gap-3 items-center xl:gap-10">
                                 <div className="flex flex-col justify-center items-center">
                                     <h5 className="text-indigo-900 dark:text-indigo-300 text-lg">{income - expenses > 0 ? 'Pos. Cashflow' : 'Neg. Cashflow'}</h5>
-                                    <div className={`${ income - expenses > 0 ? 'text-green-600' : 'text-rose-600' } xl:text-2xl`}>${(formatMoney(income - expenses))}</div>
+                                    <div className={`${ income - expenses > 0 ? 'text-green-600' : 'text-rose-600' } xl:text-2xl`}>{(formatMoney(income - expenses))}</div>
                                 </div>
                                 <div className="text-indigo-900 dark:text-indigo-300 xl:text-2xl self-end">or</div>
                                 <div>
-                                    <h5 className="text-indigo-900 dark:text-indigo-300 text-lg">{income - expenses > 0 ? '%Unspent' : '%Overspent'}</h5>
-                                    <div className={`${ income - expenses > 0 ? 'text-green-600' : 'text-rose-600' } xl:text-2xl`}>%{(100 * ((income - expenses) / ( income === 0 ? 1 : income ))).toFixed(2)}</div>
+                                    <h5 className="text-indigo-900 dark:text-indigo-300 text-lg">{income - expenses > 0 ? '% Unspent' : '% Overspent'}</h5>
+                                    <div className={`${ income - expenses > 0 ? 'text-green-600' : 'text-rose-600' } xl:text-2xl`}>% {calculateOverspent()}</div>
                                 </div>
                             </div>
                         </div>
@@ -142,24 +166,24 @@ function AnalyticsModal(props) {
                         <div className="flex flex-col justify-center text-center items-center xl:flex-row xl:gap-10 ">
                             <div className='flex flex-col'>
                                 <h5 className="text-indigo-900 dark:text-indigo-300 text-lg">Debit Accs. Total</h5>
-                                <div className={`${accountTotals.debit > 0 ? 'text-green-600' : 'text-rose-600'} xl:text-2xl`}>${formatMoney(accountTotals.debit)}</div>
+                                <div className={`${accountTotals.debit > 0 ? 'text-green-600' : 'text-rose-600'} xl:text-2xl`}>{formatMoney(accountTotals.debit)}</div>
                             </div>
                             <div className="text-indigo-900 dark:text-indigo-300">+</div>
                             <div>
                                 <h5 className="text-indigo-900 dark:text-indigo-300 text-lg">Savings</h5>
-                                <div className={`${accountTotals.saving > 0 ? 'text-green-600' : 'text-rose-600'} xl:text-2xl`}>${formatMoney(accountTotals.savings)}</div>
+                                <div className={`${accountTotals.saving > 0 ? 'text-green-600' : 'text-rose-600'} xl:text-2xl`}>{formatMoney(accountTotals.savings)}</div>
                             </div>
                             <div className="text-indigo-900 dark:text-indigo-300 xl:text-2xl">-</div>
                             <div>
                                 <h5 className="text-indigo-900 dark:text-indigo-300 text-lg">Credit Cards Total</h5>
-                                <div className={`${accountTotals.creditCards > 0 ? 'text-rose-600' : 'text-green-600'} xl:text-2xl`}>${parseFloat(accountTotals.creditCards)}</div>
+                                <div className={`${accountTotals.creditCards === 0 ? 'text-green-600' : 'text-rose-600'} xl:text-2xl`}>{formatMoney(accountTotals.creditCards, true)}</div>
                             </div>
                             <div className="w-4/6 h-0.5 bg-indigo-900 dark:bg-indigo-300 m-auto sm:w-3/6 lg:w-2/6 xl:hidden"></div>
                             <div className="hidden text-indigo-900 dark:text-indigo-300 xl:block">
                                 =
                             </div>
                             <div className="flex text-center m-auto gap-2 xl:flex-col-reverse">
-                                <div className="text-green-600 xl:text-2xl">${formatMoney(accountTotals.debit + accountTotals.savings - accountTotals.creditCards)}</div>
+                                <div className={`${parseFloat(accountTotals.debit) + parseFloat(accountTotals.savings) - parseFloat(accountTotals.creditCards) > 0 ? 'text-green-600' : 'text-rose-600'} xl:text-2xl`}>{formatMoney(parseFloat(accountTotals.debit) + parseFloat(accountTotals.savings) - parseFloat(accountTotals.creditCards))}</div>
                                 <h5 className="text-indigo-900 dark:text-indigo-300">Total</h5>
                             </div>
                         </div>

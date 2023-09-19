@@ -133,6 +133,7 @@ function GoalsForm(props) {
                             variant="filled"
                             size="small"
                             name="current"
+                            type="number"
                             sx={bottomInputStyles}
                             value={formValues.current}
                             onChange={handleChange}
@@ -144,6 +145,7 @@ function GoalsForm(props) {
                             variant="filled"
                             size="small"
                             name="total"
+                            type="number"
                             sx={bottomInputStyles}
                             value={formValues.total}
                             onChange={handleChange}

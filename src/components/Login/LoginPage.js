@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import Login from './Login';
 import Register from './Register';
-import Logo from './logo.png';
 
 function LoginPage(props) {
     const [register, setRegister] = useState(false);
@@ -26,7 +25,7 @@ function LoginPage(props) {
     return (
         <main className='w-full h-screen flex flex-col p-5 gap-4 justify-center sm:flex-row md:flex-col md:p-1 md:gap-10'>
             <section className="w-9/12 flex flex-col mx-auto items-center justify-center">
-                <img src={Logo} alt='Moonlit Logo' className="max-h-52 sm:max-h-36 md:max-h-64"/>
+                <img src='logo.png' alt='Moonlit Logo' className="max-h-52 sm:max-h-36 md:max-h-64"/>
                 <h1 className="text-indigo-900 dark:text-indigo-300 font-bold text-4xl sm:text-2xl md:text-4xl">Moonlit</h1>
                 <h2 className="text-sky-400 text-center text-xl sm:text-base md:text-2xl">Personal Finance Dashboard</h2>
                 {register ? 

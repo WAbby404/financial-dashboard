@@ -101,7 +101,7 @@ function AccountsForm(props) {
                 </h3>
                 <TextField
                     id="filled-basic" 
-                    label="Account name" 
+                    label="Account Name" 
                     variant="filled"
                     sx={props.inputStyles}
                     // sx={{ width: {
@@ -137,6 +137,18 @@ function AccountsForm(props) {
                                                 error={formErrors?.debit ? true : false} 
                                                 helperText={formErrors?.debit}/>}
                     isOptionEqualToValue={(option, value) => option.label === value}/>
+                {props.editOn &&
+                    <TextField
+                        id="filled-basic" 
+                        label="Account Total" 
+                        variant="filled"
+                        disabled
+                        sx={props.inputStyles}
+                        size="small"
+                        name="total"
+                        value={formValues.total}
+                        onChange={handleChange}/>
+                }
                 <div className="flex flex-col justify-center gap-2 sm:flex-row md:flex-col md:gap-4 md:w-3/5 md:m-auto xl:flex-row">
                     <Button sx={props.buttonStyles} type="submit" onClick={() => giveId()}>
                         {/* {props.editOn === false ? 'Create goal' : 'Finalize Edits' } */}

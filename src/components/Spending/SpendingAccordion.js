@@ -30,6 +30,10 @@ function SpendingAccordion(props) {
         let newMoney = [];
         // console.log(formattedMoney);
         // console.log(formattedMoney[1].slice(0, 2));
+        // console.log(formattedMoney);
+        if(!formattedMoney[1]){
+          formattedMoney[1] = '00';
+        }
         formattedMoney[1] = formattedMoney[1].slice(0, 2);
         // formattedMoney[1] =parseFloat(formattedMoney[1]).toFixed(2)
         if(formattedMoney[0].length > 3){

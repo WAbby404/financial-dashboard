@@ -51,6 +51,9 @@ function AccountsModal(props) {
             const body = document.querySelector("body");
             body.style.overflow = "auto";
             setEditOn(false);
+            toSetSuccessSnackbarOff();
+            toSetErrorSnackbarOff();
+            toSetDeleteSnackbarOff();
         }
     };
 
