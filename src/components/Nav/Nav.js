@@ -23,7 +23,7 @@ function Nav(props) {
     }, []); // eslint-disable-line
 
     return (
-        <div className={`${props.showNav ? "translate-x-0" : "translate-x-full"} delay-100 ease-in-out absolute bg-gray-950/75 w-full h-screen z-50 top-0 p-3 flex flex-col justify-center items-center xl:inset-x-0`}>
+        <div className={`${props.showNav ? "translate-x-0" : "translate-x-full"} delay-100 ease-in-out fixed bg-gray-950/75 w-full h-screen z-50 top-0 p-3 flex flex-col justify-center items-center xl:inset-x-0`}>
             <nav id="navsidebar" role='region' aria-labelledby="navcontrol" className={`${ props.theme === 'dark' ? 'dark' : ''} bg-slate-50 dark:bg-indigo-950 absolute flex flex-col z-50 w-full h-full p-3 justify-between md:w-6/12 md:left-2/4 lg:w-4/12 lg:left-[67%] xl:w-3/12 xl:left-[75%] ${props.showNav ? "translate-x-0" : "translate-x-full"} ease-in-out duration-300`}>
                 <div className="flex flex-col gap-3 items-center justify-center">
                     <div className="flex flex-col justify-center text-center">
