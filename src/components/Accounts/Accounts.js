@@ -110,12 +110,14 @@ function Accounts(props) {
                             <div className="flex justify-center gap-1 md:flex-col">
                                 {props.modalOn && !account.notEditable &&
                                     <Button onClick={() => editAccount(account, index)} size="small" color="secondary" variant="outlined"
+                                        aria-label='Edit account'
                                         disabled={props.editOn ? true : false}
                                         sx={{color: 'orange'}}>
                                         <EditIcon/>
                                     </Button>}
                                 {props.modalOn  && !account.notEditable && 
                                     <Button onClick={() => deleteAccount(account, index)} size="small" color="error" variant="outlined"
+                                        aria-label="Delete account"
                                         sx={{color: 'red'}}>
                                         <DeleteIcon/>
                                     </Button>}

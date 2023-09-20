@@ -78,7 +78,7 @@ function AnalyticsModal(props) {
     }, []); // eslint-disable-line
 
     const formatMoney = (money, isCreditCard) => {
-        console.log(money);
+        // console.log(money);
         if(money){
             // need to account for negative so if neg times by -1 & add a - on render
             let formattedMoney = money.toString().split('.');
@@ -190,9 +190,6 @@ function AnalyticsModal(props) {
                     </section>
                 </div>
                 <figure className="w-full h-full xl:basis-5/12 xl:max-h-full">
-                    {/* {console.log(transactions)} */}
-
-                    {/* need to fix this, maybe with default data??? */}
                     {(transactions && Object.keys(transactions).length > 0) ?
                         <AnalyticsGraph transactions={transactions}/>
                         :

@@ -116,7 +116,8 @@ function SpendingModal(props) {
                         <SpendingGraph
                             formattedTransactions={formattedTransactions}
                             currentCategory={currentCategory}
-                            toSetCurrentCategory={toSetCurrentCategory} />
+                            toSetCurrentCategory={toSetCurrentCategory}
+                        />
                     </div>
                     <div className="basis-1/2 max-h-full">
                         <div className="flex justify-between pb-2 items-center md:w-10/12 md:m-auto lg:w-11/12">

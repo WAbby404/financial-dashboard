@@ -150,11 +150,13 @@ function Transactions(props) {
                                     <Button size="small" color="secondary" variant="outlined" 
                                         onClick={() => editTransaction(items[0], 0)}
                                         disabled={props.editOn ? true : false}
+                                        aria-label='Edit transaction'
                                         sx={{color: 'orange'}}>
                                         <EditIcon/>
                                     </Button>
                                     <Button size="small" variant="outlined" color="error"
                                         onClick={() => deleteTransaction(items[0], 0)}
+                                        aria-label='Delete transaction'
                                         sx={{color: 'red'}}>
                                         <DeleteIcon/>
                                     </Button>
@@ -193,11 +195,13 @@ function Transactions(props) {
                                             <Button size="small" color="secondary" variant="outlined"
                                                 onClick={() => editTransaction(item, index)} 
                                                 disabled={props.editOn ? true : false}
+                                                aria-label='Edit transaction'
                                                 sx={{color: 'orange'}}>
                                                     <EditIcon/>
                                             </Button>
                                             <Button size="small" variant="outlined" color="error"
                                                 sx={{color: 'red'}}
+                                                aria-label='Delete transaction'
                                                 onClick={() => deleteTransaction(item, index)} data-testid="transactionDelete">
                                                     <DeleteIcon/>
                                             </Button>

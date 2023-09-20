@@ -37,18 +37,18 @@ function Nav(props) {
                 </div>
                 <footer className="flex flex-col gap-5 sm:gap-3 md:pb-12">
                     <div className="flex flex-col gap-2 w-2/5 m-auto md:w-4/5">
-                        <Button size='small' onClick={() => props.toSetShowNavOff()} sx={props.buttonStyles}>Close Navigation</Button>
-                        <Button size='small' onClick={() => props.changeTheme()} sx={props.buttonStyles}>{props.theme === 'light' ? 'Dark Mode' : 'Light Mode'}</Button>
-                        <Button size='small' onClick={() => auth.signOut()} sx={props.buttonStyles}>Sign out</Button>
+                        <Button size='small' onClick={() => props.toSetShowNavOff()} sx={props.buttonStyles} tabIndex={props.showNav ? 1 : -1}>Close Navigation</Button>
+                        <Button size='small' onClick={() => props.changeTheme()} sx={props.buttonStyles} tabIndex={props.showNav ? 1 : -1}>{props.theme === 'light' ? 'Dark Mode' : 'Light Mode'}</Button>
+                        <Button size='small' onClick={() => auth.signOut()} sx={props.buttonStyles} tabIndex={props.showNav ? 1 : -1}>Sign out</Button>
                     </div>
                     <div className="flex gap-7 justify-center">
-                        <IconButton target="_blank" rel="noopener noreferrer" title="Linkedin" aria-label="Linkedin" href='https://www.linkedin.com/in/abbywaddell4042/'>
+                        <IconButton target="_blank" rel="noopener noreferrer" title="Linkedin" aria-label="Abby Waddell's Linkedin" href='https://www.linkedin.com/in/abbywaddell4042/' tabIndex={props.showNav ? 1 : -1}>
                             <LinkedInIcon size='large' sx={{color: props.theme === 'dark' ? 'white' : 'grey'}}/>
                         </IconButton>
-                        <IconButton target="_blank" rel="noopener noreferrer" title="Github" aria-label="Github" href='https://github.com/WAbby404'>
+                        <IconButton target="_blank" rel="noopener noreferrer" title="Github" aria-label="Abby Waddell's Github" href='https://github.com/WAbby404' tabIndex={props.showNav ? 1 : -1}>
                             <GitHubIcon size='large' sx={{color: props.theme === 'dark' ? 'white' : 'grey'}}/>
                         </IconButton>
-                        <IconButton target="_blank" rel="noopener noreferrer" title="Portfolio Site" aria-label="Portfolio Site" href='https://wabby404.github.io/portfolio-redo/'>
+                        <IconButton target="_blank" rel="noopener noreferrer" title="Portfolio Site" aria-label="Abby Waddell's Portfolio Site" href='https://wabby404.github.io/portfolio-redo/' tabIndex={props.showNav ? 1 : -1}>
                             <WebAssetIcon size='large' sx={{color: props.theme === 'dark' ? 'white' : 'grey'}}/>
                         </IconButton>
                     </div> 

@@ -201,7 +201,7 @@ function TransactionsModal(props) {
             <div className="bg-slate-50 dark:bg-indigo-900 rounded-sm p-3 m-3 flex flex-col gap-2 max-h-80 sm:w-10/12 sm:m-auto md:w-9/12 xl:w-full xl:h-full xl:max-h-none">
                 <header className="flex justify-between">
                     <h2 className="text-indigo-900 dark:text-indigo-300 font-bold text-xl">Transactions</h2>
-                    <Button sx={props.buttonStyles} onClick={() => toSetModalOn()}>
+                    <Button sx={props.buttonStyles} onClick={() => toSetModalOn()} tabIndex={props.showNav || modalOn ? -1 : 0}>
                         Manage Transactions
                     </Button>
                 </header>
@@ -225,6 +225,8 @@ function TransactionsModal(props) {
                         successSnackbarOn={successSnackbarOn} 
                         toSetSuccessSnackbarOff={toSetSuccessSnackbarOff}/>
                     <EditDialogBox 
+                        buttonStyles={props.buttonStyles}
+                        theme={props.theme}
                         dialogBoxOn={dialogBoxOn}
                         toSetDialogBoxOff={toSetDialogBoxOff}
                         toSetDialogBoxOffAndClearGoal={exitWithCancelOn ? exitDialogWithCancel : exitDialogWithX} 
@@ -234,7 +236,7 @@ function TransactionsModal(props) {
                         <header className="flex justify-between">
                             <h2 className="text-indigo-900 dark:text-indigo-300 font-bold text-xl">Transactions</h2>
                             <Button onClick={() => toSetModalOff()} className="btn" size="small" sx={props.buttonStyles}>
-                                X
+                                Exit
                             </Button>
                         </header>
                         <div className="flex gap-2 mt-2 h-5/6 m-auto justify-center md:w-11/12 md:gap-3 xl:gap-10">

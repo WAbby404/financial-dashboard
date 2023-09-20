@@ -94,13 +94,15 @@ function Goals(props) {
                                 {props.modalOn &&
                                     <Button onClick={() => editGoal(goalList[0], 0)} size="small" color="secondary" variant="outlined"
                                         disabled={props.editOn ? true : false}
+                                        aria-label='Edit goal'
                                         sx={{color: 'orange'}}>
                                         <EditIcon/>
                                     </Button>
                                 }
                                 {props.modalOn &&
                                     <Button onClick={() => deleteGoal(goalList[0], 0)} size="small" color="error" variant="outlined"
-                                    sx={{color: 'red'}}>
+                                        aria-label='Delete goal'
+                                        sx={{color: 'red'}}>
                                         <DeleteIcon/>
                                     </Button>
                                 }
@@ -143,11 +145,13 @@ function Goals(props) {
                                         {props.modalOn &&
                                         <Button onClick={() => editGoal(goal, index)} size="small" color="secondary" variant="outlined"
                                             disabled={props.editOn ? true : false}
+                                            aria-label='Edit goal'
                                             sx={{color: 'orange'}}>
                                             <EditIcon/>
                                         </Button>}
                                         {props.modalOn && 
                                         <Button onClick={() => deleteGoal(goal, index)} size="small" color="error" variant="outlined"
+                                            aria-label='Delete goal'
                                             sx={{color: 'red'}}>
                                             <DeleteIcon/>
                                         </Button>}

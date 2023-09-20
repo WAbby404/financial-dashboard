@@ -21,9 +21,6 @@ function AnalyticsGraph(props) {
           }
         });
         setGraphCategories(newCategories);
-        // need to filter out money In, cc payment, & transfer
-        // order dataPoints by date
-        // need unique categories to make lines for rendering graph & buttons to enable or disable those lines
 
         uniqueDates.forEach((date) => {
             let emptyObj = { 'date': date };
@@ -77,12 +74,7 @@ function AnalyticsGraph(props) {
 
   return (
     <div className="w-full h-[20rem] flex flex-col gap-1 pt-2 xl:max-h-full">
-      {/* <div className="flex items-center gap-5"> */}
         <h3 className="text-indigo-900 dark:text-indigo-300 text-xl xl:hidden">Trends</h3>
-        {/* <h4 className="text-indigo-900 dark:text-indigo-300 text-sm xl:hidden">Amount spent on days of the month</h4> */}
-      {/* </div> */}
-      
-      {/* {console.log(props.transactions)} */}
       {props.transactions === undefined ?
         <div className="text-indigo-900 dark:text-indigo-300 text-center py-4">Add Transactions to see your Trends chart</div>  
       :
@@ -117,7 +109,6 @@ function AnalyticsGraph(props) {
                 </YAxis>
                 <Tooltip />
                 <Legend />
-                {/* use same colors as spending chart? */}
                 {graphCategories.map((category, index) => {
                   return(
                     <Line type="monotone" 

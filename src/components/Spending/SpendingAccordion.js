@@ -79,6 +79,7 @@ function SpendingAccordion(props) {
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
                 id="panel1a-header"
+                // aria-expanded={showNav ? 'true' : 'false'}
                 sx={{
                   backgroundColor: `${colors[index]}`,
                   borderRadius: 2,

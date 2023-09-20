@@ -171,7 +171,7 @@ function AccountsModal(props) {
                     <h2 className="text-indigo-900 font-bold text-xl dark:text-indigo-300">
                         Accounts
                     </h2>
-                    <Button sx={props.buttonStyles} onClick={() => toSetModalOn()} variant='contained'>
+                    <Button sx={props.buttonStyles} aria-expanded={modalOn ? 'true' : 'false'} onClick={() => toSetModalOn()} variant='contained' tabIndex={props.showNav || modalOn ? -1 : 0}>
                         Manage Accounts
                     </Button>
                 </header>
@@ -195,6 +195,8 @@ function AccountsModal(props) {
                     successSnackbarOn={successSnackbarOn} 
                     toSetSuccessSnackbarOff={toSetSuccessSnackbarOff}/>
                 <EditDialogBox 
+                    buttonStyles={props.buttonStyles}
+                    theme={props.theme}
                     dialogBoxOn={dialogBoxOn}
                     toSetDialogBoxOff={toSetDialogBoxOff} 
                     toSetDialogBoxOffAndClearGoal={exitWithCancelOn ? exitDialogWithCancel : exitDialogWithX} 
@@ -204,7 +206,7 @@ function AccountsModal(props) {
                     <header className="flex justify-between">
                         <h2 className="text-indigo-900 font-bold text-xl dark:text-indigo-300">Accounts</h2>
                         <Button sx={props.buttonStyles} onClick={() => toSetModalOff()}>
-                            X
+                            Exit
                         </Button>
                     </header>
                     <div className="flex gap-2 mt-2 h-5/6 justify-center sm:gap-3 xl:w-11/12 xl:m-auto xl:gap-10">

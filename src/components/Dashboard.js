@@ -121,15 +121,15 @@ function Dashboard() {
                                 <h2 className="md:self-end">Dashboard</h2>
                             </div>
                             {setDate()}
-                            <IconButton onClick={() => toSetShowNavOn()} sx={navButtonStyle} aria-expanded='false' aria-controls="navsidebar" id='navcontrol'>
+                            <IconButton onClick={() => toSetShowNavOn()} sx={navButtonStyle} aria-expanded={showNav ? 'true' : 'false'} aria-controls="navsidebar" id='navcontrol' aria-label="Expand Navigation" tabIndex={showNav ? -1 : 0}>
                                 <MenuIcon/>
                             </IconButton>
                         </aside>
                         <main className="flex flex-col sm:gap-4 md:gap-5 pb-4 xl:grid xl:grid-cols-12 xl:grid-rows-18 xl:gap-4 xl:h-[93vh] xl:p-4">
-                            <AccountsModal theme={theme} buttonStyles={buttonStyles} inputStyles={inputStyles}/>
-                            <GoalsModal theme={theme} buttonStyles={buttonStyles} inputStyles={inputStyles}/>
-                            <SpendingModal theme={theme}/>
-                            <TransactionsModal theme={theme} buttonStyles={buttonStyles} inputStyles={inputStyles}/>
+                            <AccountsModal showNav={showNav} theme={theme} buttonStyles={buttonStyles} inputStyles={inputStyles}/>
+                            <GoalsModal showNav={showNav} theme={theme} buttonStyles={buttonStyles} inputStyles={inputStyles}/>
+                            <SpendingModal showNav={showNav} theme={theme}/>
+                            <TransactionsModal showNav={showNav} theme={theme} buttonStyles={buttonStyles} inputStyles={inputStyles}/>
                             <AnalyticsModal theme={theme}/>
                         </main>  
                     </div>
