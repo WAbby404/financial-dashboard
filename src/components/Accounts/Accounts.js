@@ -95,11 +95,11 @@ function Accounts(props) {
             return (
                 sortAccounts(allAccounts).map((account, index) => {
                     return (
-                        <li key={account.id} className={`pb-2 flex flex-col ${props.modalOn ? 'md:flex-row' : ''}`}>
-                            <div className="flex flex-col md:justify-center md:w-full">
-                                <div className="flex items-center">
-                                    <h3 className="text-indigo-900 font-medium pl-3 md:text-lg dark:text-indigo-300">{account.name}</h3>
-                                    <h4 className="text-indigo-400 font-light pl-2 text-sm dark:text-indigo-500">{account.debit ? 'Debit' : 'Credit'}</h4>
+                        <li key={account.id} className='p-1 flex flex-col xl:w-full xl:gap-2'>
+                            <div className={`flex flex-col`}>
+                                <div className={`flex items-center ${props.modalOn ? 'w-40 m-auto xl:w-full xl:flex-row justify-center xl:justify-normal xl:m-0' : 'flex-row xl:justify-normal xl:m-0'}`}>
+                                    <h3 className="text-indigo-900 font-medium md:text-lg dark:text-indigo-300">{account.name}</h3>
+                                    <h4 className="text-indigo-400 font-light pl-2 text-sm dark:text-indigo-500 ">{account.debit ? 'Debit' : 'Credit'}</h4>
                                 </div>
                                 <div className="flex justify-center">
                                     <h5 className={`${((account.total > 0) || (!account.debit && account.total === 0)) ? 'text-green-600' : 'text-rose-600'} font-bold text-3xl xl:text-5xl ${props.modalOn ? '' : 'text-4xl '}`}>
@@ -107,7 +107,7 @@ function Accounts(props) {
                                     </h5>
                                 </div>
                             </div>
-                            <div className="flex justify-center gap-1 md:flex-col">
+                            <div className="flex justify-center gap-1">
                                 {props.modalOn && !account.notEditable &&
                                     <Button onClick={() => editAccount(account, index)} size="small" color="secondary" variant="outlined"
                                         aria-label='Edit account'
@@ -115,13 +115,14 @@ function Accounts(props) {
                                         sx={{color: 'orange'}}>
                                         <EditIcon/>
                                     </Button>}
-                                {props.modalOn  && !account.notEditable && 
+                                {props.modalOn && !account.notEditable && 
                                     <Button onClick={() => deleteAccount(account, index)} size="small" color="error" variant="outlined"
                                         aria-label="Delete account"
                                         sx={{color: 'red'}}>
                                         <DeleteIcon/>
                                     </Button>}
                             </div>
+                            <div className={`w-4/6 h-0.5 bg-indigo-200 dark:bg-indigo-800 m-auto ${props.modalOn ? 'hidden xl:block' : 'block'} xl:my-1`}></div>
                         </li>
                     )
                 })
@@ -129,8 +130,8 @@ function Accounts(props) {
     };
 
     return (
-        <article className={`${ props.modalOn ? 'basis-40 md:basis-1/2 xl:basis-2/5' : ''} h-full overflow-y-auto`}>
-            <ul className="">
+        <article className={`${ props.modalOn ? 'basis-1/2 md:basis-1/3 overflow-x-auto overflow-y-hidden xl:basis-1/2' : 'overflow-x-hidden overflow-y-auto'} h-full xl:overflow-y-auto xl:overflow-x-hidden`}>
+            <ul className={`flex gap-4 ${props.modalOn ? 'flex-row items-center xl:flex-col' : 'flex-col'}`}>
                 {renderAccounts(props.allAccounts)}
             </ul>
         </article>

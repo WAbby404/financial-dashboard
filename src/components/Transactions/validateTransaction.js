@@ -7,8 +7,8 @@ function validateTransaction(values, CCTotal) {
     if(!values.name || values.name.trim().length === 0){
         errors.name = 'Title required';
     }
-    if(values.name.length > 12){
-        errors.name = 'Title cannot exceed 12 characters';
+    if(values.name.length > 10){
+        errors.name = 'Title cannot exceed 10 characters';
     }
 
     if(!values.account){

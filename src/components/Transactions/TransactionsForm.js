@@ -6,7 +6,7 @@ import validateTransaction from './validateTransaction';
 import capitalizeName from '../capitalizeName';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
-import { getDatabase, ref, onValue, update, get } from "firebase/database";
+import { getDatabase, ref, onValue, update } from "firebase/database";
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../../config/Firebase';
 

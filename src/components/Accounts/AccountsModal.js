@@ -209,7 +209,7 @@ function AccountsModal(props) {
                             Exit
                         </Button>
                     </header>
-                    <div className="flex gap-2 mt-2 h-5/6 justify-center sm:gap-3 xl:w-11/12 xl:m-auto xl:gap-10">
+                    <div className="flex gap-2 flex-col mt-2 h-5/6 justify-center sm:gap-3 xl:flex-row xl:w-11/12 xl:m-auto xl:gap-10">
                         <Accounts
                             modalOn={modalOn}
                             allAccounts={allAccounts}

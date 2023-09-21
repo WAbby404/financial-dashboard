@@ -95,63 +95,40 @@ function AccountsForm(props) {
 
     const accountsForm = () => {
         return(
-            <form onSubmit={handleSubmit} className="flex flex-col gap-2 sm:gap-1 md:gap-4">
-                <h3 className="text-indigo-900 font-medium dark:text-indigo-300">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-1 md:gap-4">
+                <h3 className="text-indigo-900 font-medium dark:text-indigo-300 text-center">
                     Create your Account
                 </h3>
-                <TextField
-                    id="filled-basic" 
-                    label="Account Name" 
-                    variant="filled"
-                    sx={props.inputStyles}
-                    // sx={{ width: {
-                    //     xs: 150,
-                    //     sm: 150,
-                    //     md: 300,
-                    //     },
-                    //     margin:'auto'  }}
-                    size="small"
-                    name="name"
-                    value={formValues.name}
-                    onChange={handleChange}
-                    error={formErrors?.name ? true : false}
-                    helperText={formErrors?.name}
-                    inputRef={topInputBox}/>
-                <Autocomplete
-                    name="debit"
-                    value={ formValues?.debit === undefined ? null : (formValues?.debit ? 'Debit' : 'Credit') }
-                    onChange={(event, newValue) => handleOptionChangeAccount(event, newValue)}
-                    disablePortal
-                    // sx={{ width: {
-                    //     xs: 150,
-                    //     sm: 150,
-                    //     md: 300,
-                    //     },
-                    //     margin:'auto'  }}
-                    sx={props.inputStyles}
-                    size="small"
-                    id="combo-box-demo"
-                    options={accountTypes}
-                    renderInput={(params) => <TextField {...params} label="Account Type" 
-                                                name="debit" 
-                                                error={formErrors?.debit ? true : false} 
-                                                helperText={formErrors?.debit}/>}
-                    isOptionEqualToValue={(option, value) => option.label === value}/>
-                {props.editOn &&
+                <div className="flex w-fit gap-3 m-auto justify-center xl:flex-col xl:gap-4">
                     <TextField
                         id="filled-basic" 
-                        label="Account Total" 
+                        label="Account Name" 
                         variant="filled"
-                        disabled
                         sx={props.inputStyles}
                         size="small"
-                        name="total"
-                        value={formValues.total}
-                        onChange={handleChange}/>
-                }
-                <div className="flex flex-col justify-center gap-2 sm:flex-row md:flex-col md:gap-4 md:w-3/5 md:m-auto xl:flex-row">
+                        name="name"
+                        value={formValues.name}
+                        onChange={handleChange}
+                        error={formErrors?.name ? true : false}
+                        helperText={formErrors?.name}
+                        inputRef={topInputBox}/>
+                    <Autocomplete
+                        name="debit"
+                        value={ formValues?.debit === undefined ? null : (formValues?.debit ? 'Debit' : 'Credit') }
+                        onChange={(event, newValue) => handleOptionChangeAccount(event, newValue)}
+                        disablePortal
+                        sx={props.inputStyles}
+                        size="small"
+                        id="combo-box-demo"
+                        options={accountTypes}
+                        renderInput={(params) => <TextField {...params} label="Account Type" 
+                                                    name="debit" 
+                                                    error={formErrors?.debit ? true : false} 
+                                                    helperText={formErrors?.debit}/>}
+                        isOptionEqualToValue={(option, value) => option.label === value}/>
+                </div>
+                <div className="flex justify-center gap-2 md:gap-4 md:w-3/5 md:m-auto">
                     <Button sx={props.buttonStyles} type="submit" onClick={() => giveId()}>
-                        {/* {props.editOn === false ? 'Create goal' : 'Finalize Edits' } */}
                         Create
                     </Button>
                     <Button sx={props.buttonStyles} onClick={() => toSetFormOff()}>
