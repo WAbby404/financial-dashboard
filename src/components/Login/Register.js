@@ -88,7 +88,7 @@ function Register(props) {
                 // darkMode: true
             }
             const userDataRef = ref(db, user.uid + '/userData');
-            console.log(userData);
+            // console.log(userData);
             update(userDataRef, userData);
         })
         .catch((error) => {

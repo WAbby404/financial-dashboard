@@ -6,7 +6,7 @@ import validateTransaction from './validateTransaction';
 import capitalizeName from '../capitalizeName';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
-import { getDatabase, ref, onValue, update } from "firebase/database";
+import { getDatabase, ref, onValue, update, get } from "firebase/database";
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../../config/Firebase';
 
@@ -28,6 +28,7 @@ function TransactionsForm(props) {
     const [ formErrors, setFormErrors ] = useState({});
     const [ categories, setCategories ] = useState(initialCategories);
     const [ allAccounts, setAllAccounts ] = useState([]);
+    const [ creditCardTotal, setCreditCardTotal ] = useState(null);
     const topInputBox = useRef();
 
     const toSetFormOn = setModeTo =>{
@@ -52,7 +53,7 @@ function TransactionsForm(props) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const errors = validateTransaction(formValues);
+        const errors = validateTransaction(formValues, creditCardTotal);
         // If there are no errors, send transaction to database
         // console.log(Object.keys(errors));
         if(Object.keys(errors).length === 0){
@@ -80,12 +81,6 @@ function TransactionsForm(props) {
             snapshot.forEach((childSnapshot) => {
                 const childData = childSnapshot.val();
                 if (childData.name === formValues.account){
-                    // console.log(formValues.value);
-                    // console.log(typeof formValues.value);
-                    // console.log(childData.total);
-                    // console.log(typeof childData.total);
-                    // console.log((parseFloat(childData.total)).toFixed(2));
-                    // console.log(typeof +(parseFloat(childData.total)).toFixed(2));
                     accountId += `${childSnapshot.key}`;
                     if(formValues.positive){
                         // unary operator (+ infront of childData.total & formValues.value) convert strings to numbers to add them together
@@ -93,15 +88,15 @@ function TransactionsForm(props) {
                     } else {
                         accountTotal = +childData.total - +(parseFloat(formValues.value)).toFixed(2);
                     }
-                    // console.log(accountTotal.toFixed(2));
                 }
                 if(formValues.transferTo){
-                    if (childData.name === formValues.transferTo){
+                    if(childData.name === formValues.transferTo){
                         transferToId += `${childSnapshot.key}`;
                         transferToTotal = +childData.total + +(parseFloat(formValues.value)).toFixed(2);
+                        let transferUpdatedRef = ref(db, transferToId);
+                        update(transferUpdatedRef, {total: transferToTotal.toFixed(2)});
                     }
-                    let transferUpdatedRef = ref(db, transferToId);
-                    update(transferUpdatedRef, {total: transferToTotal.toFixed(2)});
+                    console.log(transferToId);
                 }
         })
         },{onlyOnce: true});
@@ -161,15 +156,36 @@ function TransactionsForm(props) {
         // if there is no value set formvalue to null
         if(!newValue){
             setFormValues({...formValues, category: null});
+            setCreditCardTotal(null);
         // if there is a value, clear form error for category
         } else {
             // console.log(newValue.label);
             setFormErrors({...formErrors, category: null});
-            if( newValue.label === 'Money In' || newValue.label === 'Credit Card Payment'){
+            if( newValue.label === 'Money In'){
+                setCreditCardTotal(null);
                 setFormValues({...formValues, positive: true, category: newValue.label });
+            } else if (newValue.label === 'Credit Card Payment'){
+                setFormValues({...formValues, positive: true, category: newValue.label });
+
+                const db = getDatabase();
+                const dbRef = ref(db, user.uid + '/accounts');
+                onValue(dbRef, (snapshot) => {
+                    snapshot.forEach((childSnapshot) => {
+                        const childData = childSnapshot.val();
+                        console.log(childData);
+                        if(childData.name === formValues.account){
+                            setCreditCardTotal(childData.total);
+                        }
+                })});
+                // read database for cc account with same name, set its value to cc payment state
+                // set that state as a parameter for validateTransaction,
+                // setCreditCardTotal();
+                // submit & picking another category sets creditCardTotal to null
             } else if (newValue.label === 'Transfer') {
+                setCreditCardTotal(null);
                 setFormValues({...formValues, positive: false, category: newValue.label, transferTo: null });
             } else {
+                setCreditCardTotal(null);
                 setFormValues({...formValues, positive: false, category: newValue.label });
             }
         }

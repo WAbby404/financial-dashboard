@@ -49,13 +49,25 @@ function GoalsForm(props) {
     // Handles formatting input for formValues state
     const handleChange = (e) => {
         const { name, value } = e.target;
-        if(name === 'current' || name === 'total'){
+        if(name === 'total'){
             let values = value.split('.');
             // console.log(values);
             if(values[1] && values[1].length > 2){
                 return;
             }
             setFormValues({...formValues, [name]: value.replace(/^0+/, '').trim()});
+        } else if (name === 'current'){
+            let values = value.split('.');
+            // console.log(values);
+            if(values[1] && values[1].length > 2){
+                return;
+            }
+            if(parseFloat(value) === 0){
+                setFormValues({...formValues, [name]: value.trim()});
+            } else {
+                setFormValues({...formValues, [name]: value.replace(/^0+/, '').trim()});
+            }
+            
         } else {
             setFormValues({...formValues, [name]: value});
         }

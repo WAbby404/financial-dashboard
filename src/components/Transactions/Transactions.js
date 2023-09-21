@@ -57,38 +57,6 @@ function Transactions(props) {
                 {date}
             </div>
         )
-        // if(date === '1' || date === '21' || date === '31'){
-        //     return (
-        //         <div className="flex m-auto gap-0.5 md:justify-center">
-        //             <div className="text-sm pr-1">{currentMonth}</div>
-        //             {date}
-        //             <div className="text-xs">st</div>
-        //         </div>
-        //         );
-        // } else if (date === '2' || date === '22'){
-        //     return(
-        //         <div className="flex m-auto gap-0.5 md:justify-center">
-        //             <div className="text-sm pr-1">{currentMonth}</div>
-        //             {date}
-        //             <div className="text-xs">nd</div>
-        //         </div>
-        //     )
-        // } else if (date === '3' || date === '23'){
-        //     return(
-        //         <div className="flex m-auto gap-0.5 md:justify-center">
-        //             <div className="text-sm pr-1">{currentMonth}</div>
-        //             {date}
-        //             <div className="text-xs">rd</div>
-        //         </div>
-        //     )
-        // }
-        // return (
-        //     <div className="flex m-auto gap-0.5 md:justify-center">
-        //         <div className="text-sm pr-1">{currentMonth}</div>
-        //         {date}
-        //         <div className="text-xs">th</div>
-        //     </div>
-        // );
     };
 
     const formatMoney = (money, transaction) => {

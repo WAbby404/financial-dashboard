@@ -32,7 +32,7 @@ function validateGoal(values) {
     if(!values.current){
         errors.current = 'Current required';
     }
-    if(values.current <= 0){
+    if(values.current < 0){
         errors.current = 'Current must be a positive value';
     }
     if(values.current > 9999999.99){

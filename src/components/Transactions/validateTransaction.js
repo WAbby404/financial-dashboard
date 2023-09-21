@@ -1,4 +1,4 @@
-function validateTransaction(values) {
+function validateTransaction(values, CCTotal) {
     let monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     let currentMonth = monthDays[new Date().getMonth()];
 
@@ -26,7 +26,9 @@ function validateTransaction(values) {
         errors.date = 'Date required';
     }
 
-
+    if(CCTotal && (parseFloat(values.value) > ( -1 * parseFloat(CCTotal)))){
+        errors.value = 'Payment cannot be more than that accounts total';
+    }
     if( values.value > 9999999.99){
         errors.value = 'Value cannot exceed $9,999,999.99';
     }

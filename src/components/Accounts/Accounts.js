@@ -102,7 +102,7 @@ function Accounts(props) {
                                     <h4 className="text-indigo-400 font-light pl-2 text-sm dark:text-indigo-500">{account.debit ? 'Debit' : 'Credit'}</h4>
                                 </div>
                                 <div className="flex justify-center">
-                                    <h5 className={`${((account.debit && account.total > 0) || (!account.debit && account.total === 0)) ? 'text-green-600' : 'text-rose-600'} font-bold text-3xl xl:text-5xl ${props.modalOn ? '' : 'text-4xl '}`}>
+                                    <h5 className={`${((account.total > 0) || (!account.debit && account.total === 0)) ? 'text-green-600' : 'text-rose-600'} font-bold text-3xl xl:text-5xl ${props.modalOn ? '' : 'text-4xl '}`}>
                                         {formatMoney(account.total, account)}
                                     </h5>
                                 </div>

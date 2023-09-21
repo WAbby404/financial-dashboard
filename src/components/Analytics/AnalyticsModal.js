@@ -42,12 +42,8 @@ function AnalyticsModal(props) {
     
                 let expensesTotal = 0;
                 Object.values(transactionsData).forEach((transaction) => {
-                    // console.log(transaction);
                     if(transaction.category !== 'Money In' && transaction.category !== 'Transfer' && transaction.category !== 'Credit Card Payment'){
-                        // console.log(transaction.value);
-                        // console.log(parseFloat(transaction.value));
                         expensesTotal += parseFloat(transaction.value);
-                        // console.log(expensesTotal);
                     }
                 })
                 setExpenses(expensesTotal.toFixed(2));
