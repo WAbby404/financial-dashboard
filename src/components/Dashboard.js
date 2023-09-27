@@ -121,7 +121,15 @@ function Dashboard() {
                                 <h2 className="md:self-end">Dashboard</h2>
                             </div>
                             {setDate()}
-                            <IconButton onClick={() => toSetShowNavOn()} sx={navButtonStyle} aria-expanded={showNav ? 'true' : 'false'} aria-controls="navsidebar" id='navcontrol' aria-label="Expand Navigation" tabIndex={showNav ? -1 : 0}>
+                            <IconButton 
+                                data-testid="cypress-navcontrol"
+                                onClick={() => toSetShowNavOn()} 
+                                sx={navButtonStyle} 
+                                aria-expanded={showNav ? 'true' : 'false'} 
+                                aria-controls="navsidebar" 
+                                id='navcontrol' 
+                                aria-label="Expand Navigation" 
+                                tabIndex={showNav ? -1 : 0}>
                                 <MenuIcon/>
                             </IconButton>
                         </aside>

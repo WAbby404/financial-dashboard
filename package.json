@@ -49,6 +49,7 @@
   },
   "devDependencies": {
     "@testing-library/react": "^13.4.0",
+    "cypress": "^13.2.0",
     "node-sass": "^7.0.3",
     "react-test-renderer": "^18.2.0",
     "sass": "^1.57.1",

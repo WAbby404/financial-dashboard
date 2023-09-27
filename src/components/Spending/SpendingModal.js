@@ -3,8 +3,6 @@ import { getDatabase, ref, onValue } from "firebase/database";
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../../config/Firebase';
 import SpendingGraph from './SpendingGraph';
-// import './Spending.css';
-// import '../Dashboard.css';
 import SpendingAccordion from './SpendingAccordion';
 
 function SpendingModal(props) {
@@ -17,6 +15,7 @@ function SpendingModal(props) {
         const db = getDatabase();
         const dbRef = ref(db, user.uid + '/transactions');
         onValue(dbRef, (snapshot) => {
+            // console.log(snapshot.val());
             if(snapshot.val()){
               let filteredArray = Object.values(snapshot.val()).filter((transaction) => {
                 if(transaction.category === 'Credit Card Payment' || transaction.category === 'Money In' || transaction.category === 'Transfer'){
@@ -26,6 +25,10 @@ function SpendingModal(props) {
             })
             setAllTransactions(filteredArray);
             formatTransactions(filteredArray);
+            } 
+            else if(!snapshot.val()){
+                // need handling for none? maybe just set to default?
+                setAllTransactions([]);
             }
         });
     }, []); // eslint-disable-line

@@ -73,6 +73,7 @@ function Login(props) {
                     id="filled-basic" 
                     label="Email"
                     variant="filled"
+                    data-testid='email'
                     name="email"
                     size="small"
                     value={userInfo.email}
@@ -80,22 +81,12 @@ function Login(props) {
                     error={formErrors?.email ? true : false}
                     helperText={formErrors?.email}
                     sx={props.inputStyles}
-                    // sx={{backgroundColor: '#2e2270',
-                    //     ".MuiInputLabel-root": {
-                    //         color:'#A5B4FC'
-                    //     },
-                    //     input:{
-                    //         color:'#A5B4FC',
-                    //     },
-                    //     width:{
-                    //         sm:'300px',
-                    //     }
-                    // }}
                 />
                 <TextField
                     id="filled-basic" 
                     label="Password" 
                     variant="filled"
+                    data-testid='password'
                     size="small"
                     name="password"
                     value={userInfo.password}
@@ -103,17 +94,6 @@ function Login(props) {
                     error={formErrors?.password ? true : false}
                     helperText={formErrors?.password}
                     sx={props.inputStyles}
-                    // sx={{backgroundColor: '#2e2270',
-                    // ".MuiInputLabel-root": {
-                    //     color:'#A5B4FC'
-                    // },
-                    // input:{
-                    //     color:'#A5B4FC',
-                    // },
-                    // width:{
-                    //     sm:'300px',
-                    // }
-                    // }}
                 />
                 <Button type="submit" sx={props.buttonStyles}>Login</Button>
                 {loginError && 

@@ -39,7 +39,7 @@ function Nav(props) {
                     <div className="flex flex-col gap-2 w-2/5 m-auto md:w-4/5">
                         <Button size='small' onClick={() => props.toSetShowNavOff()} sx={props.buttonStyles} tabIndex={props.showNav ? 1 : -1}>Close Navigation</Button>
                         <Button size='small' onClick={() => props.changeTheme()} sx={props.buttonStyles} tabIndex={props.showNav ? 1 : -1}>{props.theme === 'light' ? 'Dark Mode' : 'Light Mode'}</Button>
-                        <Button size='small' onClick={() => auth.signOut()} sx={props.buttonStyles} tabIndex={props.showNav ? 1 : -1}>Sign out</Button>
+                        <Button size='small' onClick={() => auth.signOut()} sx={props.buttonStyles} tabIndex={props.showNav ? 1 : -1} data-testid="cypress-signout">Sign out</Button>
                     </div>
                     <div className="flex gap-7 justify-center">
                         <IconButton target="_blank" rel="noopener noreferrer" title="Linkedin" aria-label="Abby Waddell's Linkedin" href='https://www.linkedin.com/in/abbywaddell4042/' tabIndex={props.showNav ? 1 : -1}>

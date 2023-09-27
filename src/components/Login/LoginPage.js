@@ -39,8 +39,9 @@ function LoginPage(props) {
                     </div>
                     :
                     <div className="hidden sm:flex sm:flex-row sm:gap-3 sm:items-center sm:justify-center sm:pt-3 md:hidden">
-                            <h3 className="text-indigo-900 dark:text-indigo-300 text-center text-sm">Dont have an account?</h3>
+                            <h3 className="text-indigo-900 dark:text-indigo-300 text-center text-sm">Don't have an account?</h3>
                             <Button sx={props.buttonStyles}
+                            data-testid="cypress-toregister"
                             size="small"
                             onClick={() => setRegister(true)}>Register</Button>
                     </div>
@@ -61,9 +62,10 @@ function LoginPage(props) {
                     <div className="flex flex-col gap-5">
                         <Login buttonStyles={props.buttonStyles} inputStyles={inputLoginStyles}/>
                         <div className="flex flex-row gap-3 items-center justify-center sm:hidden md:flex">
-                            <h3 className="text-indigo-900 dark:text-indigo-300 text-center text-sm">Dont have an account?</h3>
+                            <h3 className="text-indigo-900 dark:text-indigo-300 text-center text-sm">Don't have an account?</h3>
                             <Button sx={props.buttonStyles}
                             size="small"
+                            data-testid="cypress-toregister"
                             onClick={() => setRegister(true)}>Register</Button>
                         </div>
                     </div>

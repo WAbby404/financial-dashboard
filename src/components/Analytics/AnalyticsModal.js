@@ -17,56 +17,78 @@ function AnalyticsModal(props) {
         const dbRefTransactions = ref(db, user.uid);
         let accountsData;
         let transactionsData;
+        // can erase countme
+        // let countMe = 0;
+        let hasTransactions = false;
+        console.log('Analytics Useeffect Ran');
         onValue(dbRefTransactions, (snapshot) => {
+            // console.log(snapshot);
             snapshot.forEach((childSnapshot) => {
+                // countMe += 1;
+                // console.log(countMe);
                 const childData = childSnapshot.val();
+                // console.log('childData vvv');
+                // console.log(childData);
+                // console.log(Object.values(childData));
+                // console.log(typeof childData);
                 if(Object.keys(childData).includes('Checking')){
                     accountsData = childData;
+                    // console.log('accountsData childData vvv');
+                    // console.log(childData);
                 }
-                if((Object.keys(childData).includes('Checking') !== true) && (Object.keys(childData).includes('initials') !== true)){
+
+                // check if object has an object with a date, if it does set transactionsData to it & set hasTransactions to true
+                // below OUT OF LOOP: if hasTransactions is false, set transactionsData to an empty obj
+                // console.log('first element');
+                // should fix trends too
+                const firstElement = Object.values(childData)[0];
+                // console.log(firstElement);
+                // Finds the object that contains transactions & sets a check variable for when transactions are found
+                if(firstElement.hasOwnProperty('date')){
+                    // console.log('transactions found!');
                     transactionsData = childData;
+                    hasTransactions = true;
                 }
+
             })
- 
+            if(!hasTransactions){
+                // console.log('no transactions');
+                transactionsData = {};
+            }
+            hasTransactions = false;
+            // countMe = 0;
+            // expenses & income comes from transactionsdata
             setTransactions(transactionsData);
             setCount(count + 1);
-
             if(typeof transactionsData === 'object'){
                 let transactionsTotal = 0;
+                let expensesTotal = 0;
                 Object.values(transactionsData).forEach((transaction) => {
                     if(transaction.category === 'Money In'){
                         transactionsTotal += parseFloat(transaction.value);
-                    }
-                })
-                setIncome(transactionsTotal);
-    
-                let expensesTotal = 0;
-                Object.values(transactionsData).forEach((transaction) => {
-                    if(transaction.category !== 'Money In' && transaction.category !== 'Transfer' && transaction.category !== 'Credit Card Payment'){
+                    } else if(transaction.category !== 'Money In' && transaction.category !== 'Transfer' && transaction.category !== 'Credit Card Payment') {
                         expensesTotal += parseFloat(transaction.value);
                     }
                 })
+                // console.log('expesesTotal vv');
+                // console.log(expensesTotal);
+                setIncome(transactionsTotal);
                 setExpenses(expensesTotal.toFixed(2));
             }
-    
+
             if(typeof accountsData === 'object'){
                 let debitTotal = 0.00;
                 let savingsTotal = 0.00;
                 let creditCardTotal = 0.00;
                 Object.values(accountsData).forEach((account) => {
-                    // console.log(account);
                     if(account.name === 'Savings'){
                         savingsTotal = parseFloat(account.total);
                     } else if(account.name !== 'Savings' && account.debit) {
                         debitTotal += parseFloat(account.total);
                     } else if(account && !account.debit){
-                        // console.log(account);
-                        // console.log(account.total);
                         creditCardTotal += parseFloat(account.total);
-                        // console.log(creditCardTotal);
                     }
                 });
-                // console.log(creditCardTotal);
                 setAccountTotals({savings: savingsTotal.toFixed(2) , debit: (debitTotal).toFixed(2), creditCards: creditCardTotal.toFixed(2)});
             }
         });
@@ -83,11 +105,7 @@ function AnalyticsModal(props) {
                 formattedMoney[1] = '00';
             }
             if(money < 0){
-                // console.log(money);
-                // console.log(formattedMoney);
                 formattedMoney[0] = formattedMoney[0].slice(1);
-                // console.log(formattedMoney[0].slice(1));
-                // console.log(formattedMoney);
                 isNegative = true;
                 if(isCreditCard){
                     isNegative = false;
