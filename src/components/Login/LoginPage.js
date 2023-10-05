@@ -41,7 +41,6 @@ function LoginPage(props) {
                     <div className="hidden sm:flex sm:flex-row sm:gap-3 sm:items-center sm:justify-center sm:pt-3 md:hidden">
                             <h3 className="text-indigo-900 dark:text-indigo-300 text-center text-sm">Don't have an account?</h3>
                             <Button sx={props.buttonStyles}
-                            data-testid="cypress-toregister"
                             size="small"
                             onClick={() => setRegister(true)}>Register</Button>
                     </div>
@@ -55,6 +54,7 @@ function LoginPage(props) {
                             <h3 className="text-indigo-900 dark:text-indigo-300 text-center text-sm">Already have an account?</h3>
                             <Button onClick={() => setRegister(false)}
                                 size="small"
+                                data-testid="cypress-tologin"
                                 sx={props.buttonStyles}>Login</Button>
                         </div>
                     </div>

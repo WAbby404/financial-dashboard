@@ -95,14 +95,14 @@ function Accounts(props) {
             return (
                 sortAccounts(allAccounts).map((account, index) => {
                     return (
-                        <li key={account.id} className='p-1 flex flex-col xl:w-full xl:gap-2'>
+                        <li key={account.id} className='p-1 flex flex-col xl:w-full xl:gap-2' data-testid={`account-${index}`}>
                             <div className={`flex flex-col`}>
                                 <div className={`flex items-center ${props.modalOn ? 'w-40 m-auto xl:w-full xl:flex-row justify-center xl:justify-normal xl:m-0' : 'flex-row xl:justify-normal xl:m-0'}`}>
                                     <h3 className="text-indigo-900 font-medium md:text-lg dark:text-indigo-300">{account.name}</h3>
                                     <h4 className="text-indigo-400 font-light pl-2 text-sm dark:text-indigo-500 ">{account.debit ? 'Debit' : 'Credit'}</h4>
                                 </div>
                                 <div className="flex justify-center">
-                                    <h5 className={`${((account.total > 0) || (!account.debit && account.total === 0)) ? 'text-green-600' : 'text-rose-600'} font-bold text-3xl xl:text-5xl ${props.modalOn ? '' : 'text-4xl '}`}>
+                                    <h5 data-testid={`account-total${index}`} className={`${((account.total > 0) || (!account.debit && account.total === 0)) ? 'text-green-600' : 'text-rose-600'} font-bold text-3xl xl:text-5xl ${props.modalOn ? '' : 'text-4xl '}`}>
                                         {formatMoney(account.total, account)}
                                     </h5>
                                 </div>
@@ -111,6 +111,7 @@ function Accounts(props) {
                                 {props.modalOn && !account.notEditable &&
                                     <Button onClick={() => editAccount(account, index)} size="small" color="secondary" variant="outlined"
                                         aria-label='Edit account'
+                                        data-testid={`accountEdit-${index}`}
                                         disabled={props.editOn ? true : false}
                                         sx={{color: 'orange'}}>
                                         <EditIcon/>
@@ -118,6 +119,7 @@ function Accounts(props) {
                                 {props.modalOn && !account.notEditable && 
                                     <Button onClick={() => deleteAccount(account, index)} size="small" color="error" variant="outlined"
                                         aria-label="Delete account"
+                                        data-testid={`accountDelete-${index}`}
                                         sx={{color: 'red'}}>
                                         <DeleteIcon/>
                                     </Button>}
@@ -131,7 +133,7 @@ function Accounts(props) {
 
     return (
         <article className={`${ props.modalOn ? 'basis-1/2 md:basis-1/3 overflow-x-auto overflow-y-hidden xl:basis-1/2' : 'overflow-x-hidden overflow-y-auto'} h-full xl:overflow-y-auto xl:overflow-x-hidden`}>
-            <ul className={`flex gap-4 ${props.modalOn ? 'flex-row items-center xl:flex-col' : 'flex-col'}`}>
+            <ul data-testid={props.modalOn ? 'accountsListModal' : 'accountsList'} className={`flex gap-4 ${props.modalOn ? 'flex-row items-center xl:flex-col' : 'flex-col'}`}>
                 {renderAccounts(props.allAccounts)}
             </ul>
         </article>

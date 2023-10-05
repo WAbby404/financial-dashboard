@@ -74,12 +74,12 @@ function SpendingAccordion(props) {
               expanded={props.currentCategory === index} 
               onChange={handleChange(index)}
               sx={accordionStyles}
+              data-testid="spendingAccordion"
             >
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
                 id="panel1a-header"
-                // aria-expanded={showNav ? 'true' : 'false'}
                 sx={{
                   backgroundColor: `${colors[index]}`,
                   borderRadius: 2,
@@ -98,6 +98,7 @@ function SpendingAccordion(props) {
                   }}
                 >
                 <Typography
+                  data-testid={`spendingAccordionBar${index}`}
                   sx={{
                     padding: '0px',
                     margin: '0px',
@@ -119,15 +120,17 @@ function SpendingAccordion(props) {
                 </Typography>
               </AccordionSummary>
               <AccordionDetails 
-              sx={{overflowY: 'auto', margin: 'auto'}}>
+                sx={{overflowY: 'auto', margin: 'auto'}}>
                 {props.allTransactions
                   .filter((transaction) => transaction.category === value.name)
                   .map((filteredTransaction, index) => {
                     return(
                       <div className="flex justify-between text-indigo-900 dark:text-indigo-300 m-auto w-8/12 sm:w-9/12 sm:m-auto" key={index}>
                         <Typography
+                          data-testid={`spendingAccordionTypographyName${index}`}
                           sx={{textAlign:"left", flexBasis: '50%'}}>{filteredTransaction.name}</Typography>
                         <Typography
+                          data-testid={`spendingAccordionTypographyMoney${index}`}
                           sx={{textAlign:"right", flexBasis: '50%'}}>${formatMoney(filteredTransaction.value)}</Typography>
                       </div>
                     )

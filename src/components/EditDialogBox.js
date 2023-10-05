@@ -30,8 +30,12 @@ function EditDialogBox(props) {
                 </DialogContentText>
             </DialogContent>
             <DialogActions sx={dialogTheme}>
-                <Button sx={props.buttonStyles} onClick={props.toSetDialogBoxOff}>Continue editing</Button>
-                <Button sx={props.buttonStyles} onClick={props.toSetDialogBoxOffAndClearGoal} autoFocus>
+                <Button sx={props.buttonStyles} 
+                    onClick={props.toSetDialogBoxOff}
+                    data-testid='dialogContinue'>Continue editing</Button>
+                <Button sx={props.buttonStyles} 
+                    onClick={props.toSetDialogBoxOffAndClearGoal}
+                    data-testid='dialogExit'>
                     Exit anyway
                 </Button>
             </DialogActions>

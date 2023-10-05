@@ -190,7 +190,19 @@ function TransactionsModal(props) {
                         accountTotal = +childData.total + +(parseFloat(formValues.value)).toFixed(2);
                     }
                 }
+
+                if(formValues.transferTo){
+                    let transferToId = `${user.uid}/accounts/`;
+                    if(childData.name === formValues.transferTo){
+                        transferToId += `${childSnapshot.key}`;
+                        let newTransferToTotal = +parseFloat(childData.total) - +parseFloat(formValues.value);
+                        let transferUpdatedRef = ref(db, transferToId);
+                        update(transferUpdatedRef, {total: newTransferToTotal.toFixed(2)});
+                    }
+                }
             })
+
+            // if transfer delete from transferto account aswell
         },{onlyOnce: true});
         let updatedRef = ref(db, accountId);
         update(updatedRef, {total: accountTotal.toFixed(2)});
@@ -201,7 +213,10 @@ function TransactionsModal(props) {
             <div className="bg-slate-50 dark:bg-indigo-900 rounded-sm p-3 m-3 flex flex-col gap-2 max-h-80 sm:w-10/12 sm:m-auto md:w-9/12 xl:w-full xl:h-full xl:max-h-none">
                 <header className="flex justify-between">
                     <h2 className="text-indigo-900 dark:text-indigo-300 font-bold text-xl">Transactions</h2>
-                    <Button sx={props.buttonStyles} onClick={() => toSetModalOn()} tabIndex={props.showNav || modalOn ? -1 : 0}>
+                    <Button sx={props.buttonStyles} 
+                        onClick={() => toSetModalOn()} 
+                        tabIndex={props.showNav || modalOn ? -1 : 0}
+                        data-testid="transactionsModalOpen">
                         Manage Transactions
                     </Button>
                 </header>
@@ -235,7 +250,11 @@ function TransactionsModal(props) {
                     <article className="container h-[37rem] w-full bg-slate-50 dark:bg-indigo-900 p-3 sm:max-h-[98vh] md:w-11/12 md:max-h-[60%] lg:max-h-[85%] xl:max-w-[50%]">
                         <header className="flex justify-between">
                             <h2 className="text-indigo-900 dark:text-indigo-300 font-bold text-xl">Transactions</h2>
-                            <Button onClick={() => toSetModalOff()} className="btn" size="small" sx={props.buttonStyles}>
+                            <Button onClick={() => toSetModalOff()}
+                                className="btn" 
+                                size="small" 
+                                sx={props.buttonStyles}
+                                data-testid="transactionsModalClose">
                                 Exit
                             </Button>
                         </header>

@@ -185,7 +185,7 @@ function AnalyticsModal(props) {
                             <div className="text-indigo-900 dark:text-indigo-300">+</div>
                             <div>
                                 <h5 className="text-indigo-900 dark:text-indigo-300 text-lg">Savings</h5>
-                                <div className={`${accountTotals.saving > 0 ? 'text-green-600' : 'text-rose-600'} xl:text-2xl`}>{formatMoney(accountTotals.savings)}</div>
+                                <div className={`${accountTotals.savings > 0 ? 'text-green-600' : 'text-rose-600'} xl:text-2xl`}>{formatMoney(accountTotals.savings)}</div>
                             </div>
                             <div className="text-indigo-900 dark:text-indigo-300 xl:text-2xl">-</div>
                             <div>

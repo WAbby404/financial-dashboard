@@ -64,7 +64,7 @@ function Goals(props) {
             // case for 1 transaction
             case (goalList.length === 1):
                 return (
-                    <li key={goalList[0].id} className="w-28 xl:pb-2">
+                    <li key={goalList[0].id} data-testid={`goal-0`} className="w-28 xl:pb-2">
                         <div className={`flex flex-col justify-center items-center text-center ${props.modalOn ? 'gap-0.5' : 'gap-1'}`}>
                             <h3 className='text-indigo-900 flex items-center basis-1/3 text-ellipsis font-medium h-4 dark:text-indigo-300 sm:text-sm xl:text-base'>{goalList[0].name}</h3>
                             <div className="w-full h-full relative basis-1/3">
@@ -95,6 +95,7 @@ function Goals(props) {
                                     <Button onClick={() => editGoal(goalList[0], 0)} size="small" color="secondary" variant="outlined"
                                         disabled={props.editOn ? true : false}
                                         aria-label='Edit goal'
+                                        data-testid={`goalEdit-0`}
                                         sx={{color: 'orange'}}>
                                         <EditIcon/>
                                     </Button>
@@ -102,6 +103,7 @@ function Goals(props) {
                                 {props.modalOn &&
                                     <Button onClick={() => deleteGoal(goalList[0], 0)} size="small" color="error" variant="outlined"
                                         aria-label='Delete goal'
+                                        data-testid={`goalDelete-0`}
                                         sx={{color: 'red'}}>
                                         <DeleteIcon/>
                                     </Button>
@@ -116,7 +118,7 @@ function Goals(props) {
                 return (
                     goalList.map((goal, index) => {
                         return(
-                            <li key={goal.id} className="xl:pb-2 xl:max-w-sm flex">
+                            <li key={goal.id} data-testid={`goal-${index}`} className="xl:pb-2 xl:max-w-sm flex">
                                 <div className={`flex flex-col justify-center items-center text-center ${props.modalOn ? 'gap-0.5' : 'gap-1'}`}>
                                     <h3 className='text-indigo-900 flex items-center basis-1/3 text-ellipsis font-medium h-4 dark:text-indigo-300 sm:text-sm xl:text-base'>{goal.name}</h3>
                                     <div className="w-full h-full relative basis-1/3">
@@ -146,11 +148,13 @@ function Goals(props) {
                                         <Button onClick={() => editGoal(goal, index)} size="small" color="secondary" variant="outlined"
                                             disabled={props.editOn ? true : false}
                                             aria-label='Edit goal'
+                                            data-testid={`goalEdit-${index}`}
                                             sx={{color: 'orange'}}>
                                             <EditIcon/>
                                         </Button>}
                                         {props.modalOn && 
                                         <Button onClick={() => deleteGoal(goal, index)} size="small" color="error" variant="outlined"
+                                            data-testid={`goalDelete-${index}`}
                                             aria-label='Delete goal'
                                             sx={{color: 'red'}}>
                                             <DeleteIcon/>
@@ -172,7 +176,7 @@ function Goals(props) {
     return (
         <article className="w-full h-full relative lg:w-10/12 lg:m-auto">
             {/* <div className="absolute z-40 w-24 h-4/6 bg-gradient-to-r from-indigo-900 "></div> */}
-            <ul className="overflow-x-auto overflow-y-hidden flex gap-9 w-full pl-3 py-2 xl:py-0">
+            <ul data-testid={props.modalOn ? 'goalsListModal' : 'goalsList'} className="overflow-x-auto overflow-y-hidden flex gap-9 w-full pl-3 py-2 xl:py-0">
                 {renderSwitch(props.allGoals)}
             </ul>
             {/* <div className="absolute z-40 w-24 h-4/6 bg-gradient-to-r from-transparent to-indigo-900 "></div> */}

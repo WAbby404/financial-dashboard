@@ -183,7 +183,10 @@ function GoalsModal(props) {
                     <h2 className="text-indigo-900 font-bold text-xl dark:text-indigo-300">
                         Goals
                     </h2>
-                    <Button onClick={() => toSetModalOn()} sx={props.buttonStyles} tabIndex={props.showNav || modalOn ? -1 : 0}>
+                    <Button onClick={() => toSetModalOn()} 
+                        sx={props.buttonStyles} 
+                        tabIndex={props.showNav || modalOn ? -1 : 0}
+                        data-testid='goalsModalOpen'>
                         Manage Goals
                     </Button>
                 </header>
@@ -217,7 +220,10 @@ function GoalsModal(props) {
                 <article className="h-[30rem] w-full bg-slate-50 p-3 md:w-10/12 md:max-h-[60%] lg:max-h-[80%] xl:max-w-[50%] xl:max-h-[80%] dark:bg-indigo-900">
                     <header className="flex justify-between">
                         <h3 className="text-indigo-900 dark:text-indigo-300 font-bold text-xl">Goals</h3>
-                        <Button onClick={() => toSetModalOff()} sx={props.buttonStyles} size='small'>
+                        <Button onClick={() => toSetModalOff()} 
+                            sx={props.buttonStyles} 
+                            size='small'
+                            data-testid="goalsModalClose">
                             Exit
                         </Button>
                     </header>

@@ -4,11 +4,11 @@ function validateTransaction(values, CCTotal) {
 
     const errors = {};
 
-    if(!values.name || values.name.trim().length === 0){
-        errors.name = 'Title required';
-    }
     if(values.name.length > 10){
         errors.name = 'Title cannot exceed 10 characters';
+    }
+    if(!values.name || values.name.trim().length === 0){
+        errors.name = 'Title required';
     }
 
     if(!values.account){
@@ -35,15 +35,15 @@ function validateTransaction(values, CCTotal) {
     if(isNaN(values.value)){
         errors.value = "Value must be a number";
     }
-    if(!values.value){
-        errors.value = 'Value required';
-    }
     if(values.value <= 0){
         errors.value = 'Value must be positive';
     }
+    if(!values.value){
+        errors.value = 'Value required';
+    }
 
     if(values.category === 'Transfer' && typeof values.transferTo === 'object'){
-        errors.transferTo = 'Account required';
+        errors.transferTo = 'Transfer account required';
     }
     return errors;
 

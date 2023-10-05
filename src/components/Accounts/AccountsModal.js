@@ -171,7 +171,12 @@ function AccountsModal(props) {
                     <h2 className="text-indigo-900 font-bold text-xl dark:text-indigo-300">
                         Accounts
                     </h2>
-                    <Button sx={props.buttonStyles} aria-expanded={modalOn ? 'true' : 'false'} onClick={() => toSetModalOn()} variant='contained' tabIndex={props.showNav || modalOn ? -1 : 0}>
+                    <Button sx={props.buttonStyles} 
+                        aria-expanded={modalOn ? 'true' : 'false'} 
+                        onClick={() => toSetModalOn()} 
+                        variant='contained'
+                        tabIndex={props.showNav || modalOn ? -1 : 0}
+                        data-testid="accountsModalOpen">
                         Manage Accounts
                     </Button>
                 </header>
@@ -205,7 +210,9 @@ function AccountsModal(props) {
                 <article className='container h-4/6 w-full bg-gray-50 p-3 max-h-96 sm:m-auto sm:h-[90vh] md:w-10/12 md:max-h-[60%] xl:max-w-[50%] xl:flex xl:flex-col dark:bg-indigo-900'>
                     <header className="flex justify-between">
                         <h2 className="text-indigo-900 font-bold text-xl dark:text-indigo-300">Accounts</h2>
-                        <Button sx={props.buttonStyles} onClick={() => toSetModalOff()}>
+                        <Button sx={props.buttonStyles} 
+                            onClick={() => toSetModalOff()} 
+                            data-testid="accountsModalClose">
                             Exit
                         </Button>
                     </header>

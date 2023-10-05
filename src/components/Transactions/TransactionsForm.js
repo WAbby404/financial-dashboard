@@ -96,7 +96,6 @@ function TransactionsForm(props) {
                         let transferUpdatedRef = ref(db, transferToId);
                         update(transferUpdatedRef, {total: transferToTotal.toFixed(2)});
                     }
-                    console.log(transferToId);
                 }
         })
         },{onlyOnce: true});
@@ -177,10 +176,6 @@ function TransactionsForm(props) {
                             setCreditCardTotal(childData.total);
                         }
                 })});
-                // read database for cc account with same name, set its value to cc payment state
-                // set that state as a parameter for validateTransaction,
-                // setCreditCardTotal();
-                // submit & picking another category sets creditCardTotal to null
             } else if (newValue.label === 'Transfer') {
                 setCreditCardTotal(null);
                 setFormValues({...formValues, positive: false, category: newValue.label, transferTo: null });
@@ -264,6 +259,7 @@ function TransactionsForm(props) {
                             label="Title"
                             variant="outlined"
                             size="small"
+                            data-testid="transactionsFormTitle"
                             name="name"
                             value={formValues.name}
                             onChange={handleChange}
@@ -276,6 +272,7 @@ function TransactionsForm(props) {
                             value={formValues?.account}
                             onChange={(event, newValue) => handleOptionChangeAccount(event, newValue)}
                             disablePortal
+                            data-testid="transactionsFormAccount"
                             id="combo-box-demo"
                             size="small"
                             options={allAccounts}
@@ -291,6 +288,7 @@ function TransactionsForm(props) {
                             onChange={(event, newValue) => handleOptionChangeCategory(event, newValue)}
                             disablePortal
                             size="small"
+                            data-testid="transactionsFormCategory"
                             disabled={formValues?.account ? false : true}
                             id="combo-box-demo"
                             options={categories}
@@ -309,6 +307,7 @@ function TransactionsForm(props) {
                                 disablePortal
                                 size="small"
                                 id="combo-box-demo"
+                                data-testid="transactionsFormTransfer"
                                 options={setTransferToAccounts()}
                                 sx={props.inputStyles}
                                 renderInput={(params) => <TextField {...params} label="Transfer To"
@@ -328,6 +327,7 @@ function TransactionsForm(props) {
                                 variant="outlined"
                                 name="value"
                                 size="small"
+                                data-testid="transactionsFormValue"
                                 type="number"
                                 disabled={formValues?.category ? false : true}
                                 value={formValues.value}
@@ -343,6 +343,7 @@ function TransactionsForm(props) {
                             variant="outlined"
                             size="small"
                             name="date"
+                            data-testid="transactionsFormDate"
                             disabled={formValues?.category ? false : true}
                             value={formValues.date}
                             onChange={handleChange}
@@ -351,10 +352,18 @@ function TransactionsForm(props) {
                             helperText={formErrors?.date}/>
                     </div>
                     <div className="flex flex-col gap-2 pt-2 justify-center sm:flex-row sm:w-full sm:flex-auto sm:pt-0 md:gap-3">
-                        <Button sx={props.buttonStyles} type="submit" size="small" onClick={() => giveId()}>
+                        <Button sx={props.buttonStyles} 
+                            type="submit" 
+                            size="small" 
+                            onClick={() => giveId()}
+                            data-testid="transactionsFormSubmit">
                             {props.editOn === false ? 'Create' : 'Finalize' }
                         </Button>
-                        <Button sx={props.buttonStyles} size="small" onClick={() => toSetFormOff()}>
+                        <Button 
+                            sx={props.buttonStyles} 
+                            size="small" 
+                            onClick={() => toSetFormOff()}
+                            data-testid="transactionsFormClose">
                             Cancel
                         </Button>
                     </div>
@@ -367,14 +376,15 @@ function TransactionsForm(props) {
         <article className="basis-40 sm:basis-7/12 md:basis-1/2">
             {props.formOn === true ? transactionForm() :
                 <div className="flex flex-col">
-                    <div className="text-indigo-900 dark:text-indigo-300 font-medium">
+                    <div className="text-indigo-900 dark:text-indigo-300 text-center font-medium">
                         Edit, Delete or
                     </div>
                     <Button sx={props.buttonStyles}
+                        data-testid='transactionsFormOpen'
                         onClick={() => {
                             renderAccounts();
                             toSetFormOn(true);
-                            }}>Create new transaction</Button>
+                        }}>Create new transaction</Button>
                 </div>
             }
         </article>

@@ -131,6 +131,7 @@ function GoalsForm(props) {
                         label="Goal name" 
                         variant="filled" 
                         name="name"
+                        data-testid="goalsFormName"
                         size="small"
                         sx={props.inputStyles}
                         value={formValues.name}
@@ -143,6 +144,7 @@ function GoalsForm(props) {
                             id="filled-basic" 
                             label="Current amount" 
                             variant="filled"
+                            data-testid="goalsFormCurrent"
                             size="small"
                             name="current"
                             type="number"
@@ -156,6 +158,7 @@ function GoalsForm(props) {
                             label="Total amount" 
                             variant="filled"
                             size="small"
+                            data-testid="goalsFormTotal"
                             name="total"
                             type="number"
                             sx={bottomInputStyles}
@@ -166,10 +169,15 @@ function GoalsForm(props) {
                     </div>
                 </div>
                 <div className="flex gap-2 justify-center pt-1 xl:pt-0">
-                    <Button sx={props.buttonStyles} type="submit" onClick={() => giveId()}>
+                    <Button sx={props.buttonStyles} 
+                        type="submit" 
+                        onClick={() => giveId()}
+                        data-testid="goalsFormSubmit">
                         {props.editOn === false ? 'Create' : 'Finalize Edits' }
                     </Button>
-                    <Button sx={props.buttonStyles} onClick={() => toSetFormOff()}>
+                    <Button sx={props.buttonStyles} 
+                        onClick={() => toSetFormOff()}
+                        data-testid="goalsFormClose">
                         Cancel
                     </Button>
                 </div>
@@ -184,7 +192,9 @@ function GoalsForm(props) {
                     <div className="text-indigo-900 dark:text-indigo-300 font-medium">
                         Edit, Delete or
                     </div>
-                    <Button sx={props.buttonStyles} onClick={() => toSetFormOn()}>
+                    <Button sx={props.buttonStyles} 
+                        onClick={() => toSetFormOn()}
+                        data-testid="goalsFormOpen">
                         Create new goal +
                     </Button>
                 </div>

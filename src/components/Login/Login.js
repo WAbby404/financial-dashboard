@@ -22,14 +22,14 @@ function Login(props) {
         const errors = {};
         // follows email format
         if( !values.email.includes('@') || !values.email.includes('.')){
-            errors.email = 'Must follow email format ex. Email@email.com';
+            errors.email = 'Must be a valid email';
         }
         if(!values.email){
-            errors.email = 'Email required.';
+            errors.email = 'Email required';
         }
 
         if(!values.password){
-            errors.password = 'Password required.';
+            errors.password = 'Password required';
         }
         return errors;
     }
@@ -73,7 +73,7 @@ function Login(props) {
                     id="filled-basic" 
                     label="Email"
                     variant="filled"
-                    data-testid='email'
+                    data-testid='cypress-email'
                     name="email"
                     size="small"
                     value={userInfo.email}
@@ -86,7 +86,7 @@ function Login(props) {
                     id="filled-basic" 
                     label="Password" 
                     variant="filled"
-                    data-testid='password'
+                    data-testid='cypress-password'
                     size="small"
                     name="password"
                     value={userInfo.password}

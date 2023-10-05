@@ -41,7 +41,7 @@ function Spending(props) {
     };
 
     return (
-        <figure className="xl:w-10/12 xl:h-4/5 xl:m-auto" aria-label='Spending Categories Pie Chart'>
+        <figure data-testid="spendingGraph" className="xl:w-10/12 xl:h-4/5 xl:m-auto" aria-label='Spending Categories Pie Chart'>
            <ResponsiveContainer width="100%" height={250}>
             <PieChart height={250}>
               <Pie

@@ -15,7 +15,6 @@ function SpendingModal(props) {
         const db = getDatabase();
         const dbRef = ref(db, user.uid + '/transactions');
         onValue(dbRef, (snapshot) => {
-            // console.log(snapshot.val());
             if(snapshot.val()){
               let filteredArray = Object.values(snapshot.val()).filter((transaction) => {
                 if(transaction.category === 'Credit Card Payment' || transaction.category === 'Money In' || transaction.category === 'Transfer'){
@@ -92,13 +91,8 @@ function SpendingModal(props) {
             if(stringArray.length % 3 === 0 && stringArray.length !== 0){
                 newMoney.push(',');
             }
-            // console.log(newMoney);
         }
-        // console.log(newMoney);
         newMoney.join('');
-        // console.log(newMoney);
-        // console.log(formattedMoney);
-        // console.log(typeof newMoney);
         if(!formattedMoney[1]){
             newMoney.push('.00');
         } else {
@@ -115,7 +109,7 @@ function SpendingModal(props) {
             :
                 <div className="flex flex-col xl:flex-row xl:w-full xl:h-full">
                     <div className="basis-1/2 xl:m-auto">
-                        <h3 className="text-indigo-900 dark:text-indigo-300 text-lg h-8 text-center self-center pt-3">{categories[currentCategory]}</h3>
+                        <h3 data-testid="spendingCategory" className="text-indigo-900 dark:text-indigo-300 text-lg h-8 text-center self-center pt-3">{categories[currentCategory]}</h3>
                         <SpendingGraph
                             formattedTransactions={formattedTransactions}
                             currentCategory={currentCategory}
@@ -125,7 +119,7 @@ function SpendingModal(props) {
                     <div className="basis-1/2 max-h-full">
                         <div className="flex justify-between pb-2 items-center md:w-10/12 md:m-auto lg:w-11/12">
                             <h3 className="text-indigo-900 dark:text-indigo-300 text-xl">Categories</h3>
-                            <h3 className="text-indigo-900 dark:text-indigo-300 font-medium text-xl text-right">{`$${transactionsTotal()} total`}</h3>
+                            <h3 data-testid="spendingTotal" className="text-indigo-900 dark:text-indigo-300 font-medium text-xl text-right">{`$${transactionsTotal()} total`}</h3>
                         </div>
                         <div className='xl:overflow-y-auto xl:max-h-56 2xl:max-h-64 2xl:w-11/12 2xl:m-auto'>
                             <SpendingAccordion

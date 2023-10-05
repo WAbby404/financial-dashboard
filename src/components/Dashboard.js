@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../config/Firebase';
 import LoginPage from './Login/LoginPage';
+import { getDatabase, ref, onValue } from "firebase/database";
 import Nav from './Nav/Nav';
 import AccountsModal from "./Accounts/AccountsModal";
 import SpendingModal from "./Spending/SpendingModal";
@@ -16,6 +17,8 @@ function Dashboard() {
     const [ theme, setTheme ] = useState('dark');
     const [ showNav, setShowNav ] = useState(false);
     const [ user, loading ] = useAuthState(auth);
+    const [ name, setName ] = useState('');
+    const [ userData, setUserData ] = useState({});
 
     useEffect(() => {
         if(theme === 'dark'){
@@ -23,7 +26,18 @@ function Dashboard() {
         } else {
             document.documentElement.classList.remove('dark');
         }
-    })
+
+        if(user){
+            const db = getDatabase();
+            const dbRef = ref(db, user.uid + '/userData');
+            onValue(dbRef, (snapshot) => {
+                // console.log(snapshot.val());
+                // let userData = snapshot.val();
+                setUserData(snapshot.val());
+                // setName(userData.name);
+            },{onlyOnce: true})
+        }
+    }, [user, theme])
 
     const changeTheme = () => {
         setTheme(theme === "dark" ? "light" : "dark");
@@ -111,15 +125,18 @@ function Dashboard() {
     return(
         <div className='bg-indigo-100 dark:bg-indigo-950 h-full max-w-full overflow-x-hidden transition-all xl:h-screen'>
             { loading && <LoadingScreen/>}
-            { !user ? <LoginPage buttonStyles={buttonStyles} inputStyles={inputStyles} theme={theme}/> :
+            { !user ? 
+                <LoginPage buttonStyles={buttonStyles} inputStyles={inputStyles} theme={theme}/>
+            :
                 <div className="static w-screen overflow-x-hidden">
-                    <Nav theme={theme} changeTheme={changeTheme} showNav={showNav} buttonStyles={buttonStyles} toSetShowNavOff={toSetShowNavOff}/>
+                    <Nav userData={userData} theme={theme} changeTheme={changeTheme} showNav={showNav} buttonStyles={buttonStyles} toSetShowNavOff={toSetShowNavOff}/>
                     <div className="h-full w-full">
                         <aside className="flex flex-row justify-between items-center p-3 text-indigo-900 dark:text-indigo-300">
                             <div className="basis-1/3 flex flex-col gap-1 md:gap-2 sm:items-center sm:flex-row">
-                                <h1 className="text-lg md:text-2xl font-semibold">{capitalize(user?.displayName)}'s</h1>
+                                <h1 className="text-lg md:text-2xl font-semibold">{capitalize(userData.name)}'s</h1>
                                 <h2 className="md:self-end">Dashboard</h2>
                             </div>
+                            {console.log(showNav)}
                             {setDate()}
                             <IconButton 
                                 data-testid="cypress-navcontrol"

@@ -26,7 +26,7 @@ function validateGoal(values) {
         errors.current = 'Current must be a number';
     }
     if(parseFloat(values.current) > parseFloat(values.total)){
-        errors.current = 'Current cannot be lower than total';
+        errors.current = 'Current cannot be higher than total';
         errors.total = 'Total cannot be lower than current';
     }
     if(!values.current){

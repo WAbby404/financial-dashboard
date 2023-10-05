@@ -105,6 +105,7 @@ function AccountsForm(props) {
                         label="Account Name" 
                         variant="filled"
                         sx={props.inputStyles}
+                        data-testid="accountsFormName"
                         size="small"
                         name="name"
                         value={formValues.name}
@@ -117,6 +118,7 @@ function AccountsForm(props) {
                         value={ formValues?.debit === undefined ? null : (formValues?.debit ? 'Debit' : 'Credit') }
                         onChange={(event, newValue) => handleOptionChangeAccount(event, newValue)}
                         disablePortal
+                        data-testid="accountsFormType"
                         sx={props.inputStyles}
                         size="small"
                         id="combo-box-demo"
@@ -128,10 +130,12 @@ function AccountsForm(props) {
                         isOptionEqualToValue={(option, value) => option.label === value}/>
                 </div>
                 <div className="flex justify-center gap-2 md:gap-4 md:w-3/5 md:m-auto">
-                    <Button sx={props.buttonStyles} type="submit" onClick={() => giveId()}>
+                    <Button sx={props.buttonStyles} type="submit" onClick={() => giveId()}
+                        data-testid="accountsFormSubmit">
                         Create
                     </Button>
-                    <Button sx={props.buttonStyles} onClick={() => toSetFormOff()}>
+                    <Button sx={props.buttonStyles} onClick={() => toSetFormOff()}
+                        data-testid="accountsFormClose">
                         Cancel
                     </Button>
                 </div>
@@ -147,7 +151,8 @@ function AccountsForm(props) {
                         Edit, Delete or
                     </h3>
                     <Button sx={props.buttonStyles} 
-                        onClick={() => toSetFormOn()}>
+                        onClick={() => toSetFormOn()}
+                        data-testid="accountsFormOpen">
                         Create new account +
                     </Button>
                 </header>

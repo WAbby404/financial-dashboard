@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useAuthState } from 'react-firebase-hooks/auth';
+import React from 'react';
 import { auth } from '../../config/Firebase';
-import { getDatabase, ref, onValue } from "firebase/database";
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
@@ -9,18 +7,6 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import WebAssetIcon from '@mui/icons-material/WebAsset';
 
 function Nav(props) {
-    const [ user ] = useAuthState(auth);
-    const [ profileImgData, setProfileImgData ] = useState({});
-
-    useEffect(() => {
-        const db = getDatabase();
-        const dbRef = ref(db, user.uid + '/userData');
-        let imgData;
-        onValue(dbRef, (snapshot) => {
-            imgData = snapshot.val();
-            setProfileImgData(imgData);
-        },{onlyOnce: true})
-    }, []); // eslint-disable-line
 
     return (
         <div className={`${props.showNav ? "translate-x-0" : "translate-x-full"} delay-100 ease-in-out fixed bg-gray-950/75 w-full h-screen z-50 top-0 p-3 flex flex-col justify-center items-center xl:inset-x-0`}>
@@ -31,15 +17,18 @@ function Nav(props) {
                         <h2 className="text-sky-400">Personal Finance Dashboard</h2>
                     </div>
                     <figure className="flex flex-col gap-3 justify-center items-center align-center pt-12 sm:pt-4 md:pt-[30%]">
-                    <div className='h-32 w-32 text-3xl font-semibold bg-indigo-300 rounded-full flex justify-center items-center sm:h-20 sm:w-20 md:h-32 md:w-32'>{profileImgData?.initials}</div>
-                    <h3 className="text-indigo-900 dark:text-indigo-300">{profileImgData?.name}</h3>
+                    <div className='h-32 w-32 text-3xl font-semibold bg-indigo-300 rounded-full flex justify-center items-center sm:h-20 sm:w-20 md:h-32 md:w-32'>{props.userData.initials}</div>
+                    <h3 className="text-indigo-900 dark:text-indigo-300">{props.userData.name}</h3>
                 </figure>
                 </div>
                 <footer className="flex flex-col gap-5 sm:gap-3 md:pb-12">
                     <div className="flex flex-col gap-2 w-2/5 m-auto md:w-4/5">
                         <Button size='small' onClick={() => props.toSetShowNavOff()} sx={props.buttonStyles} tabIndex={props.showNav ? 1 : -1}>Close Navigation</Button>
                         <Button size='small' onClick={() => props.changeTheme()} sx={props.buttonStyles} tabIndex={props.showNav ? 1 : -1}>{props.theme === 'light' ? 'Dark Mode' : 'Light Mode'}</Button>
-                        <Button size='small' onClick={() => auth.signOut()} sx={props.buttonStyles} tabIndex={props.showNav ? 1 : -1} data-testid="cypress-signout">Sign out</Button>
+                        <Button size='small' onClick={() => {
+                            auth.signOut();
+                            props.toSetShowNavOff();
+                        }} sx={props.buttonStyles} tabIndex={props.showNav ? 1 : -1} data-testid="cypress-signout">Sign out</Button>
                     </div>
                     <div className="flex gap-7 justify-center">
                         <IconButton target="_blank" rel="noopener noreferrer" title="Linkedin" aria-label="Abby Waddell's Linkedin" href='https://www.linkedin.com/in/abbywaddell4042/' tabIndex={props.showNav ? 1 : -1}>

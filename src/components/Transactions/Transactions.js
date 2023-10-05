@@ -94,7 +94,7 @@ function Transactions(props) {
             // case for 1 transaction
             case (items.length === 1):
                 return (
-                    <li key={items[0].id}>
+                    <li key={items[0].id} data-testid={`transaction-0`}>
                         <div className="flex flex-col justify-center p-1 md:flex-row-reverse md:w-full md:justify-between md:gap-2">
                             <div className={`${props.modalOn ? 'flex flex-col md:flex-row md:w-full md:gap-1 md:items-center md:justify-between' : 'flex justify-between w-full' }`}>
                                 <div className="basis-2/6 text-left">
@@ -118,12 +118,14 @@ function Transactions(props) {
                                     <Button size="small" color="secondary" variant="outlined" 
                                         onClick={() => editTransaction(items[0], 0)}
                                         disabled={props.editOn ? true : false}
+                                        data-testid='transactionEdit-0'
                                         aria-label='Edit transaction'
                                         sx={{color: 'orange'}}>
                                         <EditIcon/>
                                     </Button>
                                     <Button size="small" variant="outlined" color="error"
                                         onClick={() => deleteTransaction(items[0], 0)}
+                                        data-testid="transactionDelete-0"
                                         aria-label='Delete transaction'
                                         sx={{color: 'red'}}>
                                         <DeleteIcon/>
@@ -139,7 +141,7 @@ function Transactions(props) {
                 return (
                     sortTransactions(items).map((item, index) => {
                         return(
-                            <li key={item.id}>
+                            <li key={item.id} data-testid={`transaction-${index}`}>
                                 <div className="flex flex-col justify-center p-1 md:flex-row-reverse md:w-full md:justify-between md:gap-2">
                                     <div className={`${props.modalOn ? 'flex flex-col md:flex-row md:w-full md:gap-1 md:items-center md:justify-between' : 'flex justify-between w-full' }`}>
                                         <div className="basis-2/6 text-left">
@@ -163,14 +165,16 @@ function Transactions(props) {
                                             <Button size="small" color="secondary" variant="outlined"
                                                 onClick={() => editTransaction(item, index)} 
                                                 disabled={props.editOn ? true : false}
+                                                data-testid={`transactionEdit-${index}`}
                                                 aria-label='Edit transaction'
                                                 sx={{color: 'orange'}}>
                                                     <EditIcon/>
                                             </Button>
                                             <Button size="small" variant="outlined" color="error"
                                                 sx={{color: 'red'}}
+                                                data-testid={`transactionDelete-${index}`}
                                                 aria-label='Delete transaction'
-                                                onClick={() => deleteTransaction(item, index)} data-testid="transactionDelete">
+                                                onClick={() => deleteTransaction(item, index)}>
                                                     <DeleteIcon/>
                                             </Button>
                                         </div>
@@ -190,7 +194,7 @@ function Transactions(props) {
 
 return (
     <div className={`${ props.modalOn ? 'basis-40 sm:basis-5/12 sm:max-h-screen md:basis-2/3 xl:basis-3/6' : 'md:w-10/12 md:m-auto'} h-full overflow-y-auto`}>
-        <ul className="pr-1 xl:pr-3">
+        <ul className="pr-1 xl:pr-3" data-testid={props.modalOn ? 'transactionsListModal' : 'transactionsList'}>
             {renderSwitch(props.allTransactions)}
         </ul>
     </div>

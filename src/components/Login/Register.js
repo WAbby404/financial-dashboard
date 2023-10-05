@@ -23,20 +23,20 @@ function Register(props) {
     const validate = (values) => {
         const errors = {};
         if(!values.name){
-            errors.name = 'Required';
+            errors.name = 'Name required';
         }
         // follow email format
-        if(!values.email){
-            errors.email = 'Email required.';
-        }
         if(!values.email.includes('@') || !values.email.includes('.')){
-            errors.email = 'Email must follow Email format';
+            errors.email = 'Must be a valid email';
         }
-        if(!values.password){
-            errors.password = 'Required.';
+        if(!values.email){
+            errors.email = 'Email required';
         }
         if(values.password.length < 6 ){
             errors.password = 'Password must be at least 6 characters';
+        }
+        if(!values.password){
+            errors.password = 'Password required';
         }
         return errors;
     };
@@ -88,7 +88,6 @@ function Register(props) {
                 // darkMode: true
             }
             const userDataRef = ref(db, user.uid + '/userData');
-            // console.log(userData);
             update(userDataRef, userData);
         })
         .catch((error) => {
@@ -112,51 +111,32 @@ function Register(props) {
                     label="Name" 
                     variant="filled" 
                     name="name"
+                    data-testid='cypress-registername'
                     size="small"
                     value={userInfo.name}
                     onChange={handleChange}
                     error={formErrors?.name ? true : false}
                     helperText={formErrors?.name}
                     sx={props.inputStyles}
-                    // sx={{backgroundColor: '#2e2270',
-                    //     ".MuiInputLabel-root": {
-                    //         color:'#A5B4FC'
-                    //     },
-                    //     input:{
-                    //         color:'#A5B4FC',
-                    //     },
-                    //     width:{
-                    //         sm:'300px',
-                    //     }
-                    // }}
                 />
                 <TextField
                     id="filled-basic" 
                     label="Email"
                     variant="filled"
                     name="email"
+                    data-testid='cypress-registeremail'
                     size="small"
                     value={userInfo.email}
                     onChange={handleChange}
                     error={formErrors?.email ? true : false}
                     helperText={formErrors?.email}
                     sx={props.inputStyles}
-                    // sx={{backgroundColor: '#2e2270',
-                    //     ".MuiInputLabel-root": {
-                    //         color:'#A5B4FC'
-                    //     },
-                    //     input:{
-                    //         color:'#A5B4FC',
-                    //     },
-                    //     width:{
-                    //         sm:'300px',
-                    //     }
-                    // }}
                 />
                 <TextField
                     id="filled-basic" 
                     label="Password" 
                     variant="filled"
+                    data-testid='cypress-registerpassword'
                     size="small"
                     name="password"
                     value={userInfo.password}
@@ -165,7 +145,10 @@ function Register(props) {
                     helperText={formErrors?.password}
                     sx={props.inputStyles}
                 />
-                <Button type="submit" sx={props.buttonStyles}>Register</Button>
+                <Button type="submit" 
+                    sx={props.buttonStyles}
+                    data-testid='cypress-register'
+                >Register</Button>
                 {loginError && 
                     <div className="text-rose-600 flex gap-2 items-center justify-center">
                         <ErrorIcon sx={{ color:'red', fontSize: 20 }}/>
