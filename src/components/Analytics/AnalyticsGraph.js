@@ -78,7 +78,7 @@ function AnalyticsGraph(props) {
       {props.transactions === undefined ?
         <div className="text-indigo-900 dark:text-indigo-300 text-center py-4">Add Transactions to see your Trends chart</div>  
       :
-        <div className="w-full h-full">
+        <div data-testid="analyticsGraph" className="w-full h-full">
           <ResponsiveContainer width="99%" height="100%">
             <LineChart width="100%" height="100%" data={graphDataPoints}
               margin={{top: 10, right: 10, left: 20, bottom: 20}}>

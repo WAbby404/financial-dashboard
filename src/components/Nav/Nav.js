@@ -18,17 +18,30 @@ function Nav(props) {
                     </div>
                     <figure className="flex flex-col gap-3 justify-center items-center align-center pt-12 sm:pt-4 md:pt-[30%]">
                     <div className='h-32 w-32 text-3xl font-semibold bg-indigo-300 rounded-full flex justify-center items-center sm:h-20 sm:w-20 md:h-32 md:w-32'>{props.userData.initials}</div>
-                    <h3 className="text-indigo-900 dark:text-indigo-300">{props.userData.name}</h3>
+                    <h3 data-testid="navUserName" className="text-indigo-900 dark:text-indigo-300">{props.userData.name}</h3>
                 </figure>
                 </div>
                 <footer className="flex flex-col gap-5 sm:gap-3 md:pb-12">
                     <div className="flex flex-col gap-2 w-2/5 m-auto md:w-4/5">
-                        <Button size='small' onClick={() => props.toSetShowNavOff()} sx={props.buttonStyles} tabIndex={props.showNav ? 1 : -1}>Close Navigation</Button>
-                        <Button size='small' onClick={() => props.changeTheme()} sx={props.buttonStyles} tabIndex={props.showNav ? 1 : -1}>{props.theme === 'light' ? 'Dark Mode' : 'Light Mode'}</Button>
-                        <Button size='small' onClick={() => {
-                            auth.signOut();
-                            props.toSetShowNavOff();
-                        }} sx={props.buttonStyles} tabIndex={props.showNav ? 1 : -1} data-testid="cypress-signout">Sign out</Button>
+                        <Button size='small' 
+                            onClick={() => props.toSetShowNavOff()} 
+                            sx={props.buttonStyles} 
+                            tabIndex={props.showNav ? 1 : -1}
+                            data-testid="navClose">Close Navigation</Button>
+                        <Button size='small' 
+                            onClick={() => props.changeTheme()} 
+                            sx={props.buttonStyles} 
+                            tabIndex={props.showNav ? 1 : -1}
+                            data-testid="navLightMode">{props.theme === 'light' ? 'Dark Mode' : 'Light Mode'}</Button>
+                        <Button size='small' 
+                            onClick={() => {
+                                auth.signOut();
+                                props.toSetShowNavOff();
+                            }}
+                            sx={props.buttonStyles} 
+                            tabIndex={props.showNav ? 1 : -1} 
+                            data-testid="cypress-signout"
+                        >Sign out</Button>
                     </div>
                     <div className="flex gap-7 justify-center">
                         <IconButton target="_blank" rel="noopener noreferrer" title="Linkedin" aria-label="Abby Waddell's Linkedin" href='https://www.linkedin.com/in/abbywaddell4042/' tabIndex={props.showNav ? 1 : -1}>

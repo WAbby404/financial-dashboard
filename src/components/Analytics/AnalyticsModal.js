@@ -151,12 +151,12 @@ function AnalyticsModal(props) {
                             <div className="flex justify-center gap-3 items-center xl:gap-10">
                                 <div className="flex flex-col justify-center items-center">
                                     <h5 className="text-indigo-900 dark:text-indigo-300 text-lg">Income</h5>
-                                    <div className={`${income > 0 ? 'text-green-600' : 'text-rose-600'} xl:text-2xl`}>{formatMoney(income)}</div>
+                                    <div data-testid="analyticsIncome" className={`${income > 0 ? 'text-green-600' : 'text-rose-600'} xl:text-2xl`}>{formatMoney(income)}</div>
                                 </div>
                                 <div className="text-indigo-900 dark:text-indigo-300 xl:text-4xl self-end">-</div>
                                 <div className="flex flex-col justify-center items-center">
                                     <h5 className="text-indigo-900 dark:text-indigo-300 text-lg">Expenses</h5>
-                                    <div className={`${expenses > 0 ? 'text-rose-600' : 'text-green-600'} xl:text-2xl`}>{formatMoney(expenses)}</div>
+                                    <div data-testid="analyticsExpenses" className={`${expenses > 0 ? 'text-rose-600' : 'text-green-600'} xl:text-2xl`}>{formatMoney(expenses)}</div>
                                 </div>
                                 <div className="text-indigo-900 dark:text-indigo-300 xl:text-4xl self-end">=</div>
                             </div>
@@ -164,12 +164,12 @@ function AnalyticsModal(props) {
                             <div className="flex justify-center gap-3 items-center xl:gap-10">
                                 <div className="flex flex-col justify-center items-center">
                                     <h5 className="text-indigo-900 dark:text-indigo-300 text-lg">{income - expenses > 0 ? 'Pos. Cashflow' : 'Neg. Cashflow'}</h5>
-                                    <div className={`${ income - expenses > 0 ? 'text-green-600' : 'text-rose-600' } xl:text-2xl`}>{(formatMoney(income - expenses))}</div>
+                                    <div data-testid="analyticsCashflow" className={`${ income - expenses > 0 ? 'text-green-600' : 'text-rose-600' } xl:text-2xl`}>{(formatMoney(income - expenses))}</div>
                                 </div>
                                 <div className="text-indigo-900 dark:text-indigo-300 xl:text-2xl self-end">or</div>
                                 <div>
                                     <h5 className="text-indigo-900 dark:text-indigo-300 text-lg">{income - expenses > 0 ? '% Unspent' : '% Overspent'}</h5>
-                                    <div className={`${ income - expenses > 0 ? 'text-green-600' : 'text-rose-600' } xl:text-2xl`}>% {calculateOverspent()}</div>
+                                    <div data-testid="analyticsSpent" className={`${ income - expenses > 0 ? 'text-green-600' : 'text-rose-600' } xl:text-2xl`}>%{calculateOverspent()}</div>
                                 </div>
                             </div>
                         </div>
@@ -180,25 +180,25 @@ function AnalyticsModal(props) {
                         <div className="flex flex-col justify-center text-center items-center xl:flex-row xl:gap-10 ">
                             <div className='flex flex-col'>
                                 <h5 className="text-indigo-900 dark:text-indigo-300 text-lg">Debit Accs. Total</h5>
-                                <div className={`${accountTotals.debit > 0 ? 'text-green-600' : 'text-rose-600'} xl:text-2xl`}>{formatMoney(accountTotals.debit)}</div>
+                                <div data-testid="analyticsDebit" className={`${accountTotals.debit > 0 ? 'text-green-600' : 'text-rose-600'} xl:text-2xl`}>{formatMoney(accountTotals.debit)}</div>
                             </div>
                             <div className="text-indigo-900 dark:text-indigo-300">+</div>
                             <div>
                                 <h5 className="text-indigo-900 dark:text-indigo-300 text-lg">Savings</h5>
-                                <div className={`${accountTotals.savings > 0 ? 'text-green-600' : 'text-rose-600'} xl:text-2xl`}>{formatMoney(accountTotals.savings)}</div>
+                                <div data-testid="analyticsSavings" className={`${accountTotals.savings > 0 ? 'text-green-600' : 'text-rose-600'} xl:text-2xl`}>{formatMoney(accountTotals.savings)}</div>
                             </div>
                             <div className="text-indigo-900 dark:text-indigo-300 xl:text-2xl">-</div>
                             <div>
                                 <h5 className="text-indigo-900 dark:text-indigo-300 text-lg">Credit Cards Total</h5>
-                                <div className={`${accountTotals.creditCards === 0 ? 'text-green-600' : 'text-rose-600'} xl:text-2xl`}>{formatMoney(accountTotals.creditCards, true)}</div>
+                                <div data-testid="analyticsCC" className={`${accountTotals.creditCards === 0 ? 'text-green-600' : 'text-rose-600'} xl:text-2xl`}>{formatMoney(accountTotals.creditCards, true)}</div>
                             </div>
                             <div className="w-4/6 h-0.5 bg-indigo-900 dark:bg-indigo-300 m-auto sm:w-3/6 lg:w-2/6 xl:hidden"></div>
                             <div className="hidden text-indigo-900 dark:text-indigo-300 xl:block">
                                 =
                             </div>
                             <div className="flex text-center m-auto gap-2 xl:flex-col-reverse">
-                                <div className={`${parseFloat(accountTotals.debit) + parseFloat(accountTotals.savings) - ( -1 * parseFloat(accountTotals.creditCards)) > 0 ? 'text-green-600' : 'text-rose-600'} xl:text-2xl`}>{formatMoney(parseFloat(accountTotals.debit) + parseFloat(accountTotals.savings) - ( -1 * parseFloat(accountTotals.creditCards)))}</div>
-                                <h5 className="text-indigo-900 dark:text-indigo-300">Total</h5>
+                                <div data-testid="analyticsTotal" className={`${parseFloat(accountTotals.debit) + parseFloat(accountTotals.savings) - ( -1 * parseFloat(accountTotals.creditCards)) > 0 ? 'text-green-600' : 'text-rose-600'} xl:text-2xl`}>{formatMoney(parseFloat(accountTotals.debit) + parseFloat(accountTotals.savings) - ( -1 * parseFloat(accountTotals.creditCards)))}</div>
+                                <h5 className="text-indigo-900 dark:text-indigo-300 text-lg">Total</h5>
                             </div>
                         </div>
                     </section>

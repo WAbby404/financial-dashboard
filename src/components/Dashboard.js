@@ -60,7 +60,7 @@ function Dashboard() {
 
         return (
             <time className="flex basis-1/3 items-center">
-                <h3 className="text-lg xl:text-2xl font-semibold">{today[0]} <span>{today[1] + dateSuffix}</span></h3>
+                <h3 data-testid="dashboardDate" className="text-lg xl:text-2xl font-semibold">{today[0]}, <span>{today[1] + dateSuffix}</span></h3>
             </time>
         )
     }
@@ -133,10 +133,9 @@ function Dashboard() {
                     <div className="h-full w-full">
                         <aside className="flex flex-row justify-between items-center p-3 text-indigo-900 dark:text-indigo-300">
                             <div className="basis-1/3 flex flex-col gap-1 md:gap-2 sm:items-center sm:flex-row">
-                                <h1 className="text-lg md:text-2xl font-semibold">{capitalize(userData.name)}'s</h1>
+                                <h1 data-testid="dashboardUserName" className="text-lg md:text-2xl font-semibold">{capitalize(userData.name)}'s</h1>
                                 <h2 className="md:self-end">Dashboard</h2>
                             </div>
-                            {console.log(showNav)}
                             {setDate()}
                             <IconButton 
                                 data-testid="cypress-navcontrol"
