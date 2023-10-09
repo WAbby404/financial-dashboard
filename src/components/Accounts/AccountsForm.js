@@ -25,21 +25,15 @@ function AccountsForm(props) {
         if(props.accountToEdit?.name.length !== 0 && props.editOn === true){
             setFormValues(props.accountToEdit);
             setFormErrors(null);
-            // setFocus();
         }
     }, [props.accountToEdit]);  // eslint-disable-line
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // console.log(formValues);
-        // console.log(uniqueAccountNames);
         const errors = validateAccount(formValues, props.allAccounts);
         // If there are no errors, send transaction to database
         if(Object.keys(errors).length === 0){
-            // let oldNames = uniqueAccountNames;
-            // setUniqueAccountNames(oldNames.push(formValues.name));
             props.createAccount(formValues);
-            // console.log(uniqueAccountNames);
             // Reset form and show success message
             toSetFormOn();
         } else {

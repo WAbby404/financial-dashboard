@@ -16,7 +16,7 @@ function TransactionsModal(props) {
     const [ allTransactions, setAllTransactions ] = useState([]);
     const [ modalOn, setModalOn ] = useState(false);
     const [ formOn, setFormOn ] = useState(false);
-    // Sets edit mode on, necessary for useEffect in TransactionsForm, exiting while editing (with cancel and X) & dialog box
+    // Sets edit mode on, necessary for useEffect in TransactionsForm to fill the form with correct values at right time, exiting while editing (with cancel and X) & dialog box
     const [ editOn, setEditOn ] = useState(false);
     const [ transactionToEdit, setTransactionToEdit ] = useState(null); 
     const [ successSnackbarOn, setSuccessSnackbarOn ] = useState(false);
@@ -24,11 +24,6 @@ function TransactionsModal(props) {
     const [ deleteSnackbarOn, setDeleteSnackbarOn ] = useState(false);
     const [ dialogBoxOn, setDialogBoxOn ] = useState(false);
     const [ exitWithCancelOn, setExitWithCancelOn ] = useState(false);
-
-    // vvv this is odd, i have an issue where if i modify an element in a state array or obj React wont push for an update, so i add 1 to a count which DOES push for an update
-    // maybe i can try force update here
-
-
 
     const toSetFormOn = () => {
         setFormOn(true);
@@ -174,10 +169,12 @@ function TransactionsModal(props) {
         reflectDeleteTransaction(transacitonToDelete);
     };
 
+    // deletes amount in corresponding account (so amount in accounts will always equal transactions)
     const reflectDeleteTransaction = (formValues) => {
         const db = getDatabase();
         const dbRef = ref(db, user.uid + '/accounts/');
         let accountTotal = 0;
+        // accountId will add up correct path to the transaction we're deleting
         let accountId = `${user.uid}/accounts/`;
         onValue(dbRef, (snapshot) => {
             snapshot.forEach((childSnapshot) => {
@@ -190,7 +187,7 @@ function TransactionsModal(props) {
                         accountTotal = +childData.total + +(parseFloat(formValues.value)).toFixed(2);
                     }
                 }
-
+                // if the transaction has a transferTo value, then delete its value from account that it was transfered to
                 if(formValues.transferTo){
                     let transferToId = `${user.uid}/accounts/`;
                     if(childData.name === formValues.transferTo){
@@ -201,8 +198,6 @@ function TransactionsModal(props) {
                     }
                 }
             })
-
-            // if transfer delete from transferto account aswell
         },{onlyOnce: true});
         let updatedRef = ref(db, accountId);
         update(updatedRef, {total: accountTotal.toFixed(2)});

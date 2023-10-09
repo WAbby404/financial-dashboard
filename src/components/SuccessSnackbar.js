@@ -15,7 +15,10 @@ function SuccessSnackbar(props) {
                     anchorOrigin={{ vertical:'top', horizontal:'center' }}
                     open={props.successSnackbarOn}
                     onClose={props.toSetSuccessSnackbarOff}>
-                    <Alert onClose={props.toSetSuccessSnackbarOff} severity="success" sx={{ width: '100%' }}>
+                    <Alert 
+                        onClose={props.toSetSuccessSnackbarOff} 
+                        severity="success" 
+                        sx={{ width: '100%' }}>
                         {props.message}
                     </Alert>
                 </Snackbar>

@@ -15,6 +15,7 @@ function SpendingModal(props) {
         const db = getDatabase();
         const dbRef = ref(db, user.uid + '/transactions');
         onValue(dbRef, (snapshot) => {
+            // gets all 'spending' transactions
             if(snapshot.val()){
               let filteredArray = Object.values(snapshot.val()).filter((transaction) => {
                 if(transaction.category === 'Credit Card Payment' || transaction.category === 'Money In' || transaction.category === 'Transfer'){
@@ -26,7 +27,7 @@ function SpendingModal(props) {
             formatTransactions(filteredArray);
             } 
             else if(!snapshot.val()){
-                // need handling for none? maybe just set to default?
+                // handling for no transactions, default
                 setAllTransactions([]);
             }
         });
@@ -37,9 +38,11 @@ function SpendingModal(props) {
             transaction.value = parseFloat(transaction.value);
         })
     
+        // unique gets transaction categories for the spending accordion
         const unique = [...new Set(filteredArray.map(item => item.category))];
         const values = new Array(unique.length).fill(0);
     
+        // gets the totals for each category
         filteredArray.forEach((transaction) => {
             unique.forEach((category, index) => {
                 if(transaction.category === category){
@@ -47,9 +50,8 @@ function SpendingModal(props) {
                 }
             })
         });
-    
-        // need to change colors later when we change categories
 
+        // formats the data into an obj name & value for graph to display
         let formattedData = [];
         for(let i = 0; i < unique.length; i++){
             let obj = {name: unique[i] , value:values[i] };
@@ -59,6 +61,7 @@ function SpendingModal(props) {
         setFormattedTransactions(formattedData);
     };
 
+    // sets selected category for accordion to expand & graph to select
     const toSetCurrentCategory = (categoryIndex) => {
         setCurrentCategory(categoryIndex);
     };
@@ -67,6 +70,7 @@ function SpendingModal(props) {
         return category.name;
     });
 
+    // gets transactions total for accordion & formats it correctly
     const transactionsTotal = () => {
         let total = 0;
         allTransactions.forEach((transaction) => {
@@ -79,15 +83,12 @@ function SpendingModal(props) {
         } else {
             formattedMoney = (total * -1).toString().split('.');
         }
-    
         
         let newMoney = [];
         let stringArray = formattedMoney[0].split('');
-        // console.log(stringArray);
         while(stringArray.length){
             newMoney.push(stringArray[0]);
             stringArray.shift();
-            // console.log(stringArray);
             if(stringArray.length % 3 === 0 && stringArray.length !== 0){
                 newMoney.push(',');
             }
@@ -123,19 +124,16 @@ function SpendingModal(props) {
                         </div>
                         <div className='xl:overflow-y-auto xl:max-h-56 2xl:max-h-64 2xl:w-11/12 2xl:m-auto'>
                             <SpendingAccordion
-                            theme={props.theme}
-                            formattedTransactions={formattedTransactions}
-                            allTransactions={allTransactions}
-                            currentCategory={currentCategory}
-                            toSetCurrentCategory={toSetCurrentCategory}
+                                theme={props.theme}
+                                formattedTransactions={formattedTransactions}
+                                allTransactions={allTransactions}
+                                currentCategory={currentCategory}
+                                toSetCurrentCategory={toSetCurrentCategory}
                             />
                         </div>
                     </div>
-
-
                 </div>
                 }
-
         </section>
     );
 }

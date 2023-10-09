@@ -15,7 +15,10 @@ function ErrorSnackbar(props) {
                     anchorOrigin={{ vertical:'top', horizontal:'center' }}
                     open={props.errorSnackbarOn}
                     onClose={props.toSetErrorSnackbarOff}>
-                    <Alert onClose={props.toSetErrorSnackbarOff} severity="error" sx={{ width: '100%' }}>
+                    <Alert 
+                        onClose={props.toSetErrorSnackbarOff} 
+                        severity="error" 
+                        sx={{ width: '100%' }}>
                         {props.message}
                     </Alert>
                 </Snackbar>

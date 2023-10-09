@@ -14,7 +14,6 @@ function Accounts(props) {
         const dbRef = ref(db, user.uid + '/accounts');
         let newAccounts = [];
         onValue(dbRef, (snapshot) => {
-            // each item under accounts db
             newAccounts = [];
             snapshot.forEach((childSnapshot) => {
                 const childData = childSnapshot.val();
@@ -62,25 +61,18 @@ function Accounts(props) {
         } else {
             formattedMoney = (money * -1).toString().split('.');
         }
-    
-        
         let newMoney = [];
         if(formattedMoney[0].length > 3){
             let stringArray = formattedMoney[0].split('');
-            // console.log(stringArray);
             while(stringArray.length){
                 newMoney.push(stringArray[0]);
                 stringArray.shift();
-                // console.log(stringArray);
                 if(stringArray.length % 3 === 0 && stringArray.length !== 0){
                     newMoney.push(',');
                 }
-                // console.log(newMoney);
             }
-            // console.log(newMoney);
             newMoney.join('');
         }
-        
         return(
             <div className="flex items-center">
                 <div className="font-bold text-2xl xl:text-4xl">{!account.debit ? '' : money < 0 && '-' }</div>

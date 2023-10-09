@@ -17,49 +17,30 @@ function AnalyticsModal(props) {
         const dbRefTransactions = ref(db, user.uid);
         let accountsData;
         let transactionsData;
-        // can erase countme
-        // let countMe = 0;
         let hasTransactions = false;
         console.log('Analytics Useeffect Ran');
         onValue(dbRefTransactions, (snapshot) => {
-            // console.log(snapshot);
             snapshot.forEach((childSnapshot) => {
-                // countMe += 1;
-                // console.log(countMe);
                 const childData = childSnapshot.val();
-                // console.log('childData vvv');
-                // console.log(childData);
-                // console.log(Object.values(childData));
-                // console.log(typeof childData);
                 if(Object.keys(childData).includes('Checking')){
                     accountsData = childData;
-                    // console.log('accountsData childData vvv');
-                    // console.log(childData);
                 }
-
-                // check if object has an object with a date, if it does set transactionsData to it & set hasTransactions to true
-                // below OUT OF LOOP: if hasTransactions is false, set transactionsData to an empty obj
-                // console.log('first element');
-                // should fix trends too
                 const firstElement = Object.values(childData)[0];
-                // console.log(firstElement);
+
                 // Finds the object that contains transactions & sets a check variable for when transactions are found
                 if(firstElement.hasOwnProperty('date')){
-                    // console.log('transactions found!');
                     transactionsData = childData;
                     hasTransactions = true;
                 }
-
             })
+            // if there are no transactions, set transactionsData to empty
             if(!hasTransactions){
-                // console.log('no transactions');
                 transactionsData = {};
             }
             hasTransactions = false;
-            // countMe = 0;
-            // expenses & income comes from transactionsdata
             setTransactions(transactionsData);
             setCount(count + 1);
+            // looks for 'spending' transactions for expenses & income or 'money in' transactions
             if(typeof transactionsData === 'object'){
                 let transactionsTotal = 0;
                 let expensesTotal = 0;
@@ -70,12 +51,11 @@ function AnalyticsModal(props) {
                         expensesTotal += parseFloat(transaction.value);
                     }
                 })
-                // console.log('expesesTotal vv');
-                // console.log(expensesTotal);
                 setIncome(transactionsTotal);
                 setExpenses(expensesTotal.toFixed(2));
             }
 
+            // gets totals of each account
             if(typeof accountsData === 'object'){
                 let debitTotal = 0.00;
                 let savingsTotal = 0.00;
@@ -96,9 +76,7 @@ function AnalyticsModal(props) {
     }, []); // eslint-disable-line
 
     const formatMoney = (money, isCreditCard) => {
-        // console.log(money);
         if(money){
-            // need to account for negative so if neg times by -1 & add a - on render
             let formattedMoney = money.toString().split('.');
             let isNegative = false;
             if(!formattedMoney[1]){
@@ -112,7 +90,6 @@ function AnalyticsModal(props) {
                 }
             }
             let newMoney = [];
-            // if(formattedMoney[0].length >= 3){
                 let stringArray = formattedMoney[0].split('');
                 while(stringArray.length){
                     newMoney.push(stringArray[0]);
@@ -122,14 +99,12 @@ function AnalyticsModal(props) {
                     }
                 }
                 newMoney.join('');
-            // }
             return ((isNegative ? '-' : '' ) + '$'+ newMoney.join('') + '.' + formattedMoney[1]);
         }
         return '$0.00';
     }
 
     const calculateOverspent = () => {
-        // (100 * ((income - expenses) / ( income === 0 ? 1 : income ))).toFixed(2)
         let overspent = (100 * (income - expenses) / ( income === 0 ? 1 : income )).toFixed(2);
         if(overspent < 0){
             overspent = overspent * -1;

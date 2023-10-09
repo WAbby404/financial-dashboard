@@ -60,7 +60,8 @@ function Register(props) {
             const user = userCredential.user;
 
             setUserInfo({});
-            
+
+            // when account is registered, generic starting accounts & user info are pushed to the database
             const newUserAccounts = {
                 'Checking': {name: 'Checking', debit: true, total: 0, id:Math.random()*1000, notEditable:true},
                 'Savings': {name: 'Savings', debit: true, total: 0, id:Math.random()*1000, notEditable:true},
@@ -85,13 +86,11 @@ function Register(props) {
             const userData = {
                 name: `${capitalizeName(userInfo.name)}`,
                 initials: getInitials(userInfo.name),
-                // darkMode: true
             }
             const userDataRef = ref(db, user.uid + '/userData');
             update(userDataRef, userData);
         })
         .catch((error) => {
-            console.log(error);
             const errorCode = error.code;
             const errorMessage = error.message;
             if(errorCode === 'auth/email-already-in-use'){

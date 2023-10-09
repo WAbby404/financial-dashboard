@@ -11,11 +11,8 @@ function Transactions(props) {
     const [ count, setCount ] = useState(0);
 
     useEffect(()=> {
-        console.log('Transaction useeffect called');
-        // can maybe useMemo or usecallback here? transaction useeffect is called everytime modal is turned on etc
         const db = getDatabase();
         const dbRef = ref(db, user.uid + '/transactions');
-        // console.log(user.uid);
         onValue(dbRef, (snapshot) => {
             snapshot.forEach((childSnapshot) => {
                 const childData = childSnapshot.val();
@@ -61,24 +58,18 @@ function Transactions(props) {
 
     const formatMoney = (money, transaction) => {
         let formattedMoney = money.split('.');
-
         let newMoney = [];
         if(formattedMoney[0].length > 3){
             let stringArray = formattedMoney[0].split('');
-            // console.log(stringArray);
             while(stringArray.length){
                 newMoney.push(stringArray[0]);
                 stringArray.shift();
-                // console.log(stringArray);
                 if(stringArray.length % 3 === 0 && stringArray.length !== 0){
                     newMoney.push(',');
                 }
-                // console.log(newMoney);
             }
-            // console.log(newMoney);
             newMoney.join('');
         }
-        // console.log(transaction);
         return(
             <div className={`${props.modalOn ? 'md:justify-end' : 'justify-end' } flex`}>
                 <div>{transaction.category === 'Transfer' ? '' : (transaction.positive ? '+' : '-')}</div>
@@ -115,7 +106,9 @@ function Transactions(props) {
                             </div>
                             { props.modalOn &&
                             <div className="flex flex-col gap-2">
-                                    <Button size="small" color="secondary" variant="outlined" 
+                                    <Button size="small" 
+                                        color="secondary" 
+                                        variant="outlined" 
                                         onClick={() => editTransaction(items[0], 0)}
                                         disabled={props.editOn ? true : false}
                                         data-testid='transactionEdit-0'
@@ -123,7 +116,9 @@ function Transactions(props) {
                                         sx={{color: 'orange'}}>
                                         <EditIcon/>
                                     </Button>
-                                    <Button size="small" variant="outlined" color="error"
+                                    <Button size="small" 
+                                        variant="outlined" 
+                                        color="error"
                                         onClick={() => deleteTransaction(items[0], 0)}
                                         data-testid="transactionDelete-0"
                                         aria-label='Delete transaction'
@@ -162,7 +157,9 @@ function Transactions(props) {
                                     </div>
                                     { props.modalOn &&
                                         <div className="flex md:flex-col xl:gap-2">
-                                            <Button size="small" color="secondary" variant="outlined"
+                                            <Button size="small" 
+                                                color="secondary" 
+                                                variant="outlined"
                                                 onClick={() => editTransaction(item, index)} 
                                                 disabled={props.editOn ? true : false}
                                                 data-testid={`transactionEdit-${index}`}
@@ -170,7 +167,9 @@ function Transactions(props) {
                                                 sx={{color: 'orange'}}>
                                                     <EditIcon/>
                                             </Button>
-                                            <Button size="small" variant="outlined" color="error"
+                                            <Button size="small" 
+                                                variant="outlined" 
+                                                color="error"
                                                 sx={{color: 'red'}}
                                                 data-testid={`transactionDelete-${index}`}
                                                 aria-label='Delete transaction'

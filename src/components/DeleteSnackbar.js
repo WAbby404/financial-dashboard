@@ -15,7 +15,10 @@ function DeleteSnackbar(props) {
                     anchorOrigin={{ vertical:'top', horizontal:'center' }}
                     open={props.deleteSnackbarOn}
                     onClose={props.toSetDeleteSnackbarOff}>
-                    <Alert onClose={props.toSetDeleteSnackbarOff} severity="error" sx={{ width: '100%' }}>
+                    <Alert 
+                        onClose={props.toSetDeleteSnackbarOff} 
+                        severity="error" 
+                        sx={{ width: '100%' }}>
                         {props.message}
                     </Alert>
                 </Snackbar>

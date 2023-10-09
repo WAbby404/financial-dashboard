@@ -19,26 +19,31 @@ function EditDialogBox(props) {
                 open={props.dialogBoxOn}
                 onClose={props.toSetDialogBoxOff}
                 aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description" 
-            >
-            <DialogTitle id="alert-dialog-title" sx={dialogTheme}>
-                {props.dialogTitle}
-            </DialogTitle>
-            <DialogContent sx={dialogTheme}>
-                <DialogContentText id="alert-dialog-description" sx={dialogTheme}>
-                    {props.dialogText}
-                </DialogContentText>
-            </DialogContent>
-            <DialogActions sx={dialogTheme}>
-                <Button sx={props.buttonStyles} 
-                    onClick={props.toSetDialogBoxOff}
-                    data-testid='dialogContinue'>Continue editing</Button>
-                <Button sx={props.buttonStyles} 
-                    onClick={props.toSetDialogBoxOffAndClearGoal}
-                    data-testid='dialogExit'>
-                    Exit anyway
-                </Button>
-            </DialogActions>
+                aria-describedby="alert-dialog-description">
+                <DialogTitle 
+                    id="alert-dialog-title" 
+                    sx={dialogTheme}>
+                    {props.dialogTitle}
+                </DialogTitle>
+                <DialogContent sx={dialogTheme}>
+                    <DialogContentText 
+                        id="alert-dialog-description" 
+                        sx={dialogTheme}>
+                        {props.dialogText}
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions sx={dialogTheme}>
+                    <Button 
+                        sx={props.buttonStyles} 
+                        onClick={props.toSetDialogBoxOff}
+                        data-testid='dialogContinue'>Continue editing</Button>
+                    <Button 
+                        sx={props.buttonStyles} 
+                        onClick={props.toSetDialogBoxOffAndClearGoal}
+                        data-testid='dialogExit'>
+                        Exit anyway
+                    </Button>
+                </DialogActions>
             </Dialog>
         </div>
     );

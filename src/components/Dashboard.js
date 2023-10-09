@@ -17,24 +17,22 @@ function Dashboard() {
     const [ theme, setTheme ] = useState('dark');
     const [ showNav, setShowNav ] = useState(false);
     const [ user, loading ] = useAuthState(auth);
-    const [ name, setName ] = useState('');
     const [ userData, setUserData ] = useState({});
 
     useEffect(() => {
+        // specifies dark or light mode for tailwind
         if(theme === 'dark'){
             document.documentElement.classList.add('dark');
         } else {
             document.documentElement.classList.remove('dark');
         }
 
+        // updates users name
         if(user){
             const db = getDatabase();
             const dbRef = ref(db, user.uid + '/userData');
             onValue(dbRef, (snapshot) => {
-                // console.log(snapshot.val());
-                // let userData = snapshot.val();
                 setUserData(snapshot.val());
-                // setName(userData.name);
             },{onlyOnce: true})
         }
     }, [user, theme])
@@ -44,6 +42,7 @@ function Dashboard() {
     };
 
     const setDate = () => {
+        // gets correct formatting for the current date
         const today = new Date().toLocaleDateString().split('/');
         const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'Septemper', 'October', 'November', 'December'];
         today[0] = months[today[0]-1];
@@ -57,7 +56,6 @@ function Dashboard() {
         } else {
             dateSuffix = 'th';
         }
-
         return (
             <time className="flex basis-1/3 items-center">
                 <h3 data-testid="dashboardDate" className="text-lg xl:text-2xl font-semibold">{today[0]}, <span>{today[1] + dateSuffix}</span></h3>
@@ -126,10 +124,19 @@ function Dashboard() {
         <div className='bg-indigo-100 dark:bg-indigo-950 h-full max-w-full overflow-x-hidden transition-all xl:h-screen'>
             { loading && <LoadingScreen/>}
             { !user ? 
-                <LoginPage buttonStyles={buttonStyles} inputStyles={inputStyles} theme={theme}/>
+                <LoginPage 
+                    buttonStyles={buttonStyles} 
+                    inputStyles={inputStyles} 
+                    theme={theme}/>
             :
                 <div className="static w-screen overflow-x-hidden">
-                    <Nav userData={userData} theme={theme} changeTheme={changeTheme} showNav={showNav} buttonStyles={buttonStyles} toSetShowNavOff={toSetShowNavOff}/>
+                    <Nav 
+                        userData={userData} 
+                        theme={theme} 
+                        changeTheme={changeTheme} 
+                        showNav={showNav} 
+                        buttonStyles={buttonStyles} 
+                        toSetShowNavOff={toSetShowNavOff}/>
                     <div className="h-full w-full">
                         <aside className="flex flex-row justify-between items-center p-3 text-indigo-900 dark:text-indigo-300">
                             <div className="basis-1/3 flex flex-col gap-1 md:gap-2 sm:items-center sm:flex-row">
@@ -150,10 +157,24 @@ function Dashboard() {
                             </IconButton>
                         </aside>
                         <main className="flex flex-col sm:gap-4 md:gap-5 pb-4 xl:grid xl:grid-cols-12 xl:grid-rows-18 xl:gap-4 xl:h-[93vh] xl:p-4">
-                            <AccountsModal showNav={showNav} theme={theme} buttonStyles={buttonStyles} inputStyles={inputStyles}/>
-                            <GoalsModal showNav={showNav} theme={theme} buttonStyles={buttonStyles} inputStyles={inputStyles}/>
-                            <SpendingModal showNav={showNav} theme={theme}/>
-                            <TransactionsModal showNav={showNav} theme={theme} buttonStyles={buttonStyles} inputStyles={inputStyles}/>
+                            <AccountsModal 
+                                showNav={showNav} 
+                                theme={theme} 
+                                buttonStyles={buttonStyles} 
+                                inputStyles={inputStyles}/>
+                            <GoalsModal 
+                                showNav={showNav} 
+                                theme={theme} 
+                                buttonStyles={buttonStyles} 
+                                inputStyles={inputStyles}/>
+                            <SpendingModal 
+                                showNav={showNav} 
+                                theme={theme}/>
+                            <TransactionsModal 
+                                showNav={showNav} 
+                                theme={theme} 
+                                buttonStyles={buttonStyles} 
+                                inputStyles={inputStyles}/>
                             <AnalyticsModal theme={theme}/>
                         </main>  
                     </div>

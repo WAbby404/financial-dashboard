@@ -38,13 +38,8 @@ function TransactionsForm(props) {
         props.toSetFormOn(setModeTo);
     };
 
-    const setFocus = () => {
-        topInputBox.current.focus();
-    };
-
     useEffect(() => {
         if(props.transactionToEdit?.name.length !== 0 && props.editOn === true){
-            setFocus();
             setFormValues(props.transactionToEdit);
             setFormErrors(null);
         }
@@ -54,22 +49,17 @@ function TransactionsForm(props) {
     const handleSubmit = (e) => {
         e.preventDefault();
         const errors = validateTransaction(formValues, creditCardTotal);
-        // If there are no errors, send transaction to database
-        // console.log(Object.keys(errors));
         if(Object.keys(errors).length === 0){
             props.createTransaction(formValues);
-            setFocus();
             // Reset form and show success message
             toSetFormOn();
             reflectTransactionInAccounts(formValues);
-            // reflect transaction in account here
-
         } else {
             setFormErrors(errors);
         }
     };
 
-
+    // when a transaction is made, its value will be reflected in its corresponding account
     const reflectTransactionInAccounts = (formValues) => {
         const db = getDatabase();
         const dbRef = ref(db, user.uid + '/accounts/');
@@ -89,6 +79,7 @@ function TransactionsForm(props) {
                         accountTotal = +childData.total - +(parseFloat(formValues.value)).toFixed(2);
                     }
                 }
+                // if transaction has transferTo value, then add the transactions value to the corresponding transferTo account
                 if(formValues.transferTo){
                     if(childData.name === formValues.transferTo){
                         transferToId += `${childSnapshot.key}`;
@@ -103,6 +94,7 @@ function TransactionsForm(props) {
         update(updatedRef, {total: accountTotal.toFixed(2)});
     }
 
+    // handles change for inputs from form
     const handleChange = (e) => {
         const { name, value } = e.target;
         if(name === 'positive' && value === 'true'){
@@ -110,9 +102,7 @@ function TransactionsForm(props) {
         } else if (name === 'positive' && value === 'false'){
             setFormValues({...formValues, positive: false});
         } else if (name === 'value' || name === 'date'){
-            // console.log(value);
             let values = value.split('.');
-            // console.log(values);
             if(values[1] && values[1].length > 2){
                 return;
             }
@@ -128,7 +118,6 @@ function TransactionsForm(props) {
         // if editing a transaction, prompt user with dialog box
         if(props.editOn){
             props.toSetDialogBoxOn();
-            // when dialog box is prompted with cancel, only close form, instead of whole modal
             props.toSetExitWithCancelOn();
         // if not editing a transaction, clear form and close it
         } else {
@@ -139,33 +128,36 @@ function TransactionsForm(props) {
         }
     }
 
+    // this is for transactions when they are submitted
     const giveId = () => {
         setFormValues({...formValues, id: Math.random()*1000});
         capitalizeName(formValues, setFormValues);
     }
 
+    // for the drop down menu on transferTo input, filters out current selected account
+    // (so you cant transfer to the same account)
     const setTransferToAccounts = () => {
         const currentAccount = formValues?.account;
         let transferToAccounts = allAccounts.filter((account) => (account.label !== currentAccount && account.debit));
         return transferToAccounts;
     }
 
+    // will change positive T/F depending on which category is selected
+    // categories like money in will be positive, expenses will be negative including CC payments
     const handleOptionChangeCategory = (event, newValue) => {
-        // if certain category is selected, positive changes depending on which category it is
         // if there is no value set formvalue to null
         if(!newValue){
             setFormValues({...formValues, category: null});
             setCreditCardTotal(null);
         // if there is a value, clear form error for category
         } else {
-            // console.log(newValue.label);
             setFormErrors({...formErrors, category: null});
-            if( newValue.label === 'Money In'){
+            if(newValue.label === 'Money In'){
                 setCreditCardTotal(null);
                 setFormValues({...formValues, positive: true, category: newValue.label });
             } else if (newValue.label === 'Credit Card Payment'){
                 setFormValues({...formValues, positive: true, category: newValue.label });
-
+                // take the payment amount out of corresponding credit account
                 const db = getDatabase();
                 const dbRef = ref(db, user.uid + '/accounts');
                 onValue(dbRef, (snapshot) => {
@@ -186,6 +178,7 @@ function TransactionsForm(props) {
         }
     }
 
+    // for category drop down input, filters out categories based on type of account (debit or credit)
     const handleOptionChangeAccount = (event, newValue) => {
         // if there is no value set formvalue to null
         if(!newValue){
@@ -214,6 +207,7 @@ function TransactionsForm(props) {
         }
     }
 
+    // removes or adds transferTo category
     const handleOptionChangeTransferTo = (event, newValue) => {
         if(!newValue){
             setFormValues({...formValues, transferTo: ''});
@@ -243,8 +237,6 @@ function TransactionsForm(props) {
             );
         setAllAccounts(formattedAccounts);
     }
-
-
 
     const transactionForm = () => {
         return(
@@ -280,7 +272,8 @@ function TransactionsForm(props) {
                             renderInput={(params) => <TextField {...params} label="Account"
                                                         name="account"
                                                         error={formErrors?.account ? true : false}
-                                                        helperText={formErrors?.account}/>}
+                                                        helperText={formErrors?.account}
+                                        />}
                             isOptionEqualToValue={(option, value) => option.label === value}/>
                         <Autocomplete
                             name="category"

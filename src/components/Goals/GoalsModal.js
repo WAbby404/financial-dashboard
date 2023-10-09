@@ -24,15 +24,6 @@ function GoalsModal(props) {
     const [ deleteSnackbarOn, setDeleteSnackbarOn ] = useState(false);
     const [ dialogBoxOn, setDialogBoxOn ] = useState(false);
     const [ exitWithCancelOn, setExitWithCancelOn ] = useState(false);
-
-
-    // vvv this is odd, i have an issue where if i modify an element in a state array or obj React wont push for an update, so i add 1 to a count which DOES push for an update
-    // maybe i can try force update here
-
-    // stale state?????? gotta look into this
-    // const [ count, setCount ] = useState(0);
-    
-
     
     const toSetFormOn = () => {
         setFormOn(true);
@@ -116,7 +107,6 @@ function GoalsModal(props) {
         setDialogBoxOn(false);
         setExitWithCancelOn(false);
     }
-
     
     // Turns off success snackbar alert
     const toSetSuccessSnackbarOff = () => {
@@ -152,7 +142,6 @@ function GoalsModal(props) {
         const idToDel = goalToDelete.id;
         const db = getDatabase();
         const dbRef = ref(db, user.uid + '/goals');
-        // maybe have to change this to get
         onValue(dbRef, (snapshot) => {
             snapshot.forEach((childSnapshot) => {
                 const childKey = childSnapshot.key;

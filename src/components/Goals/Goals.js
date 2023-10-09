@@ -24,7 +24,6 @@ function Goals(props) {
                     let oldGoals = props.allGoals;
                     oldGoals.push(childData);
                     props.toSetAllGoals(oldGoals);
-                    // console.log(oldGoals);
                 }
                 setCount(count + 1);
             })});
@@ -41,7 +40,7 @@ function Goals(props) {
 
     const goalBarColor = (goal) => {
         let goalColor = Math.floor((goal.current / goal.total) * 100);
-        return `hsl(${goalColor}, 100%, 50%)`
+        return `hsl(${goalColor}, 100%, 50%)`;
     }
 
     const renderBackgroundColor = () => {
@@ -123,15 +122,15 @@ function Goals(props) {
                                     <h3 className='text-indigo-900 flex items-center basis-1/3 text-ellipsis font-medium h-4 dark:text-indigo-300 sm:text-sm xl:text-base'>{goal.name}</h3>
                                     <div className="w-full h-full relative basis-1/3">
                                         <LinearProgress variant="determinate" value={Math.floor(goal.current / goal.total * 100)}
-                                        sx={{
-                                            backgroundColor: renderBackgroundColor(),
-                                            '& .MuiLinearProgress-bar': {
-                                                    backgroundColor: goalBarColor(goal)
-                                                    },
-                                            height: 50,
-                                            borderRadius: 1,
-                                            width: '100px',
-                                            margin: '0 auto'
+                                            sx={{
+                                                backgroundColor: renderBackgroundColor(),
+                                                '& .MuiLinearProgress-bar': {
+                                                        backgroundColor: goalBarColor(goal)
+                                                        },
+                                                height: 50,
+                                                borderRadius: 1,
+                                                width: '100px',
+                                                margin: '0 auto'
                                         }} />
                                         <div className='absolute w-full top-1/4 m-auto text-lg font-semibold text-indigo-900'>
                                             {Math.floor(goal.current / goal.total * 100)}
@@ -175,11 +174,9 @@ function Goals(props) {
 
     return (
         <article className="w-full h-full relative lg:w-10/12 lg:m-auto">
-            {/* <div className="absolute z-40 w-24 h-4/6 bg-gradient-to-r from-indigo-900 "></div> */}
             <ul data-testid={props.modalOn ? 'goalsListModal' : 'goalsList'} className="overflow-x-auto overflow-y-hidden flex gap-9 w-full pl-3 py-2 xl:py-0">
                 {renderSwitch(props.allGoals)}
             </ul>
-            {/* <div className="absolute z-40 w-24 h-4/6 bg-gradient-to-r from-transparent to-indigo-900 "></div> */}
         </article>
     );
 }

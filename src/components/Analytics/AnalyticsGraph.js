@@ -7,6 +7,7 @@ function AnalyticsGraph(props) {
 
 
   useEffect(() => {
+    // creates all data points for graph
     const createDataPoints = (transactions) => {
       if(transactions !== undefined && Object.keys(transactions).length){
         let dataPoints = [];
@@ -49,7 +50,6 @@ function AnalyticsGraph(props) {
           dataPoints[0].amount = biggestAmount;
         }
         
-
         let sortedPoints = [];
         while(dataPoints.length){
             let currentSmallestIndex = 0;
@@ -60,12 +60,8 @@ function AnalyticsGraph(props) {
             }
             sortedPoints.push(dataPoints.splice(currentSmallestIndex, 1));
         }
-
-        // console.log(sortedPoints.flat());
-      
         setGraphDataPoints(sortedPoints.flat());
       }
-
     };
     createDataPoints(props.transactions);
   }, [props.transactions]); // eslint-disable-line

@@ -1,5 +1,4 @@
 function validateAccount(values, otherAccounts) {
-    // account name needs to be unqiue
     const errors = {}; 
 
     let accountNames = [];

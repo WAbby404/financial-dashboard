@@ -7,9 +7,9 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 function SpendingAccordion(props) {
 
+  // handles which accordion is active (or expanded)
   const handleChange = (index) => (e, newExpanded) => {
     props.toSetCurrentCategory(newExpanded ? index : false);
-    // console.log(index);
   }
 
   let colors = ['#fcba03', '#ec03fc', '#fc6f03', '#03befc', '#52fc03', '#3503fc'];
@@ -23,46 +23,34 @@ function SpendingAccordion(props) {
     color: '#312e81'
   }
 
-
   const formatMoney = (money) => {
     if(money){
         let formattedMoney = money.toString().split('.');
         let newMoney = [];
-        // console.log(formattedMoney);
-        // console.log(formattedMoney[1].slice(0, 2));
-        // console.log(formattedMoney);
         if(!formattedMoney[1]){
           formattedMoney[1] = '00';
         }
         formattedMoney[1] = formattedMoney[1].slice(0, 2);
-        // formattedMoney[1] =parseFloat(formattedMoney[1]).toFixed(2)
         if(formattedMoney[0].length > 3){
             let stringArray = formattedMoney[0].split('');
-            // console.log(stringArray);
             while(stringArray.length){
                 newMoney.push(stringArray[0]);
                 stringArray.shift();
-                // console.log(stringArray);
                 if(stringArray.length % 3 === 0 && stringArray.length !== 0){
                     newMoney.push(',');
                 }
-                // console.log(newMoney);
             }
-            // console.log(newMoney);
             newMoney.join('');
-            // console.log(newMoney.join(''));
         } else {
           if(formattedMoney[1]){
             return formattedMoney[0] + '.' + formattedMoney[1];
           }
           return formattedMoney[0] + '.00';
         }
-        // console.log(newMoney.join('') + '.' + formattedMoney[1]);
         if(formattedMoney[1]){
           return (newMoney.join('') + '.' + formattedMoney[1]);
         }
         return newMoney.join('') + '.00';
-        
     }
     return '0.00';
 }

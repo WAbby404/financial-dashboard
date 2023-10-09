@@ -21,6 +21,7 @@ function GoalsForm(props) {
     const setFocus = () => {
         topInputBox.current.focus();
     };
+    
     // Watches for a goal to edit & will fill the form with its values when edit mode is on
     useEffect(() => {
         if(props.goalToEdit?.name.length !== 0 && props.editOn === true){
@@ -51,14 +52,12 @@ function GoalsForm(props) {
         const { name, value } = e.target;
         if(name === 'total'){
             let values = value.split('.');
-            // console.log(values);
             if(values[1] && values[1].length > 2){
                 return;
             }
             setFormValues({...formValues, [name]: value.replace(/^0+/, '').trim()});
         } else if (name === 'current'){
             let values = value.split('.');
-            // console.log(values);
             if(values[1] && values[1].length > 2){
                 return;
             }
@@ -73,7 +72,6 @@ function GoalsForm(props) {
         }
         // If there was an error on this textfield, once a change happens it'll disappear
         setFormErrors({...formErrors, [name]: null});
-        // console.log(value.replace(/^0+/, ""));
     }
 
     // Exit form with cancel button

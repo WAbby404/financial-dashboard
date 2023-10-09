@@ -46,7 +46,6 @@ function validateTransaction(values, CCTotal) {
         errors.transferTo = 'Transfer account required';
     }
     return errors;
-
 }
 
 export default validateTransaction;
