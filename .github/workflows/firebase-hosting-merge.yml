@@ -14,7 +14,6 @@ jobs:
         with:
           build: npm run build
           start: npm start
-
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
