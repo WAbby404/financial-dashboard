@@ -120,7 +120,7 @@ describe('Spending Modal', ()=> {
         cy.getByTestId('transactionsModalClose').click();
 
         cy.getByTestId('spendingGraph').click();
-        cy.getByTestId('spendingGraph').click();
+        // cy.getByTestId('spendingGraph').click();
 
         cy.getByTestId('spendingCategory').should('have.text', 'Housing');
 
