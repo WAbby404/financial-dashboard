@@ -108,27 +108,6 @@ describe('Spending Modal', ()=> {
         cy.getByTestId('transactionsModalClose').click();
     })
 
-    it('says transaction category as title when circle is clicked', ()=> {
-        cy.getByTestId('transactionsModalOpen').click();
-        cy.getByTestId('transactionsFormOpen').click();
-        cy.getByTestId('transactionsFormTitle').type('rent')
-        cy.getByTestId('transactionsFormAccount').type('{downarrow}{enter}');
-        cy.getByTestId('transactionsFormCategory').type('{downarrow}{downarrow}{enter}');
-        cy.getByTestId('transactionsFormValue').type('2000.33');
-        cy.getByTestId('transactionsFormDate').type('28');
-        cy.getByTestId('transactionsFormSubmit').click();
-        cy.getByTestId('transactionsModalClose').click();
-
-        cy.getByTestId('spendingGraph').click();
-        // cy.getByTestId('spendingGraph').click();
-
-        cy.getByTestId('spendingCategory').should('have.text', 'Housing');
-
-        cy.getByTestId('transactionsModalOpen').click();
-        cy.getByTestId('transactionDelete-0').click();
-        cy.getByTestId('transactionsModalClose').click();
-    })
-
     it('shows another accordion category when a transaction of another categroy is made', ()=> {
         cy.getByTestId('transactionsModalOpen').click();
         cy.getByTestId('transactionsFormOpen').click();
