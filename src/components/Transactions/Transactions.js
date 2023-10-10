@@ -187,7 +187,7 @@ function Transactions(props) {
                 
             // case for 0 transactions
             default:
-                return <div className='text-indigo-300 font-medium text-center m-auto'>Transaction list empty{!props.modalOn && ', add a goal in Manage Transactions'}</div>;
+                return <div className='text-indigo-900 dark:text-indigo-300 font-medium text-center m-auto'>Transaction list empty{!props.modalOn && ', add a goal in Manage Transactions'}</div>;
         }
     };
 

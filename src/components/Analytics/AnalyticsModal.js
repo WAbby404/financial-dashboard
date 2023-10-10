@@ -182,7 +182,7 @@ function AnalyticsModal(props) {
                     {(transactions && Object.keys(transactions).length > 0) ?
                         <AnalyticsGraph transactions={transactions}/>
                         :
-                        <div className="text-indigo-300">Create Transactions to see your Spending Trends</div> 
+                        <div className="text-indigo-900 dark:text-indigo-300">Create Transactions to see your Spending Trends</div> 
                     }
                 </figure>
             </div>

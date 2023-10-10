@@ -51,7 +51,7 @@ describe('Spending Modal', ()=> {
         cy.getByTestId('transactionsModalClose').click();
 
     })
-
+    
     it('renders multiple transactions under correct category of the accordion', ()=> {
         cy.getByTestId('transactionsModalOpen').click();
         cy.getByTestId('transactionsFormOpen').click();

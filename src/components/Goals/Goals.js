@@ -168,7 +168,7 @@ function Goals(props) {
                 
             // case for 0 transactions
             default:
-                return <div className='text-indigo-300 font-medium p-3 text-center m-auto'>Goal list empty{!props.modalOn && ', add a goal in Manage Goals'}</div>;
+                return <div className='text-indigo-900 dark:text-indigo-300 font-medium p-3 text-center m-auto'>Goal list empty{!props.modalOn && ', add a goal in Manage Goals'}</div>;
         }
     };
 
