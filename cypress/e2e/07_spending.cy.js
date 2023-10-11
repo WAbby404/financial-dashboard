@@ -108,33 +108,6 @@ describe('Spending Modal', ()=> {
         cy.getByTestId('transactionsModalClose').click();
     })
 
-    // it('shows another accordion category when a transaction of another categroy is made', ()=> {
-    //     cy.getByTestId('transactionsModalOpen').click();
-    //     cy.getByTestId('transactionsFormOpen').click();
-    //     cy.getByTestId('transactionsFormTitle').type('cat')
-    //     cy.getByTestId('transactionsFormAccount').type('{downarrow}{enter}');
-    //     cy.getByTestId('transactionsFormCategory').type('{downarrow}{downarrow}{enter}');
-    //     cy.getByTestId('transactionsFormValue').type('100');
-    //     cy.getByTestId('transactionsFormDate').type('9');
-    //     cy.getByTestId('transactionsFormSubmit').click();
-
-    //     cy.getByTestId('transactionsFormTitle').type('chipotle')
-    //     cy.getByTestId('transactionsFormAccount').type('{downarrow}{enter}');
-    //     cy.getByTestId('transactionsFormCategory').type('{downarrow}{downarrow}{downarrow}{downarrow}{enter}');
-    //     cy.getByTestId('transactionsFormValue').type('36.55');
-    //     cy.getByTestId('transactionsFormDate').type('7');
-    //     cy.getByTestId('transactionsFormSubmit').click();
-    //     cy.getByTestId('transactionsModalClose').click();
-
-    //     cy.getByTestId('spendingAccordionBar0').should('have.text', 'Housing');
-    //     cy.getByTestId('spendingAccordionBar1').should('have.text', 'Transportation');
-
-    //     cy.getByTestId('transactionsModalOpen').click();
-    //     cy.getByTestId('transactionDelete-0').click();
-    //     cy.getByTestId('transactionDelete-0').click();
-    //     cy.getByTestId('transactionsModalClose').click();
-    // })
-
     it('when all transactions are deleted, graph and accordion disappear and 0 case appears', ()=> {
         cy.getByTestId('transactionsModalOpen').click();
         cy.getByTestId('transactionsFormOpen').click();
