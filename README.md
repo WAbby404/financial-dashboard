@@ -69,9 +69,6 @@ Moonlit was designed in Figma, take a look at the dashboards original designs.<b
 * Designed with accessibility & responsiveness in mind
 * Figma
 
-## Designed in Figma - (Original concept designs)
-<!-- images here -->
-
 ## About Me
 Thank you for checking out my work, I hope you enjoyed my site! <br/>
 I'm currently searching for a new career opportunity in Web Development and would love to hear from you, so feel free to reach out. <br/>
