@@ -47,7 +47,7 @@ Analytics helps you see how much of your money you spend each month & when you s
 <br/>
 
 Moonlit is also available on mobile devices with responsive design.<br/>
-<!-- <img src="public/ReadMe9.png" alt="Moonlit Dashboard" width="800"/> -->
+<img src="public/ReadMe9.png" alt="Moonlit Dashboard" width="800"/>
 <br/>
 
 Moonlit was designed in Figma, take a look at the dashboards original designs.<br/>
