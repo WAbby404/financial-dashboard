@@ -1,6 +1,7 @@
 # Moonlit Financial Dashboard
 <img src="public/ReadMeBanner.png" alt="Moonlit Logo" width="800"/>
 A financial tracking dashboard to watch your monthly spending with graphs & transaction categories so you know where your money is being spent.
+Developed using React, Tailwind, MUI, JavaScript, Firebase Database & Authentication, Cypress Testing and designed in Figma.
 Features include: <br/>
 * Firebase authentication for secure login<br/>
 * A goals modal to keep in mind what you're saving up for and how much you've saved<br/>
